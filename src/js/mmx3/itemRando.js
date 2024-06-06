@@ -67,6 +67,7 @@ function itemRandomize(rom, rng, opts, m) {
             name: "Blast Hornet Capsule",
             stageIdx: STAGE_BLAST_HORNET,
             itemName: "Head Chip",
+			itemType: "Capsule",
             entityEntry: findStageEntityData(rom, STAGE_BLAST_HORNET, ...ENT_CAPSULE),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLAST_HORNET, 3, 0),
             minimapMarkerEntry: 0,
@@ -75,6 +76,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Blast Hornet Chimera Ride Armour",
             stageIdx: STAGE_BLAST_HORNET,
+			itemType: "Armour",
             entityEntry: findStageEntityData(rom, STAGE_BLAST_HORNET, ...ENT_RIDE_ARMOUR_ITEM),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLAST_HORNET, 6, 3),
             minimapMarkerEntry: 2,
@@ -83,6 +85,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Blast Hornet Heart Tank",
             stageIdx: STAGE_BLAST_HORNET,
+			itemType: "Heart"
             entityEntry: findStageEntityData(rom, STAGE_BLAST_HORNET, ...ENT_HEART_TANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLAST_HORNET, 9, 0),
             minimapMarkerEntry: 1,
@@ -92,6 +95,7 @@ function itemRandomize(rom, rng, opts, m) {
             name: "Blizzard Buffalo Capsule",
             stageIdx: STAGE_BLIZZARD_BUFFALO,
             itemName: "Leg Upgrade",
+			itemType: "Capsule"
             entityEntry: findStageEntityData(rom, STAGE_BLIZZARD_BUFFALO, ...ENT_CAPSULE),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLIZZARD_BUFFALO, 6, 0),
             minimapMarkerEntry: 2,
@@ -100,6 +104,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Blizzard Buffalo Heart Tank",
             stageIdx: STAGE_BLIZZARD_BUFFALO,
+			itemType: "Heart",
             entityEntry: findStageEntityData(rom, STAGE_BLIZZARD_BUFFALO, ...ENT_HEART_TANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLIZZARD_BUFFALO, 1, 0),
             tileDataOffset: 0x1e00,
@@ -109,6 +114,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Blizzard Buffalo Subtank",
             stageIdx: STAGE_BLIZZARD_BUFFALO,
+			itemType: "Tank",
             entityEntry: findStageEntityData(rom, STAGE_BLIZZARD_BUFFALO, ...ENT_SUBTANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLIZZARD_BUFFALO, 5, 3),
             minimapMarkerEntry: 1,
@@ -118,6 +124,7 @@ function itemRandomize(rom, rng, opts, m) {
             name: "Crush Crawfish Capsule",
             stageIdx: STAGE_CRUSH_CRAWFISH,
             itemName: "Body Chip",
+			itemType: "Capsule",
             entityEntry: findStageEntityData(rom, STAGE_CRUSH_CRAWFISH, ...ENT_CAPSULE),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_CRUSH_CRAWFISH, 3, 0),
             minimapMarkerEntry: 1,
@@ -126,6 +133,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Crush Crawfish Hawk Ride Armour",
             stageIdx: STAGE_CRUSH_CRAWFISH,
+			itemType: "Armour",
             entityEntry: findStageEntityData(rom, STAGE_CRUSH_CRAWFISH, ...ENT_RIDE_ARMOUR_ITEM),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_CRUSH_CRAWFISH, 0, 3),
             minimapMarkerEntry: 0,
@@ -134,6 +142,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Crush Crawfish Heart Tank",
             stageIdx: STAGE_CRUSH_CRAWFISH,
+			itemType: "Heart",
             entityEntry: findStageEntityData(rom, STAGE_CRUSH_CRAWFISH, ...ENT_HEART_TANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_CRUSH_CRAWFISH, 2, 2),
             minimapMarkerEntry: 2,
@@ -142,6 +151,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Doppler 1 Capsule",
             itemName: "Hyper Armour",
+			itemType: "Capsule",
             stageIdx: STAGE_DOPPLER_1,
             entityEntry: findStageEntityData(rom, STAGE_DOPPLER_1, ...ENT_CAPSULE),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_DOPPLER_1, 8, 0),
@@ -151,6 +161,7 @@ function itemRandomize(rom, rng, opts, m) {
             name: "Gravity Beetle Capsule",
             stageIdx: STAGE_GRAVITY_BEETLE,
             itemName: "Arm Chip",
+			itemType: "Capsule",
             entityEntry: findStageEntityData(rom, STAGE_GRAVITY_BEETLE, ...ENT_CAPSULE),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_GRAVITY_BEETLE, 10, 0),
             minimapMarkerEntry: 2,
@@ -159,6 +170,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Gravity Beetle Frog Ride Armour",
             stageIdx: STAGE_GRAVITY_BEETLE,
+			itemType: "Armour",
             entityEntry: findStageEntityData(rom, STAGE_GRAVITY_BEETLE, ...ENT_RIDE_ARMOUR_ITEM),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_GRAVITY_BEETLE, 5, 3),
             minimapMarkerEntry: 1,
@@ -167,6 +179,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Gravity Beetle Heart Tank",
             stageIdx: STAGE_GRAVITY_BEETLE,
+			itemType: "Heart",
             entityEntry: findStageEntityData(rom, STAGE_GRAVITY_BEETLE, ...ENT_HEART_TANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_GRAVITY_BEETLE, 0, 3),
             minimapMarkerEntry: 0,
@@ -176,6 +189,7 @@ function itemRandomize(rom, rng, opts, m) {
             name: "Neon Tiger Capsule",
             stageIdx: STAGE_NEON_TIGER,
             itemName: "Arm Upgrade",
+			itemType: "Capsule",
             entityEntry: findStageEntityData(rom, STAGE_NEON_TIGER, ...ENT_CAPSULE),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_NEON_TIGER, 2, 0),
             minimapMarkerEntry: 1,
@@ -184,6 +198,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Neon Tiger Heart Tank",
             stageIdx: STAGE_NEON_TIGER,
+			itemType: "Heart",
             entityEntry: findStageEntityData(rom, STAGE_NEON_TIGER, ...ENT_HEART_TANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_NEON_TIGER, 8, 0),
             minimapMarkerEntry: 2,
@@ -192,6 +207,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Neon Tiger Subtank",
             stageIdx: STAGE_NEON_TIGER,
+			itemType: "Tank",
             entityEntry: findStageEntityData(rom, STAGE_NEON_TIGER, ...ENT_SUBTANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_NEON_TIGER, 0, 3),
             minimapMarkerEntry: 0,
@@ -201,6 +217,7 @@ function itemRandomize(rom, rng, opts, m) {
             name: "Toxic Seahorse Capsule",
             stageIdx: STAGE_TOXIC_SEAHORSE,
             itemName: "Leg Chip",
+			itemType: "Capsule",
             entityEntry: findStageEntityData(rom, STAGE_TOXIC_SEAHORSE, ...ENT_CAPSULE),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TOXIC_SEAHORSE, 7, 0),
             minimapMarkerEntry: 2,
@@ -209,6 +226,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Toxic Seahorse Heart Tank",
             stageIdx: STAGE_TOXIC_SEAHORSE,
+			itemType: "Heart",
             entityEntry: findStageEntityData(rom, STAGE_TOXIC_SEAHORSE, ...ENT_HEART_TANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TOXIC_SEAHORSE, 1, 3),
             minimapMarkerEntry: 0,
@@ -217,6 +235,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Toxic Seahorse Kangaroo Ride Armour",
             stageIdx: STAGE_TOXIC_SEAHORSE,
+			itemType: "Armour",
             entityEntry: findStageEntityData(rom, STAGE_TOXIC_SEAHORSE, ...ENT_RIDE_ARMOUR_ITEM),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TOXIC_SEAHORSE, 4, 2),
             minimapMarkerEntry: 1,
@@ -226,6 +245,7 @@ function itemRandomize(rom, rng, opts, m) {
             name: "Tunnel Rhino Capsule",
             stageIdx: STAGE_TUNNEL_RHINO,
             itemName: "Helmet Upgrade",
+			itemType: "Capsule",
             entityEntry: findStageEntityData(rom, STAGE_TUNNEL_RHINO, ...ENT_CAPSULE),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TUNNEL_RHINO, 7, 1),
             minimapMarkerEntry: 2,
@@ -234,6 +254,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Tunnel Rhino Heart Tank",
             stageIdx: STAGE_TUNNEL_RHINO,
+			itemType: "Heart",
             entityEntry: findStageEntityData(rom, STAGE_TUNNEL_RHINO, ...ENT_HEART_TANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TUNNEL_RHINO, 2, 0),
             tileDataOffset: 0x1600,
@@ -243,6 +264,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Tunnel Rhino Subtank",
             stageIdx: STAGE_TUNNEL_RHINO,
+			itemType: "Tank",
             entityEntry: findStageEntityData(rom, STAGE_TUNNEL_RHINO, ...ENT_SUBTANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TUNNEL_RHINO, 4, 0),
             minimapMarkerEntry: 1,
@@ -252,6 +274,7 @@ function itemRandomize(rom, rng, opts, m) {
             name: "Volt Catfish Capsule",
             stageIdx: STAGE_VOLT_CATFISH,
             itemName: "Body Upgrade",
+			itemType: "Capsule",
             entityEntry: findStageEntityData(rom, STAGE_VOLT_CATFISH, ...ENT_CAPSULE),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_VOLT_CATFISH, 4, 1),
             minimapMarkerEntry: 0,
@@ -260,6 +283,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Volt Catfish Heart Tank",
             stageIdx: STAGE_VOLT_CATFISH,
+			itemType: "Heart",
             entityEntry: findStageEntityData(rom, STAGE_VOLT_CATFISH, ...ENT_HEART_TANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_VOLT_CATFISH, 3, 0),
             minimapMarkerEntry: 1,
@@ -268,6 +292,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Volt Catfish Subtank",
             stageIdx: STAGE_VOLT_CATFISH,
+			itemType: "Tank",
             entityEntry: findStageEntityData(rom, STAGE_VOLT_CATFISH, ...ENT_SUBTANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_VOLT_CATFISH, 8, 0),
             minimapMarkerEntry: 2,
