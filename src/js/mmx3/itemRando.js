@@ -85,7 +85,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Blast Hornet Heart Tank",
             stageIdx: STAGE_BLAST_HORNET,
-			itemType: "Heart"
+			itemType: "Heart", 
             entityEntry: findStageEntityData(rom, STAGE_BLAST_HORNET, ...ENT_HEART_TANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLAST_HORNET, 9, 0),
             minimapMarkerEntry: 1,
@@ -95,7 +95,7 @@ function itemRandomize(rom, rng, opts, m) {
             name: "Blizzard Buffalo Capsule",
             stageIdx: STAGE_BLIZZARD_BUFFALO,
             itemName: "Leg Upgrade",
-			itemType: "Capsule"
+			itemType: "Capsule",
             entityEntry: findStageEntityData(rom, STAGE_BLIZZARD_BUFFALO, ...ENT_CAPSULE),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLIZZARD_BUFFALO, 6, 0),
             minimapMarkerEntry: 2,
@@ -328,7 +328,7 @@ function itemRandomize(rom, rng, opts, m) {
             ramByteLowToCheck: ramByteLowToCheck,
             ramBitToCheck: ramBitToCheck,
             textIdx: slot.textIdx,
-            slot_name: slot.name,
+         	Category: slot.itemType,
         })
     }
 
@@ -350,14 +350,18 @@ function itemRandomize(rom, rng, opts, m) {
 
     // Prevent volt catfish heart tank having a capsule (spikes)
     // Prevent blizzard buffalo heart tank having a capsule (ride armour issues)
+	// Prevent Toxic Seahorse Kangaroo Armour from having a capsule (softlock issues, leftside capsule)
+	// Prevent Blizzard Buffalo Subtank from having a capsule (softlock issues, leftside capsule) 
     for (let assignedSlot of newSlots) {
         if (assignedSlot.slot.name !== "Volt Catfish Heart Tank" && 
+			assignedSlot.slot.name !== "Toxic Seahorse Kangaroo Ride Armour" &&
+			assignedSlot.slot.name !== "Blizzard Buffalo Subtank" &&
             assignedSlot.slot.name !== "Blizzard Buffalo Heart Tank") continue;
-        if (assignedSlot.item.slot_name.indexOf("Capsule") === -1) continue;
+        if (assignedSlot.item.Category.indexOf("Capsule") === -1) continue;
 
         for (let assignedSlot2 of newSlots) {
             if (assignedSlot2.slot.name === assignedSlot.slot.name) continue;
-            if (assignedSlot2.item.name.indexOf("Capsule") !== -1) continue;
+            if (assignedSlot2.item.Category.indexOf("Capsule") !== -1) continue;
 
             let temp = assignedSlot.item;
             assignedSlot.item = assignedSlot2.item;
@@ -390,7 +394,7 @@ function itemRandomize(rom, rng, opts, m) {
     // Move gravity beetle frog ride armour left by 0x18 pixels if it's a capsule
     for (let assignedSlot of newSlots) {
         if (assignedSlot.slot.name !== "Gravity Beetle Frog Ride Armour") continue;
-        if (assignedSlot.item.slot_name.indexOf("Capsule") === -1) break;
+        if (assignedSlot.item.Category.indexOf("Capsule") === -1) break;
 
         start = assignedSlot.slot.entityEntry;
         rom[start+5] = 0x28;

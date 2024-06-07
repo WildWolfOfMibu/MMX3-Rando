@@ -12,7 +12,7 @@
     <script>
       const MAJOR_VERSION = 1;
       const MINOR_VERSION = 1;
-      const PATCH_VERSION = 0;
+      const PATCH_VERSION = 1;
     </script>
     <script src="src/js/asm65816.js"></script>
     <script src="src/js/mmx3/utils.js"></script>
@@ -342,6 +342,15 @@
         <div v-show="tab==='changelog'">
           <div class="content">
             <div class="title">Changelog</div>
+			
+			<div class="subtitle">v1.1.1</div>
+
+			<ul>
+              <li>Removed Blizzard Buffalo Subtank from locations for Capsules due to soft lock issues</li>
+			  <li>Removed Toxic Seahorse Ride Armour from locations for Capsules due to soft lock issues</li>
+			  <li>Corrected Capsule softlock checks to include "Chip" check for upgrade chips</li>
+			  <li> Added itemType and Category for cleaner checks and future precise item placement (Plando?) </li>
+			</ul>
 
             <div class="subtitle">v1.1.0</div>
 
