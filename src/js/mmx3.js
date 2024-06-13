@@ -700,7 +700,7 @@ function randomize(_rom, rng, opts) {
         bne _setInitialRideArmour
 
         inx
-        bit #$04.b
+        bit #$03.b
         bne _setInitialRideArmour
 
         inx
