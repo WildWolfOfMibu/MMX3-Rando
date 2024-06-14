@@ -569,14 +569,27 @@
             // crc check
             reader.onload = function() {
               let crcCheck = crc32(reader.result);
-              if (crcCheck === 0xfa0fe671) {
+              // standard sfc rom
+			  if (crcCheck === 0xfa0fe671) {
                 app.correctFileCRCcheck = true;
                 app.romType = 'normal';
                 app.romExt = 'sfc';
-              } else if (crcCheck === 0x7afec006) {
+				// added check for MSU-1 compatible rom
+              } else if (crcCheck === 0x4daad6d4){
+			    app.correctFileCRCcheck = true;
+                app.romType = 'normal';
+                app.romExt = 'sfc';
+				// Zeromod
+			  } else if (crcCheck === 0x7afec006) {
                 app.correctFileCRCcheck = true;
                 app.romType = 'zeromod';
                 app.romExt = 'sfc';
+				//added Zeromod MSU-1 compatible rom
+				} else if (crcCheck === 0xc7e11b7a) {
+                app.correctFileCRCcheck = true;
+                app.romType = 'zeromod';
+                app.romExt = 'sfc';
+				// MMX3 (U) smc rom
               } else if (crcCheck === 0x97f99192) {
                 app.correctFileCRCcheck = true;
                 app.romType = 'normal';
