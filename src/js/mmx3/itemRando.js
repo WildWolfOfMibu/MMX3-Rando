@@ -63,6 +63,16 @@ function itemRandomize(rom, rng, opts, m) {
     // This is done here for the 'find'-type functions
     // This is not in `constants.js` as `prep.js` needs to modify the base rom 1st
     let slots = [
+	// moved doppler into slot 0 to simplify doppler check further
+	    {
+            name: "Doppler 1 Capsule",
+            itemName: "Hyper Armour",
+			itemType: "Capsule",
+            stageIdx: STAGE_DOPPLER_1,
+            entityEntry: findStageEntityData(rom, STAGE_DOPPLER_1, ...ENT_CAPSULE),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_DOPPLER_1, 8, 0),
+            textIdx: 0x5d,
+        },
         {
             name: "Blast Hornet Capsule",
             stageIdx: STAGE_BLAST_HORNET,
@@ -147,15 +157,6 @@ function itemRandomize(rom, rng, opts, m) {
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_CRUSH_CRAWFISH, 2, 2),
             minimapMarkerEntry: 2,
             textIdx: 0x24,
-        },
-        {
-            name: "Doppler 1 Capsule",
-            itemName: "Hyper Armour",
-			itemType: "Capsule",
-            stageIdx: STAGE_DOPPLER_1,
-            entityEntry: findStageEntityData(rom, STAGE_DOPPLER_1, ...ENT_CAPSULE),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_DOPPLER_1, 8, 0),
-            textIdx: 0x5d,
         },
         {
             name: "Gravity Beetle Capsule",
@@ -343,6 +344,14 @@ function itemRandomize(rom, rng, opts, m) {
 	  let logic = false;
 	  //future move of logic INTO randomization algorithm
 	  while(logic !== true){
+		  //doppler_upgrades_locked logic first
+		  //if 4 upgrades unlock Doppler, force Hyper Armour in Doppler 1
+		  if (opts.new_game_mode === 'doppler_upgrades_locked' && opts.upgrades_required === '4') {
+			  while(chosen_item.name !== "Hyper Armour" && chosen_slot.itemName !== "Hyper Armour"){
+				  chosen_item = Math.floor(rng() * available_items.length);
+				  chosen_slot = Math.floor(rng() * available_slots.length);
+			  }
+		  }
 		  //insert logic checks here
 		  //if fail, re-randomize using chosen_item = Math.floor(rng() * available_items.length); & chosen_slot = Math.floor(rng() * available_slots.length); lines
 		  //if pass then next line 
@@ -360,6 +369,7 @@ function itemRandomize(rom, rng, opts, m) {
     // Prevent blizzard buffalo heart tank having a capsule (ride armour issues)
 	// Prevent Toxic Seahorse Kangaroo Armour from having a capsule (softlock issues, leftside capsule)
 	// Prevent Blizzard Buffalo Subtank from having a capsule (softlock issues, leftside capsule) 
+	// add crush crawfish heart tank block to prevent armor into capsule 
     for (let assignedSlot of newSlots) {
         if (assignedSlot.slot.name !== "Volt Catfish Heart Tank" && 
 			assignedSlot.slot.name !== "Toxic Seahorse Kangaroo Ride Armour" &&
