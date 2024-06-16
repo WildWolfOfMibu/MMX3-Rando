@@ -329,7 +329,7 @@ function itemRandomize(rom, rng, opts, m) {
             ramByteLowToCheck: ramByteLowToCheck,
             ramBitToCheck: ramBitToCheck,
             textIdx: slot.textIdx,
-         	Category: slot.itemType,
+         	itemType: slot.itemType,
         })
     }
 
@@ -338,20 +338,36 @@ function itemRandomize(rom, rng, opts, m) {
     // randomly fill slots with items
     let available_items = [...items];
     let available_slots = [...slots];
-    for (let i = 0; i < slots.length; i += 1) {
+	//if 4 upgrades unlock Doppler, force Hyper Armour in Doppler 1
+	//moved Doppler to slot 0 to hard set hyper chip if upgrades required
+	let i = 0;
+	if (opts.new_game_mode === 'doppler_upgrades_locked' && opts.upgrades_required === '4') {
+		let chosen_item = available_items.i;
+		let chosen_slot = available_slots.i;
+		i++; 
+		}
+    for (i < slots.length) {
       let chosen_item = Math.floor(rng() * available_items.length);
       let chosen_slot = Math.floor(rng() * available_slots.length);
 	  let logic = false;
 	  //future move of logic INTO randomization algorithm
 	  while(logic !== true){
-		  //doppler_upgrades_locked logic first
-		  //if 4 upgrades unlock Doppler, force Hyper Armour in Doppler 1
-		  if (opts.new_game_mode === 'doppler_upgrades_locked' && opts.upgrades_required === '4') {
-			  while(chosen_item.name !== "Hyper Armour" && chosen_slot.itemName !== "Hyper Armour"){
-				  chosen_item = Math.floor(rng() * available_items.length);
-				  chosen_slot = Math.floor(rng() * available_slots.length);
-			  }
+		  //capsule softlock logic 5 checks for anti softlock on capsules (syntax in order to be able to add more if needed)
+		  //(Volt Catfish HT, spikes)
+		  //(Blizzard Buffalo HT, ride Armour lock)
+		  //(Blizzard Buffalo Subtank, softlock)
+		  //(Crush Crawfish HT, ride Armour lock)
+		  //(Toxic Seahorse Kangaroo Armour, softlock)
+		  while (chosen_item.itemType == "Capsule" && (chosen_slot.name == "Volt Catfish Heart Tank" || chosen_slot.name == "Blizzard Buffalo Subtank" || chosen_slot.name == "Blizzard Buffalo Heart Tank"  || chosen_slot.name == "Toxic Seahorse Kangaroo Ride Armour" || chosen_slot.name == "Crush Crawfish Heart Tank")){
+		  let chosen_item = Math.floor(rng() * available_items.length); 
+		  let chosen_slot = Math.floor(rng() * available_slots.length);
 		  }
+		  // Move gravity beetle frog ride armour left by 0x18 pixels if it's a capsule (reduced code from 7 to 3 lines)
+		  if (chosen_item.itemType == "Capsule" && chosen_slot.name == "Gravity Beetle Frog Ride Armour"){
+			  start = chosen_slot.entityEntry;
+			  rom[start+5] = 0x28;
+		  }
+		  
 		  //insert logic checks here
 		  //if fail, re-randomize using chosen_item = Math.floor(rng() * available_items.length); & chosen_slot = Math.floor(rng() * available_slots.length); lines
 		  //if pass then next line 
@@ -363,61 +379,9 @@ function itemRandomize(rom, rng, opts, m) {
       })
       available_items.splice(chosen_item, 1);
       available_slots.splice(chosen_slot, 1);
+	  i++;
     }
 
-    // Prevent volt catfish heart tank having a capsule (spikes)
-    // Prevent blizzard buffalo heart tank having a capsule (ride armour issues)
-	// Prevent Toxic Seahorse Kangaroo Armour from having a capsule (softlock issues, leftside capsule)
-	// Prevent Blizzard Buffalo Subtank from having a capsule (softlock issues, leftside capsule) 
-	// add crush crawfish heart tank block to prevent armor into capsule 
-    for (let assignedSlot of newSlots) {
-        if (assignedSlot.slot.name !== "Volt Catfish Heart Tank" && 
-			assignedSlot.slot.name !== "Toxic Seahorse Kangaroo Ride Armour" &&
-			assignedSlot.slot.name !== "Blizzard Buffalo Subtank" &&
-            assignedSlot.slot.name !== "Blizzard Buffalo Heart Tank") continue;
-        if (assignedSlot.item.Category.indexOf("Capsule") === -1) continue;
-
-        for (let assignedSlot2 of newSlots) {
-            if (assignedSlot2.slot.name === assignedSlot.slot.name) continue;
-            if (assignedSlot2.item.Category.indexOf("Capsule") !== -1) continue;
-
-            let temp = assignedSlot.item;
-            assignedSlot.item = assignedSlot2.item;
-            assignedSlot2.item = temp;
-            break;
-        }
-    }
-
-    // Prevent Doppler having an upgrade if 4 upgrades required to reach him
-    if (opts.new_game_mode === 'doppler_upgrades_locked' && opts.upgrades_required === '4') {
-        for (let assignedSlot of newSlots) {
-            if (assignedSlot.slot.name !== "Doppler 1 Capsule") continue;
-            if (assignedSlot.item.name.indexOf(" Upgrade") === -1) break;
-
-            console.log('was upgrade', assignedSlot.item.name)
-    
-            for (let assignedSlot2 of newSlots) {
-                if (assignedSlot2.slot.name === assignedSlot.slot.name) continue;
-                if (assignedSlot2.item.name.indexOf(" Upgrade") !== -1) continue;
-    
-                let temp = assignedSlot.item;
-                assignedSlot.item = assignedSlot2.item;
-                assignedSlot2.item = temp;
-                break;
-            }
-            break;
-        }
-    }
-
-    // Move gravity beetle frog ride armour left by 0x18 pixels if it's a capsule
-    for (let assignedSlot of newSlots) {
-        if (assignedSlot.slot.name !== "Gravity Beetle Frog Ride Armour") continue;
-        if (assignedSlot.item.Category.indexOf("Capsule") === -1) break;
-
-        start = assignedSlot.slot.entityEntry;
-        rom[start+5] = 0x28;
-        break;
-    }
 
     /*
     Mutate
