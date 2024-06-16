@@ -340,6 +340,14 @@ function itemRandomize(rom, rng, opts, m) {
     for (let i = 0; i < slots.length; i += 1) {
       let chosen_item = Math.floor(rng() * available_items.length);
       let chosen_slot = Math.floor(rng() * available_slots.length);
+	  let logic = false;
+	  //future move of logic INTO randomization algorithm
+	  while(logic !== true){
+		  //insert logic checks here
+		  //if fail, re-randomize using chosen_item = Math.floor(rng() * available_items.length); & chosen_slot = Math.floor(rng() * available_slots.length); lines
+		  //if pass then next line 
+		  logic = true;
+	  }
       newSlots.push({
         item: available_items[chosen_item],
         slot: available_slots[chosen_slot],
