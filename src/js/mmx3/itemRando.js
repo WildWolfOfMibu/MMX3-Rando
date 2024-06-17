@@ -63,45 +63,88 @@ function itemRandomize(rom, rng, opts, m) {
     // This is done here for the 'find'-type functions
     // This is not in `constants.js` as `prep.js` needs to modify the base rom 1st
     let slots = [
-	// moved doppler into slot 0 to simplify doppler check further
+	// rearranged slots so that 0 req checks are processed last.
 	    {
-            name: "Doppler 1 Capsule",
-            itemName: "Hyper Armour",
-			itemType: "Capsule",
-            stageIdx: STAGE_DOPPLER_1,
-            entityEntry: findStageEntityData(rom, STAGE_DOPPLER_1, ...ENT_CAPSULE),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_DOPPLER_1, 8, 0),
-            textIdx: 0x5d,
+            name: "Tunnel Rhino Subtank",
+            stageIdx: STAGE_TUNNEL_RHINO,
+			itemName: "Tunnel Tank",
+			itemType: "Tank",
+            entityEntry: findStageEntityData(rom, STAGE_TUNNEL_RHINO, ...ENT_SUBTANK),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TUNNEL_RHINO, 4, 0),
+            minimapMarkerEntry: 1,
+            textIdx: 0x55,
         },
-        {
-            name: "Blast Hornet Capsule",
-            stageIdx: STAGE_BLAST_HORNET,
-            itemName: "Head Chip",
-			itemType: "Capsule",
-            entityEntry: findStageEntityData(rom, STAGE_BLAST_HORNET, ...ENT_CAPSULE),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLAST_HORNET, 3, 0),
+		{
+            name: "Gravity Beetle Heart Tank",
+            stageIdx: STAGE_GRAVITY_BEETLE,
+			itemName: "Beetle Heart",
+			itemType: "Heart",
+            entityEntry: findStageEntityData(rom, STAGE_GRAVITY_BEETLE, ...ENT_HEART_TANK),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_GRAVITY_BEETLE, 0, 3),
             minimapMarkerEntry: 0,
-            textIdx: 0x5d,
+            textIdx: 0x24,
+        },
+		{
+            name: "Crush Crawfish Heart Tank",
+            stageIdx: STAGE_CRUSH_CRAWFISH,
+			itemName: "Crawfish Heart",
+			itemType: "Heart",
+            entityEntry: findStageEntityData(rom, STAGE_CRUSH_CRAWFISH, ...ENT_HEART_TANK),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_CRUSH_CRAWFISH, 2, 2),
+            minimapMarkerEntry: 2,
+            textIdx: 0x24,
+        },
+	    {
+            name: "Neon Tiger Heart Tank",
+            stageIdx: STAGE_NEON_TIGER,
+			itemName: "Tiger Heart",
+			itemType: "Heart",
+            entityEntry: findStageEntityData(rom, STAGE_NEON_TIGER, ...ENT_HEART_TANK),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_NEON_TIGER, 8, 0),
+            minimapMarkerEntry: 2,
+            textIdx: 0x24,
         },
         {
+            name: "Neon Tiger Subtank",
+            stageIdx: STAGE_NEON_TIGER,
+			itemName: "Tiger Tank",
+			itemType: "Tank",
+            entityEntry: findStageEntityData(rom, STAGE_NEON_TIGER, ...ENT_SUBTANK),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_NEON_TIGER, 0, 3),
+            minimapMarkerEntry: 0,
+            textIdx: 0x55,
+        },
+	    {
+            name: "Toxic Seahorse Heart Tank",
+            stageIdx: STAGE_TOXIC_SEAHORSE,
+			itemName: "Seahorse Heart",
+			itemType: "Heart",
+            entityEntry: findStageEntityData(rom, STAGE_TOXIC_SEAHORSE, ...ENT_HEART_TANK),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TOXIC_SEAHORSE, 1, 3),
+            minimapMarkerEntry: 0,
+            textIdx: 0x24,
+        },
+		{
+            name: "Volt Catfish Heart Tank",
+            stageIdx: STAGE_VOLT_CATFISH,
+			itemName: "Catfish Heart",
+			itemType: "Heart",
+            entityEntry: findStageEntityData(rom, STAGE_VOLT_CATFISH, ...ENT_HEART_TANK),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_VOLT_CATFISH, 3, 0),
+            minimapMarkerEntry: 1,
+            textIdx: 0x24,
+        },
+		{
             name: "Blast Hornet Chimera Ride Armour",
             stageIdx: STAGE_BLAST_HORNET,
+			itemName: "Chimera Armour",
 			itemType: "Armour",
             entityEntry: findStageEntityData(rom, STAGE_BLAST_HORNET, ...ENT_RIDE_ARMOUR_ITEM),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLAST_HORNET, 6, 3),
             minimapMarkerEntry: 2,
             textIdx: 0x28,
         },
-        {
-            name: "Blast Hornet Heart Tank",
-            stageIdx: STAGE_BLAST_HORNET,
-			itemType: "Heart", 
-            entityEntry: findStageEntityData(rom, STAGE_BLAST_HORNET, ...ENT_HEART_TANK),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLAST_HORNET, 9, 0),
-            minimapMarkerEntry: 1,
-            textIdx: 0x24,
-        },
-        {
+		{
             name: "Blizzard Buffalo Capsule",
             stageIdx: STAGE_BLIZZARD_BUFFALO,
             itemName: "Leg Upgrade",
@@ -111,9 +154,21 @@ function itemRandomize(rom, rng, opts, m) {
             minimapMarkerEntry: 2,
             textIdx: 0x61,
         },
+		// 1 req checks
+        {
+            name: "Blast Hornet Heart Tank",
+            stageIdx: STAGE_BLAST_HORNET,
+			itemName: "Hornet Heart",
+			itemType: "Heart", 
+            entityEntry: findStageEntityData(rom, STAGE_BLAST_HORNET, ...ENT_HEART_TANK),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLAST_HORNET, 9, 0),
+            minimapMarkerEntry: 1,
+            textIdx: 0x24,
+        },
         {
             name: "Blizzard Buffalo Heart Tank",
             stageIdx: STAGE_BLIZZARD_BUFFALO,
+			itemName: "Buffalo Heart",
 			itemType: "Heart",
             entityEntry: findStageEntityData(rom, STAGE_BLIZZARD_BUFFALO, ...ENT_HEART_TANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLIZZARD_BUFFALO, 1, 0),
@@ -124,6 +179,7 @@ function itemRandomize(rom, rng, opts, m) {
         {
             name: "Blizzard Buffalo Subtank",
             stageIdx: STAGE_BLIZZARD_BUFFALO,
+			itemName: "Buffalo Tank",
 			itemType: "Tank",
             entityEntry: findStageEntityData(rom, STAGE_BLIZZARD_BUFFALO, ...ENT_SUBTANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLIZZARD_BUFFALO, 5, 3),
@@ -151,15 +207,6 @@ function itemRandomize(rom, rng, opts, m) {
             textIdx: 0x5b,
         },
         {
-            name: "Crush Crawfish Heart Tank",
-            stageIdx: STAGE_CRUSH_CRAWFISH,
-			itemType: "Heart",
-            entityEntry: findStageEntityData(rom, STAGE_CRUSH_CRAWFISH, ...ENT_HEART_TANK),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_CRUSH_CRAWFISH, 2, 2),
-            minimapMarkerEntry: 2,
-            textIdx: 0x24,
-        },
-        {
             name: "Gravity Beetle Capsule",
             stageIdx: STAGE_GRAVITY_BEETLE,
             itemName: "Arm Chip",
@@ -180,15 +227,6 @@ function itemRandomize(rom, rng, opts, m) {
             textIdx: 0x57,
         },
         {
-            name: "Gravity Beetle Heart Tank",
-            stageIdx: STAGE_GRAVITY_BEETLE,
-			itemType: "Heart",
-            entityEntry: findStageEntityData(rom, STAGE_GRAVITY_BEETLE, ...ENT_HEART_TANK),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_GRAVITY_BEETLE, 0, 3),
-            minimapMarkerEntry: 0,
-            textIdx: 0x24,
-        },
-        {
             name: "Neon Tiger Capsule",
             stageIdx: STAGE_NEON_TIGER,
             itemName: "Arm Upgrade",
@@ -197,52 +235,6 @@ function itemRandomize(rom, rng, opts, m) {
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_NEON_TIGER, 2, 0),
             minimapMarkerEntry: 1,
             textIdx: 0x67,
-        },
-        {
-            name: "Neon Tiger Heart Tank",
-            stageIdx: STAGE_NEON_TIGER,
-			itemType: "Heart",
-            entityEntry: findStageEntityData(rom, STAGE_NEON_TIGER, ...ENT_HEART_TANK),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_NEON_TIGER, 8, 0),
-            minimapMarkerEntry: 2,
-            textIdx: 0x24,
-        },
-        {
-            name: "Neon Tiger Subtank",
-            stageIdx: STAGE_NEON_TIGER,
-			itemType: "Tank",
-            entityEntry: findStageEntityData(rom, STAGE_NEON_TIGER, ...ENT_SUBTANK),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_NEON_TIGER, 0, 3),
-            minimapMarkerEntry: 0,
-            textIdx: 0x55,
-        },
-        {
-            name: "Toxic Seahorse Capsule",
-            stageIdx: STAGE_TOXIC_SEAHORSE,
-            itemName: "Leg Chip",
-			itemType: "Capsule",
-            entityEntry: findStageEntityData(rom, STAGE_TOXIC_SEAHORSE, ...ENT_CAPSULE),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TOXIC_SEAHORSE, 7, 0),
-            minimapMarkerEntry: 2,
-            textIdx: 0x5d,
-        },
-        {
-            name: "Toxic Seahorse Heart Tank",
-            stageIdx: STAGE_TOXIC_SEAHORSE,
-			itemType: "Heart",
-            entityEntry: findStageEntityData(rom, STAGE_TOXIC_SEAHORSE, ...ENT_HEART_TANK),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TOXIC_SEAHORSE, 1, 3),
-            minimapMarkerEntry: 0,
-            textIdx: 0x24,
-        },
-        {
-            name: "Toxic Seahorse Kangaroo Ride Armour",
-            stageIdx: STAGE_TOXIC_SEAHORSE,
-			itemType: "Armour",
-            entityEntry: findStageEntityData(rom, STAGE_TOXIC_SEAHORSE, ...ENT_RIDE_ARMOUR_ITEM),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TOXIC_SEAHORSE, 4, 2),
-            minimapMarkerEntry: 1,
-            textIdx: 0x59,
         },
         {
             name: "Tunnel Rhino Capsule",
@@ -254,24 +246,16 @@ function itemRandomize(rom, rng, opts, m) {
             minimapMarkerEntry: 2,
             textIdx: 0x65,
         },
-        {
+		{
             name: "Tunnel Rhino Heart Tank",
             stageIdx: STAGE_TUNNEL_RHINO,
+			itemName: "Rhino Heart",
 			itemType: "Heart",
             entityEntry: findStageEntityData(rom, STAGE_TUNNEL_RHINO, ...ENT_HEART_TANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TUNNEL_RHINO, 2, 0),
             tileDataOffset: 0x1600,
             minimapMarkerEntry: 0,
             textIdx: 0x24,
-        },
-        {
-            name: "Tunnel Rhino Subtank",
-            stageIdx: STAGE_TUNNEL_RHINO,
-			itemType: "Tank",
-            entityEntry: findStageEntityData(rom, STAGE_TUNNEL_RHINO, ...ENT_SUBTANK),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TUNNEL_RHINO, 4, 0),
-            minimapMarkerEntry: 1,
-            textIdx: 0x55,
         },
         {
             name: "Volt Catfish Capsule",
@@ -284,22 +268,56 @@ function itemRandomize(rom, rng, opts, m) {
             textIdx: 0x63,
         },
         {
-            name: "Volt Catfish Heart Tank",
-            stageIdx: STAGE_VOLT_CATFISH,
-			itemType: "Heart",
-            entityEntry: findStageEntityData(rom, STAGE_VOLT_CATFISH, ...ENT_HEART_TANK),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_VOLT_CATFISH, 3, 0),
-            minimapMarkerEntry: 1,
-            textIdx: 0x24,
-        },
-        {
             name: "Volt Catfish Subtank",
             stageIdx: STAGE_VOLT_CATFISH,
+			itemName: "Catfish Subtank",
 			itemType: "Tank",
             entityEntry: findStageEntityData(rom, STAGE_VOLT_CATFISH, ...ENT_SUBTANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_VOLT_CATFISH, 8, 0),
             minimapMarkerEntry: 2,
             textIdx: 0x55,
+        },
+		//forcing frog armour checks for next two checks
+		{
+            name: "Toxic Seahorse Capsule",
+            stageIdx: STAGE_TOXIC_SEAHORSE,
+            itemName: "Leg Chip",
+			itemType: "Capsule",
+            entityEntry: findStageEntityData(rom, STAGE_TOXIC_SEAHORSE, ...ENT_CAPSULE),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TOXIC_SEAHORSE, 7, 0),
+            minimapMarkerEntry: 2,
+            textIdx: 0x5d,
+        },
+        {
+            name: "Toxic Seahorse Kangaroo Ride Armour",
+            stageIdx: STAGE_TOXIC_SEAHORSE,
+			itemName: "Kangaroo Armour",
+			itemType: "Armour",
+            entityEntry: findStageEntityData(rom, STAGE_TOXIC_SEAHORSE, ...ENT_RIDE_ARMOUR_ITEM),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TOXIC_SEAHORSE, 4, 2),
+            minimapMarkerEntry: 1,
+            textIdx: 0x59,
+        },
+		// Blast hornet has 2 requirements, so it needs processed first after doppler's potential 4 reqs
+		{
+            name: "Blast Hornet Capsule",
+            stageIdx: STAGE_BLAST_HORNET,
+            itemName: "Head Chip",
+			itemType: "Capsule",
+            entityEntry: findStageEntityData(rom, STAGE_BLAST_HORNET, ...ENT_CAPSULE),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLAST_HORNET, 3, 0),
+            minimapMarkerEntry: 0,
+            textIdx: 0x5d,
+        },
+		// moved doppler into first slot processed to simplify doppler check further
+	    {
+            name: "Doppler 1 Capsule",
+            itemName: "Hyper Armour",
+			itemType: "Capsule",
+            stageIdx: STAGE_DOPPLER_1,
+            entityEntry: findStageEntityData(rom, STAGE_DOPPLER_1, ...ENT_CAPSULE),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_DOPPLER_1, 8, 0),
+            textIdx: 0x5d,
         },
     ]
 
@@ -342,55 +360,61 @@ function itemRandomize(rom, rng, opts, m) {
     // randomly fill slots with items
     let available_items = [...items];
     let available_slots = [...slots];
+	let capsulecount = 0;
 	let ArmourCount = 0;
 	let ArmourCount2 = 0;
-	for (let i = 0;i < slots.length;) {
+	for (let i = slots.length ; i > 0;) {
 		chosen_item = Math.floor(rng() * available_items.length);
 		chosen_slot = Math.floor(rng() * available_slots.length);
 		let logic = false;
 		while(logic !== true){
-		
+		// no capsule in Doppler 1 if 4 upgrades required
+		  if (opts.new_game_mode === 'doppler_upgrades_locked' && opts.upgrades_required === '4'){
+			  while (available_items[chosen_item].itemType == "Capsule" && available_slots[chosen_slot].name == "Doppler 1 Capsule"){
+		  chosen_slot = Math.floor(rng() * available_slots.length);}}
+				 
+		 let logiccheck = 0
+		 while (logiccheck = 0){
+			 
+		  // Blast Hornet Capsule location check. Req Leg and Hawk Armour. 
+		  // frog armour checks
 		  //capsule softlock logic 5 checks for anti softlock on capsules (syntax in order to be able to add more if needed)
 		  //(Volt Catfish HT, spikes)
 		  //(Blizzard Buffalo HT, ride Armour lock)
 		  //(Blizzard Buffalo Subtank, softlock)
 		  //(Crush Crawfish HT, ride Armour lock)
 		  //(Toxic Seahorse Kangaroo Armour, softlock)
-		  while (available_items[chosen_item].itemType == "Capsule" && (available_slots[chosen_slot].name == "Volt Catfish Heart Tank" || "Blizzard Buffalo Subtank" || "Blizzard Buffalo Heart Tank"  || "Toxic Seahorse Kangaroo Ride Armour" || "Crush Crawfish Heart Tank")){
-			  chosen_slot = Math.floor(rng() * available_slots.length);}
-		  
 		  // leg upgrade checks
-		  while (available_items[chosen_item].itemName == "Leg Upgrade" && (available_slots[chosen_slot].name == "Blast Hornet Heart Tank" || "Gravity Beetle Frog Ride Armour" || "Neon Tiger Capsule")){
-			  chosen_slot = Math.floor(rng() * available_slots.length);}
-		  
 		  // arm upgrade checks
-		  while (available_items[chosen_item].itemName == "Arm Upgrade" && (available_slots[chosen_slot].name == "Crush Crawfish Capsule" || "Tunnel Rhino Heart Tank" || "Tunnel Rhino Capsule" || "Volt Catfish Capsule")){
-			  chosen_slot = Math.floor(rng() * available_slots.length);} 		  
-	
- 	      // frog armour checks
-		  while (available_items[chosen_item].itemName == "Frog Armour" && (available_slots[chosen_slot].name == "Toxic Seahorse Kangaroo Ride Armour" || "Toxic Seahorse Capsule")){
-			  chosen_slot = Math.floor(rng() * available_slots.length);} 	
-			  
-		  // Blast Hornet Capsule location check. Req Leg and Hawk Armour. Cannot be either
-		  while (available_items[chosen_item].itemName == "Leg Upgrade" || "Hawk Armour" && available_slots[chosen_slot].name == "Blast Hornet Capsule"){
-			  chosen_slot = Math.floor(rng() * available_slots.length);}
-			  
-		  // Armour checks (not frog and have gotten 2 of the 3 other armors, prevent placement of third)
-		  while (available_items[chosen_item].itemType == "Armour" && available_items[chosen_item].itemName !== "Frog Armour" && (available_slots[chosen_slot].name == "Gravity Beetle Capsule" || "Crush Crawfish Capsule" || "Volt Catfish Heart Tank") && ArmourCount == 2 ){
-			  chosen_slot = Math.floor(rng() * available_slots.length);}
-		  
+ 	      // Armour checks (not frog and have gotten 2 of the 3 other armors, prevent placement of third)
 		  // Armour check #2 (not frog or hawk and have gotten one of the 2 other armors, prevent placement of the second)
-		  while (available_items[chosen_item].itemType == "Armour" && available_items[chosen_item].itemName !== ("Frog Armour" || "Hawk Armour") && available_slots[chosen_slot].name == "Blizzard Buffalo Heart Tank" && ArmourCount2 == 1 ){
-			  chosen_slot = Math.floor(rng() * available_slots.length);}		  
-		 // no capsule in Doppler 1 if 4 upgrades required
-		  if (opts.new_game_mode === 'doppler_upgrades_locked' && opts.upgrades_required === '4'){
-			  while (available_items[chosen_item].itemType == "Capsule" && available_slots[chosen_slot].name == "Doppler 1 Capsule"){
-				  chosen_slot = Math.floor(rng() * available_slots.length);}
-		  }
+		  //consolidation of all logic checks to attempt to reduce resource hogging
 		  
+		 if (available_items[chosen_item].itemType == "Armour" && available_items[chosen_item].itemName != "Chimera Armour" && available_slots[chosen_slot].name == "Blizzard Buffalo Heart Tank" && ArmourCount2 < 2 ) {
+			 if (available_items[chosen_item].itemType == "Armour" && available_items[chosen_item].itemName != "Kangaroo Armour" && available_slots[chosen_slot].name == "Blizzard Buffalo Heart Tank" && ArmourCount2 < 2 ){
+				 if (available_items[chosen_item].itemName != "Leg Upgrade" && available_slots[chosen_slot].name == "Blast Hornet Capsule"){
+					 if (available_items[chosen_item].itemName != "Hawk Armour" && available_slots[chosen_slot].name == "Blast Hornet Capsule"){
+						 if (available_items[chosen_item].itemName != "Frog Armour" && (available_slots[chosen_slot].name == "Toxic Seahorse Kangaroo Ride Armour" || "Toxic Seahorse Capsule")){
+							 if (available_items[chosen_item].itemType == "Capsule" && (available_slots[chosen_slot].name != "Volt Catfish Heart Tank" || "Blizzard Buffalo Subtank" || "Blizzard Buffalo Heart Tank"  || "Toxic Seahorse Kangaroo Ride Armour" || "Crush Crawfish Heart Tank")){
+								 if (available_items[chosen_item].itemName != "Leg Upgrade" && (available_slots[chosen_slot].name == "Blast Hornet Heart Tank" || "Gravity Beetle Frog Ride Armour" || "Neon Tiger Capsule")){
+									 if (available_items[chosen_item].itemName != "Arm Upgrade" && (available_slots[chosen_slot].name == "Crush Crawfish Capsule" || "Tunnel Rhino Heart Tank" || "Tunnel Rhino Capsule" || "Volt Catfish Capsule")){
+										 if (available_items[chosen_item].itemType == "Armour" && available_items[chosen_item].itemName !== "Frog Armour" && (available_slots[chosen_slot].name == "Gravity Beetle Capsule" || "Crush Crawfish Capsule" || "Volt Catfish Heart Tank") && ArmourCount < 3 ){
+											 logiccheck = 1;
+										 }
+									 }
+								 }
+							 }
+						 }
+					 }
+				 }
+			 }
+		 }
+		 else {chosen_slot = Math.floor(rng() * available_slots.length);}
+		 
+		 }
 		  //if pass then set logic to true
 		  logic = true;
-		  }
+		}
 	  // Move gravity beetle frog ride armour left by 0x18 pixels if it's a capsule (reduced code from 7 to 3 lines)
 		  if (available_items[chosen_item].itemType == "Capsule" && available_slots[chosen_slot].name == "Gravity Beetle Frog Ride Armour"){
 			  start = chosen_slot.entityEntry;
@@ -400,6 +424,8 @@ function itemRandomize(rom, rng, opts, m) {
 		  ArmourCount++;}
 		  if (available_items[chosen_item].itemType == "Armour" && available_items[chosen_item].itemName !== ("Frog Armour" || "Hawk Armour")){
 		  ArmourCount2++;}
+		  if (available_items[chosen_item].itemType == "Capsule"){
+		  capsulecount++;}
 		  
 		  newSlots.push({
 			  item: available_items[chosen_item],
@@ -407,7 +433,7 @@ function itemRandomize(rom, rng, opts, m) {
 			  })
 			  available_items.splice(chosen_item, 1);
 			  available_slots.splice(chosen_slot, 1);
-			  i++;
+			  i--;
 			 
 	}
 
