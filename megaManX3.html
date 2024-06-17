@@ -10,9 +10,9 @@
     <script src="seedrandom.js"></script>
 
     <script>
-      const MAJOR_VERSION = 1;
-      const MINOR_VERSION = 1;
-      const PATCH_VERSION = 1;
+      const MAJOR_VERSION = 2;
+      const MINOR_VERSION = 0;
+      const PATCH_VERSION = 0;
     </script>
     <script src="src/js/asm65816.js"></script>
     <script src="src/js/mmx3/utils.js"></script>
@@ -48,7 +48,6 @@
   <body>
     <section class="section" id="app">
       <div class="container box">
-        <p><a href="index.html">back</a></p>
 
         <h1 class="title">
           Mega Man X3 Item Randomizer {{ fullVersion }}
@@ -343,6 +342,20 @@
           <div class="content">
             <div class="title">Changelog</div>
 			
+			<div class="subtitle">v2.0.0</div>
+			
+			<ul>
+				<li> Complete logic rework </li>
+				<li> 5 capsule softlock checks </li>
+				<li> 4 Arm Upgrade logic checks</li>
+				<li> 3 Leg Upgrade logic checks</li>
+				<li> 2 Frog Armour logic checks</li>
+				<li> 3 Non-Frog Armour logic checks</li>
+				<li> Special Blizzard Buffalo Heart Tank and Blast Hornet Capsule checks</li>
+				<li></li>
+				<li> Removed all 4 chips required for Hyper Chip</li>
+			</ul>
+
 			<div class="subtitle">v1.1.1</div>
 
 			<ul>
@@ -424,7 +437,8 @@
             <ul>
               <li>You can get all the body part chips, and the hyper chip</li>
               <li>The 4 body part chips' requirements stay the same (requires their associated upgrade)</li>
-              <li>Hyper chip requires the other 4 body part chips</li>
+              <s>Hyper chip requires the other 4 body part chips</s>
+			  <li>Reverted Hyper Chip to original game - Hyper stands alone</li>
             </ul>
 
             <div class="subtitle">Convenience changes</div>
