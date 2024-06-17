@@ -476,19 +476,19 @@ function itemRandomize(rom, rng, opts, m) {
 
     // Prevent Doppler having an upgrade if 4 upgrades required to reach him - still needs to be moved into check logic, before Blast Hornet Capsule.
     if (opts.new_game_mode === 'doppler_upgrades_locked' && opts.upgrades_required === '4') {
-        for (let assignedSlot of newSlots) {
-            if (assignedSlot.slot.name !== "Doppler 1 Capsule") continue;
-            if (assignedSlot.item.name.indexOf(" Upgrade") === -1) break;
+        for (let FinalSlot of newSlots) {
+            if (FinalSlot.slot.name !== "Doppler 1 Capsule") continue;
+            if (FinalSlot.item.name.indexOf(" Upgrade") === -1) break;
 
-            console.log('was upgrade', assignedSlot.item.name)
+            console.log('was upgrade', FinalSlot.item.name)
     
-            for (let assignedSlot2 of newSlots) {
-                if (assignedSlot2.slot.name === assignedSlot.slot.name) continue;
-                if (assignedSlot2.item.name.indexOf(" Upgrade") !== -1) continue;
+            for (let FinalSlot2 of newSlots) {
+                if (FinalSlot2.slot.name === FinalSlot.slot.name) continue;
+                if (FinalSlot2.item.name.indexOf(" Upgrade") !== -1) continue;
     
-                let temp = assignedSlot.item;
-                assignedSlot.item = assignedSlot2.item;
-                assignedSlot2.item = temp;
+                let temp = FinalSlot.item;
+                FinalSlot.item = FinalSlot2.item;
+                FinalSlot2.item = temp;
                 break;
             }
             break;
