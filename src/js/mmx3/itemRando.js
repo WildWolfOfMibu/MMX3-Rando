@@ -356,27 +356,27 @@ function itemRandomize(rom, rng, opts, m) {
 		  //(Blizzard Buffalo Subtank, softlock)
 		  //(Crush Crawfish HT, ride Armour lock)
 		  //(Toxic Seahorse Kangaroo Armour, softlock)
-		  while (available_items[chosen_item].itemType == "Capsule" && (available_slots[chosen_slot].name == ("Volt Catfish Heart Tank" || "Blizzard Buffalo Subtank" || "Blizzard Buffalo Heart Tank"  || "Toxic Seahorse Kangaroo Ride Armour" || "Crush Crawfish Heart Tank"))){
+		  while (available_items[chosen_item].itemType == "Capsule" && (available_slots[chosen_slot].name == "Volt Catfish Heart Tank" || "Blizzard Buffalo Subtank" || "Blizzard Buffalo Heart Tank"  || "Toxic Seahorse Kangaroo Ride Armour" || "Crush Crawfish Heart Tank")){
 			  chosen_slot = Math.floor(rng() * available_slots.length);}
 		  
 		  // leg upgrade checks
-		  while (available_items[chosen_item].itemName == "Leg Upgrade" && (available_slots[chosen_slot].name == ("Blast Hornet Heart Tank" || "Gravity Beetle Frog Ride Armour" || "Neon Tiger Capsule"))){
+		  while (available_items[chosen_item].itemName == "Leg Upgrade" && (available_slots[chosen_slot].name == "Blast Hornet Heart Tank" || "Gravity Beetle Frog Ride Armour" || "Neon Tiger Capsule")){
 			  chosen_slot = Math.floor(rng() * available_slots.length);}
 		  
 		  // arm upgrade checks
-		  while (available_items[chosen_item].itemName == "Arm Upgrade" && (available_slots[chosen_slot].name == ("Crush Crawfish Capsule" || "Tunnel Rhino Heart Tank" || "Tunnel Rhino Capsule" || "Volt Catfish Capsule"))){
+		  while (available_items[chosen_item].itemName == "Arm Upgrade" && (available_slots[chosen_slot].name == "Crush Crawfish Capsule" || "Tunnel Rhino Heart Tank" || "Tunnel Rhino Capsule" || "Volt Catfish Capsule")){
 			  chosen_slot = Math.floor(rng() * available_slots.length);} 		  
 	
  	      // frog armour checks
-		  while (available_items[chosen_item].itemName == "Frog Armour" && (available_slots[chosen_slot].name == ("Toxic Seahorse Kangaroo Ride Armour" || "Toxic Seahorse Capsule"))){
+		  while (available_items[chosen_item].itemName == "Frog Armour" && (available_slots[chosen_slot].name == "Toxic Seahorse Kangaroo Ride Armour" || "Toxic Seahorse Capsule")){
 			  chosen_slot = Math.floor(rng() * available_slots.length);} 	
 			  
 		  // Blast Hornet Capsule location check. Req Leg and Hawk Armour. Cannot be either
-		  while (available_items[chosen_item].itemName == ("Leg Upgrade" || "Hawk Armour") && available_slots[chosen_slot].name == "Blast Hornet Capsule"){
+		  while (available_items[chosen_item].itemName == "Leg Upgrade" || "Hawk Armour" && available_slots[chosen_slot].name == "Blast Hornet Capsule"){
 			  chosen_slot = Math.floor(rng() * available_slots.length);}
 			  
 		  // Armour checks (not frog and have gotten 2 of the 3 other armors, prevent placement of third)
-		  while (available_items[chosen_item].itemType == "Armour" && available_items[chosen_item].itemName !== "Frog Armour" && (available_slots[chosen_slot].name == ("Gravity Beetle Capsule" || "Crush Crawfish Capsule" || "Volt Catfish Heart Tank")) && ArmourCount == 2 ){
+		  while (available_items[chosen_item].itemType == "Armour" && available_items[chosen_item].itemName !== "Frog Armour" && (available_slots[chosen_slot].name == "Gravity Beetle Capsule" || "Crush Crawfish Capsule" || "Volt Catfish Heart Tank") && ArmourCount == 2 ){
 			  chosen_slot = Math.floor(rng() * available_slots.length);}
 		  
 		  // Armour check #2 (not frog or hawk and have gotten one of the 2 other armors, prevent placement of the second)
