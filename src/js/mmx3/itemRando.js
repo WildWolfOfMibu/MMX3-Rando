@@ -345,19 +345,11 @@ function itemRandomize(rom, rng, opts, m) {
 	let ArmourCount = 0;
 	let ArmourCount2 = 0;
 	for (let i = 0;i < slots.length;) {
-	//force Hyper Armour in Doppler 1
-	//moved Doppler to slot 0 to hard set hyper chip if upgrades required
-	//if 4 upgrades required for Doppler 1, don't reroll hard set of Hyper Armour in Doppler Slot, increment i variable
-		if (opts.new_game_mode === 'doppler_upgrades_locked' && opts.upgrades_required === '4' && i == 0) {
-		i++; 
-		}
-		else {
-			chosen_item = Math.floor(rng() * available_items.length);
-			chosen_slot = Math.floor(rng() * available_slots.length);
-		}
-	  let logic = false;
-	  while(logic !== true){
-		  
+		chosen_item = Math.floor(rng() * available_items.length);
+		chosen_slot = Math.floor(rng() * available_slots.length);
+		let logic = false;
+		while(logic !== true){
+		
 		  //capsule softlock logic 5 checks for anti softlock on capsules (syntax in order to be able to add more if needed)
 		  //(Volt Catfish HT, spikes)
 		  //(Blizzard Buffalo HT, ride Armour lock)
@@ -390,6 +382,11 @@ function itemRandomize(rom, rng, opts, m) {
 		  // Armour check #2 (not frog or hawk and have gotten one of the 2 other armors, prevent placement of the second)
 		  while (available_items[chosen_item].itemType == "Armour" && available_items[chosen_item].itemName !== ("Frog Armour" || "Hawk Armour") && available_slots[chosen_slot].name == "Blizzard Buffalo Heart Tank" && ArmourCount2 == 1 ){
 			  chosen_slot = Math.floor(rng() * available_slots.length);}		  
+		 // no capsule in Doppler 1 if 4 upgrades required
+		  if (opts.new_game_mode === 'doppler_upgrades_locked' && opts.upgrades_required === '4'){
+			  while (available_items[chosen_item].itemType == "Capsule" && available_slots[chosen_slot].name == "Doppler 1 Capsule"){
+				  chosen_slot = Math.floor(rng() * available_slots.length);}
+		  }
 		  
 		  //if pass then set logic to true
 		  logic = true;
@@ -411,6 +408,7 @@ function itemRandomize(rom, rng, opts, m) {
 			  available_items.splice(chosen_item, 1);
 			  available_slots.splice(chosen_slot, 1);
 			  i++;
+			 
 	}
 
 
