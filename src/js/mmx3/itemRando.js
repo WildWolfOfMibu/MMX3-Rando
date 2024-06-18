@@ -417,6 +417,10 @@ function itemRandomize(rom, rng, opts, m) {
     let s = 0;
     for (let i = 0; i < slots.length; i += 1) {
       let chosen_item = Math.floor(rng() * available_items.length);
+	 
+	 if (available_slots[s].slotindex == 1 ){
+		  chosen_item = 24;
+	  } //lock item into slot to confirm logic check
 
 //find index number of item and slot for logic checks to reduce resources used on continually pulling names and locations.
       let itemcheck = available_items[chosen_item].itemindex;
@@ -436,14 +440,14 @@ function itemRandomize(rom, rng, opts, m) {
 			   available_items.splice(0, 1);
 			   available_slots.splice(0, 1);
 			   i++;
-			   chosen_item = Math.floor(rng() * available_items.length);
+			   let chosen_item = Math.floor(rng() * available_items.length);
 			   itemcheck = available_items[chosen_item].itemindex;
 			   slotcheck = available_slots[s].slotindex;
 			   smax = available_slots.length - 1;
 		  }
 	  }
 	  // if hornet capsule (slot 1) is either hawk armour (item 8) or leg upgrade (item 24), increment slot and pull index
-	  if (slotcheck == 1 && itemcheck == 24 || slotcheck == 1 && itemcheck == 8){
+	  if (slotcheck == 1 && itemcheck == 24){
 		  if (smax != s){
 			  s++;
 			  slotcheck = available_slots[s].slotindex;
@@ -453,7 +457,16 @@ function itemRandomize(rom, rng, opts, m) {
 			  slotcheck = available_slots[s].slotindex;
 		  }
 	  }
-		  
+	  if (slotcheck == 1 && itemcheck == 8){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+		  else {
+			  s = 0;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+	  }  
 			  
 		  
 //prelim (while loop, if incorrect, increment check available slots length, if < max, increment s by one and pull new slotindex, if = to max, reset s to 0 and pull index for check)
