@@ -417,11 +417,12 @@ function itemRandomize(rom, rng, opts, m) {
     let s = 0;
     for (let i = 0; i < slots.length; i += 1) {
       let chosen_item = Math.floor(rng() * available_items.length);
-      //always choose first available slot.
 
 //find index number of item and slot for logic checks to reduce resources used on continually pulling names and locations.
       let itemcheck = available_items[chosen_item].itemindex;
       let slotcheck = available_slots[s].slotindex;
+// find length, subtract 1 to have length match index spot
+      let smax = available_slots.length - 1;
 //insert itemcheck number vs chosen slot number for logic checks, increment item number slot if incorrect, checking for clear check. while statement to make sure it clears all checks.
 
 //prelim (while loop, if incorrect, increment check available slots length, if < max, increment s by one and pull new slotindex, if = to max, reset s to 0 and pull index for check)
