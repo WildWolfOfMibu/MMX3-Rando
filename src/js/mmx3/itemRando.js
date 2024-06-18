@@ -145,7 +145,7 @@ function itemRandomize(rom, rng, opts, m) {
 	    itemindex: 6,            
 	    name: "Blizzard Buffalo Subtank",
             stageIdx: STAGE_BLIZZARD_BUFFALO,
-	    itemName: "Buffalo Tank",
+	    itemName: "Buffalo Subtank",
 	    itemType: "Tank",
             entityEntry: findStageEntityData(rom, STAGE_BLIZZARD_BUFFALO, ...ENT_SUBTANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLIZZARD_BUFFALO, 5, 3),
@@ -218,7 +218,7 @@ function itemRandomize(rom, rng, opts, m) {
             name: "Tunnel Rhino Capsule",
             stageIdx: STAGE_TUNNEL_RHINO,
             itemName: "Helmet Upgrade",
-			itemType: "Capsule",
+	    itemType: "Capsule",
             entityEntry: findStageEntityData(rom, STAGE_TUNNEL_RHINO, ...ENT_CAPSULE),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TUNNEL_RHINO, 7, 1),
             minimapMarkerEntry: 2,
@@ -267,7 +267,7 @@ function itemRandomize(rom, rng, opts, m) {
 	    itemindex: 16,		    
 	    name: "Tunnel Rhino Subtank",
 	    stageIdx: STAGE_TUNNEL_RHINO,
-            itemName: "Tunnel Tank",
+            itemName: "Tunnel Subtank",
 	    itemType: "Tank",
 	    entityEntry: findStageEntityData(rom, STAGE_TUNNEL_RHINO, ...ENT_SUBTANK),
 	    dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TUNNEL_RHINO, 4, 0),
@@ -315,7 +315,7 @@ function itemRandomize(rom, rng, opts, m) {
 	    itemindex: 20,		
             name: "Neon Tiger Subtank",
             stageIdx: STAGE_NEON_TIGER,
-    	    itemName: "Tiger Tank",
+    	    itemName: "Tiger Subtank",
 	    itemType: "Tank",
             entityEntry: findStageEntityData(rom, STAGE_NEON_TIGER, ...ENT_SUBTANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_NEON_TIGER, 0, 3),
@@ -391,6 +391,7 @@ function itemRandomize(rom, rng, opts, m) {
         }
 
         items.push({
+	    itemindex: slot.itemindex,	
             name: slot.name,
 // split name into name and itemName
 	    itemName: slot.itemName,
@@ -412,13 +413,24 @@ function itemRandomize(rom, rng, opts, m) {
     // randomly fill slots with items
     let available_items = [...items];
     let available_slots = [...slots];
+    let s = 0;
     for (let i = 0; i < slots.length; i += 1) {
       let chosen_item = Math.floor(rng() * available_items.length);
-      let chosen_slot = Math.floor(rng() * available_slots.length);
-      newSlots.push({
+      //always choose first available slot.
+      let chosen_slot = available_slots[s];
+//find index number of item and slot for logic checks to reduce resources used on continually pulling names and locations.
+      let itemcheck = available_items[chosen_item].itemindex;
+      let slotcheck = available_slots[chosen_slot].slotindex;
+//insert itemcheck number vs chosen slot number for logic checks, increment item number slot if incorrect, checking for clear check. while statement to make sure it clears all checks.
+
+//set chosen slot to fixed slotcheck
+     chosen_slot = slotcheck;
+// pushes the item and slot to locked array for building
+     newSlots.push({
         item: available_items[chosen_item],
         slot: available_slots[chosen_slot],
       })
+// removes the item from both arrays.
       available_items.splice(chosen_item, 1);
       available_slots.splice(chosen_slot, 1);
     }
@@ -461,8 +473,8 @@ function itemRandomize(rom, rng, opts, m) {
 					break
 				}
 			}
-			//final leg check, two already in capsule checks
-			if (FinalSlot.item.itemName == "Arm Upgrade" && FinalSlot.slot.name == "Blast Hornet Heart Tank"){
+			//final leg check, two already in capsule checks (put arm instead of leg. d'oh)
+			if (FinalSlot.item.itemName == "Leg Upgrade" && FinalSlot.slot.name == "Blast Hornet Heart Tank"){
 				//shift variable and save temp for slot on next loop
 				for (let SlotShift of newSlots){
 					//find your index (matching name of temp slot array and future finalized array) 
