@@ -442,6 +442,20 @@ function itemRandomize(rom, rng, opts, m) {
 			   smax = available_slots.length - 1;
 		  }
 	  }
+	  // if hornet capsule (slot 1) is either hawk armour (item 8) or leg upgrade (item 24), increment slot and pull index
+	  if (slotcheck == 1 && itemcheck == 24 || slotcheck == 1 && itemcheck == 8){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+		  else {
+			  s = 0;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+	  }
+		  
+			  
+		  
 //prelim (while loop, if incorrect, increment check available slots length, if < max, increment s by one and pull new slotindex, if = to max, reset s to 0 and pull index for check)
 	    
 //lock slot AFTER checks
