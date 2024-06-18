@@ -425,7 +425,8 @@ function itemRandomize(rom, rng, opts, m) {
       let smax = available_slots.length - 1;
 //insert itemcheck number vs chosen slot number for logic checks, increment item number slot if incorrect, checking for clear check. while statement to make sure it clears all checks.
       // Prevent Doppler having an upgrade if 4 upgrades required to reach him - iterate the rest of the loop manually once to set and get past Doppler slot
-      if (opts.new_game_mode === 'doppler_upgrades_locked' && opts.upgrades_required === '4') {
+	  // == is better than === in conjunction with && operands. Doppler logic fixed for hard set hyper armor if 4 upgrades required.
+      if (opts.new_game_mode == 'doppler_upgrades_locked' && opts.upgrades_required == '4') {
 		  if (slotcheck == 0){
 			   newSlots.push({
 				   item: available_items[0],
@@ -462,112 +463,6 @@ function itemRandomize(rom, rng, opts, m) {
 //reset s for next loop
       s = 0;
     }
-/*  let count = 0
-	while (count < 5){
-		for (let FinalSlot of newSlots){
-			//Sphere 2 BH Capsule check
-			if (FinalSlot.item.itemName == "Leg Upgrade" && FinalSlot.slot.name == "Blast Hornet Capsule" || FinalSlot.item.itemName == "Hawk Armour" && FinalSlot.slot.name == "Blast Hornet Capsule"){
-				//shift variable and save temp for slot on next loop
-				for (let SlotShift of newSlots){
-					//find your index (matching name of temp slot array and future finalized array) 
-					if (SlotShift.slot.name === FinalSlot.slot.name) continue;
-					// after finding the right slot, find the next non-capsule slot
-					if (SlotShift.item.itemtype !== "Capsule") continue;
-					
-					//pull bad item into temp slot
-					let TempSlot = FinalSlot.item;
-					//move shift item into finalized item
-					FinalSlot.item = SlotShift.item;
-					//move temp into corrected slot, finishing the Swapped
-					SlotShift.item = temp;
-					break
-				}
-			}
-			//capsule checks (VC-HT, spikes) (BB-HT, Ride) (TS-KA, left capsule) (BB-ST, left capsule) (CC-HT, Ride) (1 sphere check)
-			if (FinalSlot.item.itemType == "Capsule" && FinalSlot.slot.name == "Volt Catfish Heart Tank" || FinalSlot.item.itemType == "Capsule" && FinalSlot.slot.name == "Blizzard Buffalo Subtank" || FinalSlot.item.itemType == "Capsule" && FinalSlot.slot.name == "Blizzard Buffalo Heart Tank"  || FinalSlot.item.itemType == "Capsule" && FinalSlot.slot.name == "Toxic Seahorse Kangaroo Ride Armour" || FinalSlot.item.itemType == "Capsule" && FinalSlot.slot.name == "Crush Crawfish Heart Tank"){
-				//shift variable and save temp for slot on next loop
-				for (let SlotShift of newSlots){
-					//find your index (matching name of temp slot array and future finalized array) 
-					if (SlotShift.slot.name === FinalSlot.slot.name) continue;
-					// after finding the right slot, find the next non-capsule slot
-					if (SlotShift.item.itemtype !== "Capsule") continue;
-					
-					//pull bad item into temp slot
-					let TempSlot = FinalSlot.item;
-					//move shift item into finalized item
-					FinalSlot.item = SlotShift.item;
-					//move temp into corrected slot, finishing the Swapped
-					SlotShift.item = temp;
-					break
-				}
-			}
-			//final leg check, two already in capsule checks (put arm instead of leg. d'oh)
-			if (FinalSlot.item.itemName == "Leg Upgrade" && FinalSlot.slot.name == "Blast Hornet Heart Tank"){
-				//shift variable and save temp for slot on next loop
-				for (let SlotShift of newSlots){
-					//find your index (matching name of temp slot array and future finalized array) 
-					if (SlotShift.slot.name === FinalSlot.slot.name) continue;
-					// after finding the right slot, find the next non-capsule slot
-					if (SlotShift.item.itemtype !== "Capsule") continue;
-					
-					//pull bad item into temp slot
-					let TempSlot = FinalSlot.item;
-					//move shift item into finalized item
-					FinalSlot.item = SlotShift.item;
-					//move temp into corrected slot, finishing the Swapped
-					SlotShift.item = temp;
-					break
-				}
-			}
-			//arm upgrade checks
-			if (FinalSlot.item.itemName == "Arm Upgrade" && FinalSlot.slot.name == "Crush Crawfish Capsule" || FinalSlot.item.itemName == "Arm Upgrade" && FinalSlot.slot.name == "Tunnel Rhino Heart Tank" || FinalSlot.item.itemName == "Arm Upgrade" && FinalSlot.slot.name == "Tunnel Rhino Capsule") {
-				//shift variable and save temp for slot on next loop
-				for (let SlotShift of newSlots){
-					//find your index (matching name of temp slot array and future finalized array) 
-					if (SlotShift.slot.name === FinalSlot.slot.name) continue;
-					// after finding the right slot, find the next non-capsule slot
-					if (SlotShift.item.itemtype !== "Capsule") continue;
-					
-					//pull bad item into temp slot
-					let TempSlot = FinalSlot.item;
-					//move shift item into finalized item
-					FinalSlot.item = SlotShift.item;
-					//move temp into corrected slot, finishing the Swapped
-					SlotShift.item = temp;
-					break
-				}
-			}
-				// frog armour checks
-				if (FinalSlot.item.itemName == "Frog Armour" && FinalSlot.slot.name == "Toxic Seahorse Kangaroo Ride Armour" || FinalSlot.item.itemName == "Frog Armour" && FinalSlot.slot.name == "Toxic Seahorse Capsule"){
-				//shift variable and save temp for slot on next loop
-				for (let SlotShift of newSlots){
-					//find your index (matching name of temp slot array and future finalized array) 
-					if (SlotShift.slot.name === FinalSlot.slot.name) continue;
-					// after finding the right slot, find the next non-capsule slot
-					if (SlotShift.item.itemtype !== "Capsule") continue;
-					
-					//pull bad item into temp slot
-					let TempSlot = FinalSlot.item;
-					//move shift item into finalized item
-					FinalSlot.item = SlotShift.item;
-					//move temp into corrected slot, finishing the Swapped
-					SlotShift.item = temp;
-					break
-				}
-			}
-		} //Close slot loop
-		count++;
-	}
-
-     // Move gravity beetle frog ride armour left by 0x18 pixels if it's a capsule - Swapped to FinalSlot variable, last possible check.
-    for (let FinalSlot of newSlots) {
-        if (FinalSlot.slot.name !== "Gravity Beetle Frog Ride Armour") continue;
-        if (FinalSlot.item.Category.indexOf("Capsule") === -1) break;
-
-        start = FinalSlot.slot.entityEntry;
-        rom[start+5] = 0x28;
-        break;
-    }*/
 
     /*
     Mutate
