@@ -372,23 +372,11 @@ function itemRandomize(rom, rng, opts, m) {
       available_items.splice(chosen_item, 1);
       available_slots.splice(chosen_slot, 1);
     }
-
-//set trip counter and null outside of while loop so that while loop can wrap from bottom to top of array with temp variable
-	let trip = 1;
-	let TempSlot = null;
-	while (trip != 0){
-		trip = 0;
+    let count = 0
+	while (count < 5){
 		for (let FinalSlot of newSlots){
-			// on iteration, check to see if TempSlot was set from previous iteration
-			if (TempSlot != null){
-				//move tempslot into the next FinalSlot (if there's still a residual in TempSlot)
-				FinalSlot.item = TempSlot;
-				//clear TempSlot
-				TempSlot = null;
-			}
 			//Sphere 2 BH Capsule check
 			if (FinalSlot.item.itemName == "Leg Upgrade" && FinalSlot.slot.name == "Blast Hornet Capsule" || FinalSlot.item.itemName == "Hawk Armour" && FinalSlot.slot.name == "Blast Hornet Capsule"){
-				trip++
 				//shift variable and save temp for slot on next loop
 				for (let SlotShift of newSlots){
 					//find your index (matching name of temp slot array and future finalized array) 
@@ -397,15 +385,16 @@ function itemRandomize(rom, rng, opts, m) {
 					if (SlotShift.item.itemtype !== "Capsule") continue;
 					
 					//pull bad item into temp slot
-					TempSlot = FinalSlot.item;
+					let TempSlot = FinalSlot.item;
 					//move shift item into finalized item
 					FinalSlot.item = SlotShift.item;
+					//move temp into corrected slot, finishing the Swapped
+					SlotShift.item = temp;
 					break
 				}
 			}
 			//capsule checks (VC-HT, spikes) (BB-HT, Ride) (TS-KA, left capsule) (BB-ST, left capsule) (CC-HT, Ride) (1 sphere check)
 			if (FinalSlot.item.itemType == "Capsule" && FinalSlot.slot.name == "Volt Catfish Heart Tank" || FinalSlot.item.itemType == "Capsule" && FinalSlot.slot.name == "Blizzard Buffalo Subtank" || FinalSlot.item.itemType == "Capsule" && FinalSlot.slot.name == "Blizzard Buffalo Heart Tank"  || FinalSlot.item.itemType == "Capsule" && FinalSlot.slot.name == "Toxic Seahorse Kangaroo Ride Armour" || FinalSlot.item.itemType == "Capsule" && FinalSlot.slot.name == "Crush Crawfish Heart Tank"){
-				trip++
 				//shift variable and save temp for slot on next loop
 				for (let SlotShift of newSlots){
 					//find your index (matching name of temp slot array and future finalized array) 
@@ -414,15 +403,16 @@ function itemRandomize(rom, rng, opts, m) {
 					if (SlotShift.item.itemtype !== "Capsule") continue;
 					
 					//pull bad item into temp slot
-					TempSlot = FinalSlot.item;
+					let TempSlot = FinalSlot.item;
 					//move shift item into finalized item
 					FinalSlot.item = SlotShift.item;
+					//move temp into corrected slot, finishing the Swapped
+					SlotShift.item = temp;
 					break
 				}
 			}
 			//final leg check, two already in capsule checks
 			if (FinalSlot.item.itemName == "Arm Upgrade" && FinalSlot.slot.name == "Blast Hornet Heart Tank"){
-				trip++
 				//shift variable and save temp for slot on next loop
 				for (let SlotShift of newSlots){
 					//find your index (matching name of temp slot array and future finalized array) 
@@ -431,15 +421,16 @@ function itemRandomize(rom, rng, opts, m) {
 					if (SlotShift.item.itemtype !== "Capsule") continue;
 					
 					//pull bad item into temp slot
-					TempSlot = FinalSlot.item;
+					let TempSlot = FinalSlot.item;
 					//move shift item into finalized item
 					FinalSlot.item = SlotShift.item;
+					//move temp into corrected slot, finishing the Swapped
+					SlotShift.item = temp;
 					break
 				}
 			}
 			//arm upgrade checks
 			if (FinalSlot.item.itemName == "Arm Upgrade" && FinalSlot.slot.name == "Crush Crawfish Capsule" || FinalSlot.item.itemName == "Arm Upgrade" && FinalSlot.slot.name == "Tunnel Rhino Heart Tank" || FinalSlot.item.itemName == "Arm Upgrade" && FinalSlot.slot.name == "Tunnel Rhino Capsule") {
-				trip++
 				//shift variable and save temp for slot on next loop
 				for (let SlotShift of newSlots){
 					//find your index (matching name of temp slot array and future finalized array) 
@@ -448,15 +439,16 @@ function itemRandomize(rom, rng, opts, m) {
 					if (SlotShift.item.itemtype !== "Capsule") continue;
 					
 					//pull bad item into temp slot
-					TempSlot = FinalSlot.item;
+					let TempSlot = FinalSlot.item;
 					//move shift item into finalized item
 					FinalSlot.item = SlotShift.item;
+					//move temp into corrected slot, finishing the Swapped
+					SlotShift.item = temp;
 					break
 				}
 			}
 				// frog armour checks
 				if (FinalSlot.item.itemName == "Frog Armour" && FinalSlot.slot.name == "Toxic Seahorse Kangaroo Ride Armour" || FinalSlot.item.itemName == "Frog Armour" && FinalSlot.slot.name == "Toxic Seahorse Capsule"){
-					trip++
 				//shift variable and save temp for slot on next loop
 				for (let SlotShift of newSlots){
 					//find your index (matching name of temp slot array and future finalized array) 
@@ -465,14 +457,17 @@ function itemRandomize(rom, rng, opts, m) {
 					if (SlotShift.item.itemtype !== "Capsule") continue;
 					
 					//pull bad item into temp slot
-					TempSlot = FinalSlot.item;
+					let TempSlot = FinalSlot.item;
 					//move shift item into finalized item
 					FinalSlot.item = SlotShift.item;
+					//move temp into corrected slot, finishing the Swapped
+					SlotShift.item = temp;
 					break
 				}
 			}
 		} //Close slot loop
-	} //close trip loop
+		count++;
+	}
 
     // Prevent Doppler having an upgrade if 4 upgrades required to reach him - still needs to be moved into check logic, before Blast Hornet Capsule.
     if (opts.new_game_mode === 'doppler_upgrades_locked' && opts.upgrades_required === '4') {
