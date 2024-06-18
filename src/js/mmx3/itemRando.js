@@ -424,11 +424,33 @@ function itemRandomize(rom, rng, opts, m) {
 // find length, subtract 1 to have length match index spot
       let smax = available_slots.length - 1;
 //insert itemcheck number vs chosen slot number for logic checks, increment item number slot if incorrect, checking for clear check. while statement to make sure it clears all checks.
-
+      // Prevent Doppler having an upgrade if 4 upgrades required to reach him - iterate the rest of the loop manually once to set and get past Doppler slot
+      if (opts.new_game_mode === 'doppler_upgrades_locked' && opts.upgrades_required === '4') {
+		  if (slotcheck == 0){
+			   newSlots.push({
+				   item: available_items[0],
+				   slot: available_slots[0],
+				   })
+// removes the item from both arrays.
+			   available_items.splice(0, 1);
+			   available_slots.splice(0, 1);
+			   i++;
+			   chosen_item = Math.floor(rng() * available_items.length);
+			   itemcheck = available_items[chosen_item].itemindex;
+			   slotcheck = available_slots[s].slotindex;
+			   smax = available_slots.length - 1;
+		  }
+	  }
 //prelim (while loop, if incorrect, increment check available slots length, if < max, increment s by one and pull new slotindex, if = to max, reset s to 0 and pull index for check)
 	    
 //lock slot AFTER checks
-      let chosen_slot = available_slots[s];
+	let chosen_slot = 0;
+	for (let z = 0; z < available_slots.length;){
+		if (available_slots[z].slotindex = slotcheck){
+			chosen_slot = z;
+		}
+		z++;
+	}
 // pushes the item and slot to locked array for building
      newSlots.push({
         item: available_items[chosen_item],
@@ -440,7 +462,7 @@ function itemRandomize(rom, rng, opts, m) {
 //reset s for next loop
       s = 0;
     }
-    let count = 0
+/*  let count = 0
 	while (count < 5){
 		for (let FinalSlot of newSlots){
 			//Sphere 2 BH Capsule check
@@ -537,28 +559,7 @@ function itemRandomize(rom, rng, opts, m) {
 		count++;
 	}
 
-    // Prevent Doppler having an upgrade if 4 upgrades required to reach him - still needs to be moved into check logic, before Blast Hornet Capsule.
-    if (opts.new_game_mode === 'doppler_upgrades_locked' && opts.upgrades_required === '4') {
-        for (let FinalSlot of newSlots) {
-            if (FinalSlot.slot.name !== "Doppler 1 Capsule") continue;
-            if (FinalSlot.item.name.indexOf(" Upgrade") === -1) break;
-
-            console.log('was upgrade', FinalSlot.item.name)
-    
-            for (let FinalSlot2 of newSlots) {
-                if (FinalSlot2.slot.name === FinalSlot.slot.name) continue;
-                if (FinalSlot2.item.name.indexOf(" Upgrade") !== -1) continue;
-    
-                let temp = FinalSlot.item;
-                FinalSlot.item = FinalSlot2.item;
-                FinalSlot2.item = temp;
-                break;
-            }
-            break;
-        }
-    }
-
-    // Move gravity beetle frog ride armour left by 0x18 pixels if it's a capsule - Swapped to FinalSlot variable, last possible check.
+     // Move gravity beetle frog ride armour left by 0x18 pixels if it's a capsule - Swapped to FinalSlot variable, last possible check.
     for (let FinalSlot of newSlots) {
         if (FinalSlot.slot.name !== "Gravity Beetle Frog Ride Armour") continue;
         if (FinalSlot.item.Category.indexOf("Capsule") === -1) break;
@@ -566,7 +567,7 @@ function itemRandomize(rom, rng, opts, m) {
         start = FinalSlot.slot.entityEntry;
         rom[start+5] = 0x28;
         break;
-    }
+    }*/
 
     /*
     Mutate
