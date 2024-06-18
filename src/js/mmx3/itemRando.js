@@ -261,19 +261,19 @@ function itemRandomize(rom, rng, opts, m) {
             minimapMarkerEntry: 2,
             textIdx: 0x55,
         },
-	// rearranged slots so that 0 req checks are processed last.
 	{
 	    slotindex: 16,
-	    itemindex: 16,		    
-	    name: "Tunnel Rhino Subtank",
-	    stageIdx: STAGE_TUNNEL_RHINO,
-            itemName: "Tunnel Subtank",
-	    itemType: "Tank",
-	    entityEntry: findStageEntityData(rom, STAGE_TUNNEL_RHINO, ...ENT_SUBTANK),
-	    dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TUNNEL_RHINO, 4, 0),
-	    minimapMarkerEntry: 1,
-	    textIdx: 0x55,
+	    itemindex: 16,		
+            name: "Crush Crawfish Heart Tank",
+            stageIdx: STAGE_CRUSH_CRAWFISH,
+	    itemName: "Crawfish Heart",
+	    itemType: "Heart",
+            entityEntry: findStageEntityData(rom, STAGE_CRUSH_CRAWFISH, ...ENT_HEART_TANK),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_CRUSH_CRAWFISH, 2, 2),
+            minimapMarkerEntry: 2,
+            textIdx: 0x24,
         },
+	// rearranged slots so that 0 req checks are processed last.
 	{
 	    slotindex: 17,
 	    itemindex: 17,		
@@ -286,17 +286,18 @@ function itemRandomize(rom, rng, opts, m) {
             minimapMarkerEntry: 0,
             textIdx: 0x24,
         },
+	// swapped CCHT as it does req a non frog armor
 	{
 	    slotindex: 18,
-	    itemindex: 18,		
-            name: "Crush Crawfish Heart Tank",
-            stageIdx: STAGE_CRUSH_CRAWFISH,
-	    itemName: "Crawfish Heart",
-	    itemType: "Heart",
-            entityEntry: findStageEntityData(rom, STAGE_CRUSH_CRAWFISH, ...ENT_HEART_TANK),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_CRUSH_CRAWFISH, 2, 2),
-            minimapMarkerEntry: 2,
-            textIdx: 0x24,
+	    itemindex: 18,		    
+	    name: "Tunnel Rhino Subtank",
+	    stageIdx: STAGE_TUNNEL_RHINO,
+            itemName: "Tunnel Subtank",
+	    itemType: "Tank",
+	    entityEntry: findStageEntityData(rom, STAGE_TUNNEL_RHINO, ...ENT_SUBTANK),
+	    dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TUNNEL_RHINO, 4, 0),
+	    minimapMarkerEntry: 1,
+	    textIdx: 0x55,
         },
 	{
 	    slotindex: 19,
@@ -417,14 +418,16 @@ function itemRandomize(rom, rng, opts, m) {
     for (let i = 0; i < slots.length; i += 1) {
       let chosen_item = Math.floor(rng() * available_items.length);
       //always choose first available slot.
-      let chosen_slot = available_slots[s];
+
 //find index number of item and slot for logic checks to reduce resources used on continually pulling names and locations.
       let itemcheck = available_items[chosen_item].itemindex;
-      let slotcheck = available_slots[chosen_slot].slotindex;
+      let slotcheck = available_slots[s].slotindex;
 //insert itemcheck number vs chosen slot number for logic checks, increment item number slot if incorrect, checking for clear check. while statement to make sure it clears all checks.
 
-//set chosen slot to fixed slotcheck
-     chosen_slot = slotcheck;
+//prelim (while loop, if incorrect, increment check available slots length, if < max, increment s by one and pull new slotindex, if = to max, reset s to 0 and pull index for check)
+	    
+//lock slot AFTER checks
+      let chosen_slot = available_slots[s];
 // pushes the item and slot to locked array for building
      newSlots.push({
         item: available_items[chosen_item],
@@ -433,6 +436,8 @@ function itemRandomize(rom, rng, opts, m) {
 // removes the item from both arrays.
       available_items.splice(chosen_item, 1);
       available_slots.splice(chosen_slot, 1);
+//reset s for next loop
+      s = 0;
     }
     let count = 0
 	while (count < 5){
