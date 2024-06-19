@@ -415,9 +415,9 @@ function itemRandomize(rom, rng, opts, m) {
     let available_items = [...items];
     let available_slots = [...slots];
     let s = 0;
-    for (let i = 0; i < slots.length; i += 1) {
+    for (let i = 0; i < slots.length - 1;) {
 	    let chosen_slot = 0;
-		let chosen_item = Math.floor(rng() * available_items.length);
+	    let chosen_item = Math.floor(rng() * available_items.length);
 
 //find index number of item and slot for logic checks to reduce resources used on continually pulling names and locations.
       let itemcheck = available_items[chosen_item].itemindex;
@@ -426,55 +426,35 @@ function itemRandomize(rom, rng, opts, m) {
       let smax = available_slots.length - 1;
 //insert itemcheck number vs chosen slot number for logic checks, increment item number slot if incorrect, checking for clear check. while statement to make sure it clears all checks.
 
+	    let dop = 0;
       // Prevent Doppler having an upgrade if 4 upgrades required to reach him - iterate the rest of the loop manually once to set and get past Doppler slot
 	  // == is better than === in conjunction with && operands. Doppler logic fixed for hard set hyper armor if 4 upgrades required.
 	  if (opts.new_game_mode == 'doppler_upgrades_locked' && opts.upgrades_required == '4') {
-		  //doppler slot
-		  if (slotcheck == 0){
-			  //arm upgrade
-			  if (itemcheck == 11){
-		  if (smax != s){
-			  s++;
-			  slotcheck = available_slots[s].slotindex;
-		  }
-		  else {
+		  //if doppler slot not yet set
+		  if (dop == 0){
+			  chosen_slot = 0;
+			  for (let z = 0; z < available_slots.length;){
+				  if (available_slots[z].slotindex = slotcheck){
+					  chosen_slot = z;
+				  }
+				  z++;
+			  }
+			  chosen_item = 0;
+			  // pushes the item and slot to locked array for building
+			  newSlots.push({
+				  item: available_items[chosen_item],
+				  slot: available_slots[chosen_slot],
+			  })
+			  // removes the item from both arrays.
+			  available_items.splice(chosen_item, 1);
+			  available_slots.splice(chosen_slot, 1);
+			  //reset s for next loop
 			  s = 0;
-			  slotcheck = available_slots[s].slotindex;
-		  }
-			  }
-			  //helmet upgrade
-			  if (itemcheck == 12){
-				  if (smax != s){
-					  s++;
-					  slotcheck = available_slots[s].slotindex;
-					  }
-					  else {
-						  s = 0;
-						  slotcheck = available_slots[s].slotindex;
-					  }
-			  }
-			  //body upgrade
-			  if (itemcheck == 14){
-				  if (smax != s){
-					  s++;
-					  slotcheck = available_slots[s].slotindex;
-					  }
-					  else {
-						  s = 0;
-						  slotcheck = available_slots[s].slotindex;
-					  }
-			  }
-			  //leg upgrade
-			  if (itemcheck == 24){
-				  if (smax != s){
-					  s++;
-					  slotcheck = available_slots[s].slotindex;
-					  }
-					  else {
-						  s = 0;
-						  slotcheck = available_slots[s].slotindex;
-					  }
-			  }
+			  //iterate i for next loop
+			  i++;
+			  chosen_item = Math.floor(rng() * available_items.length);
+			  //set Doppler Slot
+			  dop = 1;
 		  }
 	  }
 	  // if hornet capsule (slot 1) is either hawk armour (item 8) or leg upgrade (item 24), increment slot and pull index
@@ -1132,6 +1112,8 @@ function itemRandomize(rom, rng, opts, m) {
       available_slots.splice(chosen_slot, 1);
 //reset s for next loop
       s = 0;
+//iterate i for next loop
+      i++;
     }
 
     /*
