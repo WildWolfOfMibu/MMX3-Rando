@@ -1198,6 +1198,7 @@ function itemRandomize(rom, rng, opts, m) {
     m.addAsm(0x13, isNormal ? 0xc071 : 0xc06a, `
     GoodToGoWithCapsule:
     `);
+	//removing chips req.... again.
     m.addAsm(0x13, null, `
     _InitialCapsuleCheck:
         jsr ConvertNewCapsuleParamToCapsuleItemGivingEntityParam.w
@@ -1206,11 +1207,6 @@ function itemRandomize(rom, rng, opts, m) {
 
         lda wSubTanksAndUpgradesGottenBitfield.w
         and wHealthTanksGottenBitfield.w
-        cmp #$ff.b
-        bne _makeHyperCapsuleUnavail
-
-    ; Require 4 chips
-        lda wChipsAndRideArmoursGottenBitfield.w
         cmp #$ff.b
         bne _makeHyperCapsuleUnavail
 
