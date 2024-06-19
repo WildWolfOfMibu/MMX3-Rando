@@ -477,7 +477,6 @@ function itemRandomize(rom, rng, opts, m) {
 			  }
 		  }
 	  }
-
 	  // if hornet capsule (slot 1) is either hawk armour (item 8) or leg upgrade (item 24), increment slot and pull index
 	  if (slotcheck == 1 && itemcheck == 24){
 		  if (smax != s){
@@ -624,7 +623,8 @@ function itemRandomize(rom, rng, opts, m) {
 	  }
 	  // Buffalo Heart Tank (5) cannot be either kangaroo armour (3) or chimera armour (23) if the other is already placed.
 	  // all multi armour checks have Chimera Armor (23) in them, so I will exclude chimera armor from all these locations, 
-	  // thus keeping a circular lock from happening at all locations.
+	  // thus keeping a circular lock from happening at all locations. 
+	  // (also adding checks for all capsules. 0,1,2,7,9,11,12,14,24)
 	  if (slotcheck == 5 && itemcheck == 23){
 		  if (smax != s){
 			  s++;
@@ -635,8 +635,179 @@ function itemRandomize(rom, rng, opts, m) {
 				  slotcheck = available_slots[s].slotindex;
 			  }
 	  }
+	  if (slotcheck == 5 && itemcheck == 24){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 5 && itemcheck == 14){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }			  
+	  if (slotcheck == 5 && itemcheck == 12){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 5 && itemcheck == 11){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 5 && itemcheck == 9){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 5 && itemcheck == 7){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 5 && itemcheck == 2){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 5 && itemcheck == 1){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 5 && itemcheck == 0){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
 	  // Buffalo Subtank (6) cannot be leg upgrade (24)
+	  // (also adding checks for all capsules. 0,1,2,7,9,11,12,14,24)
 	  if (slotcheck == 6 && itemcheck == 24){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 6 && itemcheck == 14){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }			  
+	  if (slotcheck == 6 && itemcheck == 12){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 6 && itemcheck == 11){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 6 && itemcheck == 9){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 6 && itemcheck == 7){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 6 && itemcheck == 2){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 6 && itemcheck == 1){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 6 && itemcheck == 0){
 		  if (smax != s){
 			  s++;
 			  slotcheck = available_slots[s].slotindex;
@@ -749,7 +920,189 @@ function itemRandomize(rom, rng, opts, m) {
 	  }
 	  //Crawfish Heart Tank (16) cannot be Kangaroo Armour (3), Hawk Armour (8), or Chimera Armour (23) if the other two are placed.
 	  //Excluding Chimera (23) as per previous multiarmour check above (5).
+	  // (also adding checks for all capsules. 0,1,2,7,9,11,12,14,24)
 	  	  if (slotcheck == 16 && itemcheck == 23){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 24){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 14){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }			  
+	  if (slotcheck == 16 && itemcheck == 12){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 11){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 9){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 7){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 2){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 1){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 0){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  // Catfish Heart tank cannoth be a capsule (0,1,2,7,9,11,12,14,24)
+	  if (slotcheck == 22 && itemcheck == 24){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 22 && itemcheck == 14){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }			  
+	  if (slotcheck == 22 && itemcheck == 12){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 22 && itemcheck == 11){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 22 && itemcheck == 9){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 22 && itemcheck == 7){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 22 && itemcheck == 2){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 22 && itemcheck == 1){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 22 && itemcheck == 0){
 		  if (smax != s){
 			  s++;
 			  slotcheck = available_slots[s].slotindex;
