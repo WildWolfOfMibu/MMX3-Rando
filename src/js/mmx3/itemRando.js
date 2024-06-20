@@ -67,7 +67,6 @@ function itemRandomize(rom, rng, opts, m) {
 	// moved doppler into first slot processed to simplify doppler check further
 	    {
 	    slotindex: 0,
-	    itemindex: 0,
             name: "Doppler 1 Capsule",
             itemName: "Hyper Armour",
 	    itemType: "Capsule",
@@ -79,7 +78,6 @@ function itemRandomize(rom, rng, opts, m) {
   	// Blast hornet has 2 requirements, so it needs processed first after doppler's potential 4 reqs
 		{
 	    slotindex: 1,
-	    itemindex: 1,			
             name: "Blast Hornet Capsule",
             stageIdx: STAGE_BLAST_HORNET,
             itemName: "Head Chip",
@@ -91,8 +89,7 @@ function itemRandomize(rom, rng, opts, m) {
         },
 	//forcing frog armour checks for next two checks
 		{
-            slotindex: 2,
-	    itemindex: 2,
+        slotindex: 2,
 	    name: "Toxic Seahorse Capsule",
             stageIdx: STAGE_TOXIC_SEAHORSE,
             itemName: "Leg Chip",
@@ -104,7 +101,6 @@ function itemRandomize(rom, rng, opts, m) {
         },
         {
 	    slotindex: 3,
-	    itemindex: 3,
             name: "Toxic Seahorse Kangaroo Ride Armour",
             stageIdx: STAGE_TOXIC_SEAHORSE,
 	    itemName: "Kangaroo Armour",
@@ -117,7 +113,6 @@ function itemRandomize(rom, rng, opts, m) {
 	// 1 req checks
         {
 	    slotindex: 4,
-	    itemindex: 4,
             name: "Blast Hornet Heart Tank",
             stageIdx: STAGE_BLAST_HORNET,
 	    itemName: "Hornet Heart",
@@ -129,7 +124,6 @@ function itemRandomize(rom, rng, opts, m) {
         },
         {
 	    slotindex: 5,
-	    itemindex: 5,
             name: "Blizzard Buffalo Heart Tank",
             stageIdx: STAGE_BLIZZARD_BUFFALO,
 	    itemName: "Buffalo Heart",
@@ -141,8 +135,7 @@ function itemRandomize(rom, rng, opts, m) {
             textIdx: 0x24,
         },
         {
-	    slotindex: 6,
-	    itemindex: 6,            
+	    slotindex: 6,            
 	    name: "Blizzard Buffalo Subtank",
             stageIdx: STAGE_BLIZZARD_BUFFALO,
 	    itemName: "Buffalo Subtank",
@@ -153,8 +146,7 @@ function itemRandomize(rom, rng, opts, m) {
             textIdx: 0x55,
         },
         {
-	    slotindex: 7,
-	    itemindex: 7,            
+	    slotindex: 7,            
 	    name: "Crush Crawfish Capsule",
             stageIdx: STAGE_CRUSH_CRAWFISH,
             itemName: "Body Chip",
@@ -165,8 +157,7 @@ function itemRandomize(rom, rng, opts, m) {
             textIdx: 0x5d,
         },
         {
-	    slotindex: 8,
-	    itemindex: 8,            
+	    slotindex: 8,            
 	    name: "Crush Crawfish Hawk Ride Armour",
             stageIdx: STAGE_CRUSH_CRAWFISH,
 	    itemName: "Hawk Armour",
@@ -178,7 +169,6 @@ function itemRandomize(rom, rng, opts, m) {
         },
         {
 	    slotindex: 9,
-	    itemindex: 9,
 	    name: "Gravity Beetle Capsule",
             stageIdx: STAGE_GRAVITY_BEETLE,
             itemName: "Arm Chip",
@@ -189,8 +179,7 @@ function itemRandomize(rom, rng, opts, m) {
             textIdx: 0x5d,
         },
         {
-	    slotindex: 10,
-	    itemindex: 10,		
+	    slotindex: 10,		
             name: "Gravity Beetle Frog Ride Armour",
             stageIdx: STAGE_GRAVITY_BEETLE,
 	    itemName: "Frog Armour",
@@ -201,8 +190,7 @@ function itemRandomize(rom, rng, opts, m) {
             textIdx: 0x57,
         },
         {
-	    slotindex: 11,
-	    itemindex: 11,		
+	    slotindex: 11,		
             name: "Neon Tiger Capsule",
             stageIdx: STAGE_NEON_TIGER,
             itemName: "Arm Upgrade",
@@ -213,8 +201,7 @@ function itemRandomize(rom, rng, opts, m) {
             textIdx: 0x67,
         },
         {
-	    slotindex: 12,
-	    itemindex: 12,		
+	    slotindex: 12,		
             name: "Tunnel Rhino Capsule",
             stageIdx: STAGE_TUNNEL_RHINO,
             itemName: "Helmet Upgrade",
@@ -226,7 +213,6 @@ function itemRandomize(rom, rng, opts, m) {
         },
 	{
 	    slotindex: 13,
-	    itemindex: 13,
 	    name: "Tunnel Rhino Heart Tank",
             stageIdx: STAGE_TUNNEL_RHINO,
 	    itemName: "Rhino Heart",
@@ -239,7 +225,6 @@ function itemRandomize(rom, rng, opts, m) {
         },
         {
 	    slotindex: 14,
-	    itemindex: 14,
             name: "Volt Catfish Capsule",
             stageIdx: STAGE_VOLT_CATFISH,
             itemName: "Body Upgrade",
@@ -250,8 +235,7 @@ function itemRandomize(rom, rng, opts, m) {
             textIdx: 0x63,
         },
         {
-	    slotindex: 15,
-	    itemindex: 15,	
+	    slotindex: 15,	
             name: "Volt Catfish Subtank",
             stageIdx: STAGE_VOLT_CATFISH,
 	    itemName: "Catfish Subtank",
@@ -262,8 +246,7 @@ function itemRandomize(rom, rng, opts, m) {
             textIdx: 0x55,
         },
 	{
-	    slotindex: 16,
-	    itemindex: 16,		
+	    slotindex: 16,		
             name: "Crush Crawfish Heart Tank",
             stageIdx: STAGE_CRUSH_CRAWFISH,
 	    itemName: "Crawfish Heart",
@@ -275,8 +258,7 @@ function itemRandomize(rom, rng, opts, m) {
         },
 	// rearranged slots so that 0 req checks are processed last.
 	{
-	    slotindex: 17,
-	    itemindex: 17,		
+	    slotindex: 17,		
 	    name: "Gravity Beetle Heart Tank",
             stageIdx: STAGE_GRAVITY_BEETLE,
 	    itemName: "Beetle Heart",
@@ -288,8 +270,7 @@ function itemRandomize(rom, rng, opts, m) {
         },
 	// swapped CCHT as it does req a non frog armor
 	{
-	    slotindex: 18,
-	    itemindex: 18,		    
+	    slotindex: 18,		    
 	    name: "Tunnel Rhino Subtank",
 	    stageIdx: STAGE_TUNNEL_RHINO,
             itemName: "Tunnel Subtank",
@@ -300,8 +281,7 @@ function itemRandomize(rom, rng, opts, m) {
 	    textIdx: 0x55,
         },
 	{
-	    slotindex: 19,
-	    itemindex: 19,		
+	    slotindex: 19,		
             name: "Neon Tiger Heart Tank",
             stageIdx: STAGE_NEON_TIGER,
 	    itemName: "Tiger Heart",
@@ -312,8 +292,7 @@ function itemRandomize(rom, rng, opts, m) {
             textIdx: 0x24,
         },
         {
-	    slotindex: 20,
-	    itemindex: 20,		
+	    slotindex: 20,		
             name: "Neon Tiger Subtank",
             stageIdx: STAGE_NEON_TIGER,
     	    itemName: "Tiger Subtank",
@@ -325,7 +304,6 @@ function itemRandomize(rom, rng, opts, m) {
         },
 	{
 	    slotindex: 21,
-	    itemindex: 21,		
             name: "Toxic Seahorse Heart Tank",
             stageIdx: STAGE_TOXIC_SEAHORSE,
 	    itemName: "Seahorse Heart",
@@ -336,8 +314,7 @@ function itemRandomize(rom, rng, opts, m) {
             textIdx: 0x24,
         },
 	{
-	    slotindex: 22,
-	    itemindex: 22,		
+	    slotindex: 22,		
             name: "Volt Catfish Heart Tank",
             stageIdx: STAGE_VOLT_CATFISH,
 	    itemName: "Catfish Heart",
@@ -348,8 +325,7 @@ function itemRandomize(rom, rng, opts, m) {
             textIdx: 0x24,
         },
 	{
-	    slotindex: 23,
-	    itemindex: 23,		
+	    slotindex: 23,		
             name: "Blast Hornet Chimera Ride Armour",
             stageIdx: STAGE_BLAST_HORNET,
 	    itemName: "Chimera Armour",
@@ -361,7 +337,6 @@ function itemRandomize(rom, rng, opts, m) {
         },
 	{
 	    slotindex: 24,
-	    itemindex: 24,		
             name: "Blizzard Buffalo Capsule",
             stageIdx: STAGE_BLIZZARD_BUFFALO,
             itemName: "Leg Upgrade",
@@ -392,7 +367,7 @@ function itemRandomize(rom, rng, opts, m) {
         }
 
         items.push({
-	    itemindex: slot.itemindex,	
+	    itemindex: slot.slotindex,	
             name: slot.name,
 // split name into name and itemName
 	    itemName: slot.itemName,
