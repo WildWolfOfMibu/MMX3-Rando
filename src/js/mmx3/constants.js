@@ -198,7 +198,6 @@ const ENT_SUBTANK = [MT_ITEM, ITEMID_SUBTANK];
 // New ram vars noted here
 // (TODO: have labels in banks, with base addrs), and routine to add labels
 
-
 // idxes into a table of $26 weakness vars
 const enemyWeaknesses = {
     0x12: "Gravity Well / Spinning Blade",

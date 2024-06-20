@@ -22,7 +22,7 @@ function itemRandomize(rom, rng, opts, m) {
         [STAGE_CRUSH_CRAWFISH, 0x782-0x790],
         [STAGE_TUNNEL_RHINO, 0x282-0x2a0],
         [STAGE_NEON_TIGER, 0x182-0x1c0],
-    ]) {
+		]) {
         start = findStageEntityData(rom, stage, ...ENT_CAPSULE);
         let y = readWord(rom, start+1);
         writeWord(rom, start+1, y+offset+0x20);
@@ -34,7 +34,7 @@ function itemRandomize(rom, rng, opts, m) {
         [STAGE_NEON_TIGER, 0x02],
         [STAGE_VOLT_CATFISH, 0x04],
         [STAGE_BLIZZARD_BUFFALO, 0x08],
-    ]) {
+		]) {
         start = findStageEntityData(rom, stage, ...ENT_CAPSULE);
         rom[start+4] = newSubType;
     }
@@ -347,7 +347,7 @@ function itemRandomize(rom, rng, opts, m) {
                 0x13 * (slot.stageIdx-1) + 6 * slot.minimapMarkerEntry;
             ramByteLowToCheck = rom[minimapMarkerEntry+3];
             ramBitToCheck = rom[minimapMarkerEntry+5];
-        } else {
+			 } else {
             // Doppler 1
             ramByteLowToCheck = 0xd7;
             ramBitToCheck = 0xf0;
@@ -377,7 +377,7 @@ function itemRandomize(rom, rng, opts, m) {
     let available_items = [...items];
     let available_slots = [...slots];
     let s = 0;
-    for (let i = 0; i < slots.length - 1;) {
+    for (let i = 0; i < slots.length; i += 1) {
 	    let chosen_slot = 0;
 	    let chosen_item = Math.floor(rng() * available_items.length);
 
@@ -511,7 +511,7 @@ function itemRandomize(rom, rng, opts, m) {
 				  slotcheck = available_slots[s].slotindex;
 			  }
 	  }
-	  // Hornet Heart Tank (3) cannot be leg upgrade (24)
+	  // Hornet Heart Tank (3) cannot be leg upgrade (23)
 	  if (slotcheck == 3 && itemcheck == 23){
 		  if (smax != s){
 			  s++;
@@ -892,7 +892,7 @@ function itemRandomize(rom, rng, opts, m) {
 				  slotcheck = available_slots[s].slotindex;
 			  }
 	  }
-	  // Catfish Heart tank cannoth be a capsule (0,1,2,7,9,11,12,14,24)
+	  // Catfish Heart tank cannoth be a capsule (0,1,2,7,9,11,12,14,23)
 	  if (slotcheck == 16 && itemcheck == 23){
 		  if (smax != s){
 			  s++;
@@ -993,8 +993,6 @@ function itemRandomize(rom, rng, opts, m) {
       available_slots.splice(chosen_slot, 1);
 //reset s for next loop
       s = 0;
-//iterate i for next loop
-      i++;
     }
 
     /*
