@@ -64,18 +64,7 @@ function itemRandomize(rom, rng, opts, m) {
     // This is not in `constants.js` as `prep.js` needs to modify the base rom 1st
     // added index list for slots/items for easier randomization.
     let slots = [
-	// moved doppler into first slot processed to simplify doppler check further
-	    {
-	    slotindex: 0,
-            name: "Doppler 1 Capsule",
-            itemName: "Hyper Armour",
-	    itemType: "Capsule",
-            stageIdx: STAGE_DOPPLER_1,
-            entityEntry: findStageEntityData(rom, STAGE_DOPPLER_1, ...ENT_CAPSULE),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_DOPPLER_1, 8, 0),
-            textIdx: 0x5d,
-        },
-  	// Blast hornet has 2 requirements, so it needs processed first after doppler's potential 4 reqs
+	// Blast hornet has 2 requirements, so it needs processed first after doppler's potential 4 reqs
 		{
 	    slotindex: 1,
             name: "Blast Hornet Capsule",
@@ -401,37 +390,6 @@ function itemRandomize(rom, rng, opts, m) {
       let smax = available_slots.length - 1;
 //insert itemcheck number vs chosen slot number for logic checks, increment item number slot if incorrect, checking for clear check. while statement to make sure it clears all checks.
 
-	    let dop = 0;
-      // Prevent Doppler having an upgrade if 4 upgrades required to reach him - iterate the rest of the loop manually once to set and get past Doppler slot
-	  // == is better than === in conjunction with && operands. Doppler logic fixed for hard set hyper armor if 4 upgrades required.
-	  if (opts.new_game_mode == 'doppler_upgrades_locked' && opts.upgrades_required == '4') {
-		  //if doppler slot not yet set
-		  if (dop == 0){
-			  chosen_slot = 0;
-			  for (let z = 0; z < available_slots.length;){
-				  if (available_slots[z].slotindex = slotcheck){
-					  chosen_slot = z;
-				  }
-				  z++;
-			  }
-			  chosen_item = 0;
-			  // pushes the item and slot to locked array for building
-			  newSlots.push({
-				  item: available_items[chosen_item],
-				  slot: available_slots[chosen_slot],
-			  })
-			  // removes the item from both arrays.
-			  available_items.splice(chosen_item, 1);
-			  available_slots.splice(chosen_slot, 1);
-			  //reset s for next loop
-			  s = 0;
-			  //iterate i for next loop
-			  i++;
-			  chosen_item = Math.floor(rng() * available_items.length);
-			  //set Doppler Slot
-			  dop = 1;
-		  }
-	  }
 	  // if hornet capsule (slot 1) is either hawk armour (item 8) or leg upgrade (item 24), increment slot and pull index
 	  if (slotcheck == 1 && itemcheck == 24){
 		  if (smax != s){
@@ -1133,34 +1091,6 @@ function itemRandomize(rom, rng, opts, m) {
     let chosenBank = m.getLabelBank('StageSelItemFlagAddrText');
     m.addBytes(chosenBank, stageSelItemFlagAddrText, rom);
 
-    // qol - minimap marker can cater to hyper armour
-    m.addAsm(4, 0x9080, `
-    ; Return zflag set to display marker
-        jsr CheckMinimapMarkerForHyperArmour.l
-        nop
-    `);
-    m.addAsm(null, null, `
-    CheckMinimapMarkerForHyperArmour:
-        lda $000a.w
-        cmp #$f0.b
-        bne _normalMinimapMarkerCheck
-
-        lda $${hexc(gotHyperArmour)}.l
-        bne _gotHyperArmour
-
-        sep #$02.b
-        rtl
-
-    _gotHyperArmour:
-        rep #$02.b
-        rtl
-
-    _normalMinimapMarkerCheck:
-        lda ($10)
-        bit $000a.w
-        rtl
-    `);
-
     // qol - stage select shows correct items
     for (let _textIdx of [
         0x24, 0x28, 0x55, 0x57, 0x59, 0x5b, 
@@ -1365,24 +1295,11 @@ function itemRandomize(rom, rng, opts, m) {
         rtl
     `);
 
-    // Hyper Armour sets the relevant ram var
-    m.addAsm(5, null, `
-    GiveHyperArmour:
-    ; From previous code
-        lda #$ff.b
-        tsb $1fcc.w
-        lda #$02.b
-        tsb $0a84.w
-        lda #$01.b
-        sta $${hexc(gotHyperArmour)}.l
-        rts
-    `);
     let labelAddr = m.getLabelFullAddr('GiveHyperArmour');
     let addrInBank = (labelAddr % 0x8000) + 0x8000;
     writeWord(rom, conv(5, 0xc7d7), addrInBank);
 
-    // Hyper Armour loads its tile data with the right ram var
-    m.addAsm(4, 0xb70a, `
+   
         lda $${hexc(gotHyperArmour)}.l
         cmp #$01.b
         nop
@@ -1499,30 +1416,18 @@ function itemRandomize(rom, rng, opts, m) {
         nop
         nop
     `);
-    m.addAsm(0x13, isNormal ? 0xc065 : 0xc05e, `
-    CantGetCapsuleItem:
-    `);
+
     m.addAsm(0x13, isNormal ? 0xc06d : 0xc066, `
     DeleteCapsuleEntity:
     `);
     m.addAsm(0x13, isNormal ? 0xc071 : 0xc06a, `
     GoodToGoWithCapsule:
     `);
-	//removing chips req.... again.
-    m.addAsm(0x13, null, `
+
     _InitialCapsuleCheck:
         jsr ConvertNewCapsuleParamToCapsuleItemGivingEntityParam.w
         cmp #$08.b
         bne _returnFrom_IntialCapsuleCheck
-
-        lda wSubTanksAndUpgradesGottenBitfield.w
-        and wHealthTanksGottenBitfield.w
-        cmp #$ff.b
-        bne _makeHyperCapsuleUnavail
-
-        lda wCurrHealth.w
-        cmp wMaxHealth.w
-        bne _makeHyperCapsuleUnavail
 
         lda $${hexc(gotHyperArmour)}.l
         cmp #$01.b
@@ -1530,9 +1435,6 @@ function itemRandomize(rom, rng, opts, m) {
 
     ; We good
         jmp GoodToGoWithCapsule.w
-
-    _makeHyperCapsuleUnavail:
-        jmp CantGetCapsuleItem.w
 
     _deleteHyperCapsule:
         jmp DeleteCapsuleEntity.w

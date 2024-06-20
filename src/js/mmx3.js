@@ -43,12 +43,6 @@ function randomize(_rom, rng, opts) {
     m.addAsm(0, isNormal ? 0x800e : 0xff9b, `
         jsr ClearRandoRamVars.l
     `);
-    m.addAsm(null, null, `
-    ClearRandoRamVars:
-        sta $7effff.l
-        sta $${hexc(gotHyperArmour)}.l
-        rtl
-    `);
 
     // Zero mod Zero initialised with 10hp
     if (!isNormal) {
