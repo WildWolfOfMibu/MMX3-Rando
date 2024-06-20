@@ -1295,29 +1295,6 @@ function itemRandomize(rom, rng, opts, m) {
         rtl
     `);
 
-    // Hyper Armour sets the relevant ram var
-    m.addAsm(5, null, `
-    GiveHyperArmour:
-    ; From previous code
-        lda #$ff.b
-        tsb $1fcc.w
-        lda #$02.b
-        tsb $0a84.w
-        lda #$01.b
-        sta $${hexc(gotHyperArmour)}.l
-        rts
-    `);
-    let labelAddr = m.getLabelFullAddr('GiveHyperArmour');
-    let addrInBank = (labelAddr % 0x8000) + 0x8000;
-    writeWord(rom, conv(5, 0xc7d7), addrInBank);
-
-    // Hyper Armour loads its tile data with the right ram var
-    m.addAsm(4, 0xb70a, `
-        lda $${hexc(gotHyperArmour)}.l
-        cmp #$01.b
-        nop
-    `);
-
     // Get the right text idx for Dr Light
     m.addAsm(2, 0xfd02, `
         jsr SetCapsuleItemGiverTextIdx.l
@@ -1415,20 +1392,6 @@ function itemRandomize(rom, rng, opts, m) {
     for (let i = 0; i < 15*4; i++) {
         rom[start+i] = 0;
     }
-    // Skip Doppler capsule check so it's always displayed
-    m.addAsm(0x13, isNormal ? 0xc011 : 0xc019, `
-        jmp InitialCapsuleCheck.w
-    `);
-    // various hooks to use subtype to determine item, rather than stage
-    m.addAsm(0x13, isNormal ? 0xc031 : 0xc034, `
-    InitialCapsuleCheck:
-        jmp _InitialCapsuleCheck.w
-
-    ReturnFrom_InitialCapsuleCheck:
-        tay
-        nop
-        nop
-    `);
     m.addAsm(0x13, isNormal ? 0xc065 : 0xc05e, `
     CantGetCapsuleItem:
     `);
@@ -1437,38 +1400,6 @@ function itemRandomize(rom, rng, opts, m) {
     `);
     m.addAsm(0x13, isNormal ? 0xc071 : 0xc06a, `
     GoodToGoWithCapsule:
-    `);
-	//removing chips req.... again.
-    m.addAsm(0x13, null, `
-    _InitialCapsuleCheck:
-        jsr ConvertNewCapsuleParamToCapsuleItemGivingEntityParam.w
-        cmp #$08.b
-        bne _returnFrom_IntialCapsuleCheck
-
-        lda wSubTanksAndUpgradesGottenBitfield.w
-        and wHealthTanksGottenBitfield.w
-        cmp #$ff.b
-        bne _makeHyperCapsuleUnavail
-
-        lda wCurrHealth.w
-        cmp wMaxHealth.w
-        bne _makeHyperCapsuleUnavail
-
-        lda $${hexc(gotHyperArmour)}.l
-        cmp #$01.b
-        beq _deleteHyperCapsule
-
-    ; We good
-        jmp GoodToGoWithCapsule.w
-
-    _makeHyperCapsuleUnavail:
-        jmp CantGetCapsuleItem.w
-
-    _deleteHyperCapsule:
-        jmp DeleteCapsuleEntity.w
-
-    _returnFrom_IntialCapsuleCheck:
-        jmp ReturnFrom_InitialCapsuleCheck.w
     `);
     m.addAsm(0x13, 0xc37d, `
         jsr ConvertNewCapsuleParamToCapsuleItemGivingEntityParam.w

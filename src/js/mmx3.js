@@ -39,16 +39,6 @@ function randomize(_rom, rng, opts) {
     paletteRandomize(rom, rng, opts, m);
     enemyRandomize(rom, rng, opts, m);
 
-    // Clear some ram vars
-    m.addAsm(0, isNormal ? 0x800e : 0xff9b, `
-        jsr ClearRandoRamVars.l
-    `);
-    m.addAsm(null, null, `
-    ClearRandoRamVars:
-        sta $7effff.l
-        sta $${hexc(gotHyperArmour)}.l
-        rtl
-    `);
 
     // Zero mod Zero initialised with 10hp
     if (!isNormal) {
