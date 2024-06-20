@@ -22,7 +22,6 @@ function itemRandomize(rom, rng, opts, m) {
         [STAGE_CRUSH_CRAWFISH, 0x782-0x790],
         [STAGE_TUNNEL_RHINO, 0x282-0x2a0],
         [STAGE_NEON_TIGER, 0x182-0x1c0],
-        [STAGE_DOPPLER_1, 0x692-0x680],
     ]) {
         start = findStageEntityData(rom, stage, ...ENT_CAPSULE);
         let y = readWord(rom, start+1);
@@ -35,7 +34,6 @@ function itemRandomize(rom, rng, opts, m) {
         [STAGE_NEON_TIGER, 0x02],
         [STAGE_VOLT_CATFISH, 0x04],
         [STAGE_BLIZZARD_BUFFALO, 0x08],
-        [STAGE_DOPPLER_1, 0xff],
     ]) {
         start = findStageEntityData(rom, stage, ...ENT_CAPSULE);
         rom[start+4] = newSubType;
