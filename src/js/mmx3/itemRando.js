@@ -22,8 +22,7 @@ function itemRandomize(rom, rng, opts, m) {
         [STAGE_CRUSH_CRAWFISH, 0x782-0x790],
         [STAGE_TUNNEL_RHINO, 0x282-0x2a0],
         [STAGE_NEON_TIGER, 0x182-0x1c0],
-        [STAGE_DOPPLER_1, 0x692-0x680],
-    ]) {
+		]) {
         start = findStageEntityData(rom, stage, ...ENT_CAPSULE);
         let y = readWord(rom, start+1);
         writeWord(rom, start+1, y+offset+0x20);
@@ -35,8 +34,7 @@ function itemRandomize(rom, rng, opts, m) {
         [STAGE_NEON_TIGER, 0x02],
         [STAGE_VOLT_CATFISH, 0x04],
         [STAGE_BLIZZARD_BUFFALO, 0x08],
-        [STAGE_DOPPLER_1, 0xff],
-    ]) {
+		]) {
         start = findStageEntityData(rom, stage, ...ENT_CAPSULE);
         rom[start+4] = newSubType;
     }
@@ -62,49 +60,61 @@ function itemRandomize(rom, rng, opts, m) {
 
     // This is done here for the 'find'-type functions
     // This is not in `constants.js` as `prep.js` needs to modify the base rom 1st
+    // added index list for slots/items for easier randomization.
     let slots = [
-        {
+	// Blast hornet has 2 requirements, so it needs processed first after doppler's potential 4 reqs
+		{
+	    slotindex: 0,
             name: "Blast Hornet Capsule",
             stageIdx: STAGE_BLAST_HORNET,
             itemName: "Head Chip",
-			itemType: "Capsule",
+	    itemType: "Capsule",
             entityEntry: findStageEntityData(rom, STAGE_BLAST_HORNET, ...ENT_CAPSULE),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLAST_HORNET, 3, 0),
             minimapMarkerEntry: 0,
             textIdx: 0x5d,
         },
-        {
-            name: "Blast Hornet Chimera Ride Armour",
-            stageIdx: STAGE_BLAST_HORNET,
-			itemType: "Armour",
-            entityEntry: findStageEntityData(rom, STAGE_BLAST_HORNET, ...ENT_RIDE_ARMOUR_ITEM),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLAST_HORNET, 6, 3),
+	//forcing frog armour checks for next two checks
+		{
+        slotindex: 1,
+	    name: "Toxic Seahorse Capsule",
+            stageIdx: STAGE_TOXIC_SEAHORSE,
+            itemName: "Leg Chip",
+	    itemType: "Capsule",
+            entityEntry: findStageEntityData(rom, STAGE_TOXIC_SEAHORSE, ...ENT_CAPSULE),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TOXIC_SEAHORSE, 7, 0),
             minimapMarkerEntry: 2,
-            textIdx: 0x28,
+            textIdx: 0x5d,
         },
         {
+	    slotindex: 2,
+            name: "Toxic Seahorse Kangaroo Ride Armour",
+            stageIdx: STAGE_TOXIC_SEAHORSE,
+	    itemName: "Kangaroo Armour",
+	    itemType: "Armour",
+            entityEntry: findStageEntityData(rom, STAGE_TOXIC_SEAHORSE, ...ENT_RIDE_ARMOUR_ITEM),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TOXIC_SEAHORSE, 4, 2),
+            minimapMarkerEntry: 1,
+            textIdx: 0x59,
+        },
+	// 1 req checks
+        {
+	    slotindex: 3,
             name: "Blast Hornet Heart Tank",
             stageIdx: STAGE_BLAST_HORNET,
-			itemType: "Heart", 
+	    itemName: "Hornet Heart",
+	    itemType: "Heart", 
             entityEntry: findStageEntityData(rom, STAGE_BLAST_HORNET, ...ENT_HEART_TANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLAST_HORNET, 9, 0),
             minimapMarkerEntry: 1,
             textIdx: 0x24,
         },
         {
-            name: "Blizzard Buffalo Capsule",
-            stageIdx: STAGE_BLIZZARD_BUFFALO,
-            itemName: "Leg Upgrade",
-			itemType: "Capsule",
-            entityEntry: findStageEntityData(rom, STAGE_BLIZZARD_BUFFALO, ...ENT_CAPSULE),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLIZZARD_BUFFALO, 6, 0),
-            minimapMarkerEntry: 2,
-            textIdx: 0x61,
-        },
-        {
+	    slotindex: 4,
             name: "Blizzard Buffalo Heart Tank",
             stageIdx: STAGE_BLIZZARD_BUFFALO,
-			itemType: "Heart",
+	    itemName: "Buffalo Heart",
+	    itemType: "Heart",
             entityEntry: findStageEntityData(rom, STAGE_BLIZZARD_BUFFALO, ...ENT_HEART_TANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLIZZARD_BUFFALO, 1, 0),
             tileDataOffset: 0x1e00,
@@ -112,149 +122,88 @@ function itemRandomize(rom, rng, opts, m) {
             textIdx: 0x24,
         },
         {
-            name: "Blizzard Buffalo Subtank",
+	    slotindex: 5,            
+	    name: "Blizzard Buffalo Subtank",
             stageIdx: STAGE_BLIZZARD_BUFFALO,
-			itemType: "Tank",
+	    itemName: "Buffalo Subtank",
+	    itemType: "Tank",
             entityEntry: findStageEntityData(rom, STAGE_BLIZZARD_BUFFALO, ...ENT_SUBTANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLIZZARD_BUFFALO, 5, 3),
             minimapMarkerEntry: 1,
             textIdx: 0x55,
         },
         {
-            name: "Crush Crawfish Capsule",
+	    slotindex: 6,            
+	    name: "Crush Crawfish Capsule",
             stageIdx: STAGE_CRUSH_CRAWFISH,
             itemName: "Body Chip",
-			itemType: "Capsule",
+	    itemType: "Capsule",
             entityEntry: findStageEntityData(rom, STAGE_CRUSH_CRAWFISH, ...ENT_CAPSULE),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_CRUSH_CRAWFISH, 3, 0),
             minimapMarkerEntry: 1,
             textIdx: 0x5d,
         },
         {
-            name: "Crush Crawfish Hawk Ride Armour",
+	    slotindex: 7,            
+	    name: "Crush Crawfish Hawk Ride Armour",
             stageIdx: STAGE_CRUSH_CRAWFISH,
-			itemType: "Armour",
+	    itemName: "Hawk Armour",
+	    itemType: "Armour",
             entityEntry: findStageEntityData(rom, STAGE_CRUSH_CRAWFISH, ...ENT_RIDE_ARMOUR_ITEM),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_CRUSH_CRAWFISH, 0, 3),
             minimapMarkerEntry: 0,
             textIdx: 0x5b,
         },
         {
-            name: "Crush Crawfish Heart Tank",
-            stageIdx: STAGE_CRUSH_CRAWFISH,
-			itemType: "Heart",
-            entityEntry: findStageEntityData(rom, STAGE_CRUSH_CRAWFISH, ...ENT_HEART_TANK),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_CRUSH_CRAWFISH, 2, 2),
-            minimapMarkerEntry: 2,
-            textIdx: 0x24,
-        },
-        {
-            name: "Doppler 1 Capsule",
-            itemName: "Hyper Armour",
-			itemType: "Capsule",
-            stageIdx: STAGE_DOPPLER_1,
-            entityEntry: findStageEntityData(rom, STAGE_DOPPLER_1, ...ENT_CAPSULE),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_DOPPLER_1, 8, 0),
-            textIdx: 0x5d,
-        },
-        {
-            name: "Gravity Beetle Capsule",
+	    slotindex: 8,
+	    name: "Gravity Beetle Capsule",
             stageIdx: STAGE_GRAVITY_BEETLE,
             itemName: "Arm Chip",
-			itemType: "Capsule",
+	    itemType: "Capsule",
             entityEntry: findStageEntityData(rom, STAGE_GRAVITY_BEETLE, ...ENT_CAPSULE),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_GRAVITY_BEETLE, 10, 0),
             minimapMarkerEntry: 2,
             textIdx: 0x5d,
         },
         {
+	    slotindex: 9,		
             name: "Gravity Beetle Frog Ride Armour",
             stageIdx: STAGE_GRAVITY_BEETLE,
-			itemType: "Armour",
+	    itemName: "Frog Armour",
+	    itemType: "Armour",
             entityEntry: findStageEntityData(rom, STAGE_GRAVITY_BEETLE, ...ENT_RIDE_ARMOUR_ITEM),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_GRAVITY_BEETLE, 5, 3),
             minimapMarkerEntry: 1,
             textIdx: 0x57,
         },
         {
-            name: "Gravity Beetle Heart Tank",
-            stageIdx: STAGE_GRAVITY_BEETLE,
-			itemType: "Heart",
-            entityEntry: findStageEntityData(rom, STAGE_GRAVITY_BEETLE, ...ENT_HEART_TANK),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_GRAVITY_BEETLE, 0, 3),
-            minimapMarkerEntry: 0,
-            textIdx: 0x24,
-        },
-        {
+	    slotindex: 10,		
             name: "Neon Tiger Capsule",
             stageIdx: STAGE_NEON_TIGER,
             itemName: "Arm Upgrade",
-			itemType: "Capsule",
+	    itemType: "Capsule",
             entityEntry: findStageEntityData(rom, STAGE_NEON_TIGER, ...ENT_CAPSULE),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_NEON_TIGER, 2, 0),
             minimapMarkerEntry: 1,
             textIdx: 0x67,
         },
         {
-            name: "Neon Tiger Heart Tank",
-            stageIdx: STAGE_NEON_TIGER,
-			itemType: "Heart",
-            entityEntry: findStageEntityData(rom, STAGE_NEON_TIGER, ...ENT_HEART_TANK),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_NEON_TIGER, 8, 0),
-            minimapMarkerEntry: 2,
-            textIdx: 0x24,
-        },
-        {
-            name: "Neon Tiger Subtank",
-            stageIdx: STAGE_NEON_TIGER,
-			itemType: "Tank",
-            entityEntry: findStageEntityData(rom, STAGE_NEON_TIGER, ...ENT_SUBTANK),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_NEON_TIGER, 0, 3),
-            minimapMarkerEntry: 0,
-            textIdx: 0x55,
-        },
-        {
-            name: "Toxic Seahorse Capsule",
-            stageIdx: STAGE_TOXIC_SEAHORSE,
-            itemName: "Leg Chip",
-			itemType: "Capsule",
-            entityEntry: findStageEntityData(rom, STAGE_TOXIC_SEAHORSE, ...ENT_CAPSULE),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TOXIC_SEAHORSE, 7, 0),
-            minimapMarkerEntry: 2,
-            textIdx: 0x5d,
-        },
-        {
-            name: "Toxic Seahorse Heart Tank",
-            stageIdx: STAGE_TOXIC_SEAHORSE,
-			itemType: "Heart",
-            entityEntry: findStageEntityData(rom, STAGE_TOXIC_SEAHORSE, ...ENT_HEART_TANK),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TOXIC_SEAHORSE, 1, 3),
-            minimapMarkerEntry: 0,
-            textIdx: 0x24,
-        },
-        {
-            name: "Toxic Seahorse Kangaroo Ride Armour",
-            stageIdx: STAGE_TOXIC_SEAHORSE,
-			itemType: "Armour",
-            entityEntry: findStageEntityData(rom, STAGE_TOXIC_SEAHORSE, ...ENT_RIDE_ARMOUR_ITEM),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TOXIC_SEAHORSE, 4, 2),
-            minimapMarkerEntry: 1,
-            textIdx: 0x59,
-        },
-        {
+	    slotindex: 11,		
             name: "Tunnel Rhino Capsule",
             stageIdx: STAGE_TUNNEL_RHINO,
             itemName: "Helmet Upgrade",
-			itemType: "Capsule",
+	    itemType: "Capsule",
             entityEntry: findStageEntityData(rom, STAGE_TUNNEL_RHINO, ...ENT_CAPSULE),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TUNNEL_RHINO, 7, 1),
             minimapMarkerEntry: 2,
             textIdx: 0x65,
         },
-        {
-            name: "Tunnel Rhino Heart Tank",
+	{
+	    slotindex: 12,
+	    name: "Tunnel Rhino Heart Tank",
             stageIdx: STAGE_TUNNEL_RHINO,
-			itemType: "Heart",
+	    itemName: "Rhino Heart",
+	    itemType: "Heart",
             entityEntry: findStageEntityData(rom, STAGE_TUNNEL_RHINO, ...ENT_HEART_TANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TUNNEL_RHINO, 2, 0),
             tileDataOffset: 0x1600,
@@ -262,41 +211,127 @@ function itemRandomize(rom, rng, opts, m) {
             textIdx: 0x24,
         },
         {
-            name: "Tunnel Rhino Subtank",
-            stageIdx: STAGE_TUNNEL_RHINO,
-			itemType: "Tank",
-            entityEntry: findStageEntityData(rom, STAGE_TUNNEL_RHINO, ...ENT_SUBTANK),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TUNNEL_RHINO, 4, 0),
-            minimapMarkerEntry: 1,
-            textIdx: 0x55,
-        },
-        {
+	    slotindex: 13,
             name: "Volt Catfish Capsule",
             stageIdx: STAGE_VOLT_CATFISH,
             itemName: "Body Upgrade",
-			itemType: "Capsule",
+	    itemType: "Capsule",
             entityEntry: findStageEntityData(rom, STAGE_VOLT_CATFISH, ...ENT_CAPSULE),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_VOLT_CATFISH, 4, 1),
             minimapMarkerEntry: 0,
             textIdx: 0x63,
         },
         {
+	    slotindex: 14,	
+            name: "Volt Catfish Subtank",
+            stageIdx: STAGE_VOLT_CATFISH,
+	    itemName: "Catfish Subtank",
+	    itemType: "Tank",
+            entityEntry: findStageEntityData(rom, STAGE_VOLT_CATFISH, ...ENT_SUBTANK),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_VOLT_CATFISH, 8, 0),
+            minimapMarkerEntry: 2,
+            textIdx: 0x55,
+        },
+	{
+	    slotindex: 15,		
+            name: "Crush Crawfish Heart Tank",
+            stageIdx: STAGE_CRUSH_CRAWFISH,
+	    itemName: "Crawfish Heart",
+	    itemType: "Heart",
+            entityEntry: findStageEntityData(rom, STAGE_CRUSH_CRAWFISH, ...ENT_HEART_TANK),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_CRUSH_CRAWFISH, 2, 2),
+            minimapMarkerEntry: 2,
+            textIdx: 0x24,
+        },
+		{
+	    slotindex: 16,		
             name: "Volt Catfish Heart Tank",
             stageIdx: STAGE_VOLT_CATFISH,
-			itemType: "Heart",
+	    itemName: "Catfish Heart",
+	    itemType: "Heart",
             entityEntry: findStageEntityData(rom, STAGE_VOLT_CATFISH, ...ENT_HEART_TANK),
             dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_VOLT_CATFISH, 3, 0),
             minimapMarkerEntry: 1,
             textIdx: 0x24,
         },
-        {
-            name: "Volt Catfish Subtank",
-            stageIdx: STAGE_VOLT_CATFISH,
-			itemType: "Tank",
-            entityEntry: findStageEntityData(rom, STAGE_VOLT_CATFISH, ...ENT_SUBTANK),
-            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_VOLT_CATFISH, 8, 0),
+	// rearranged slots so that 0 req checks are processed last.
+	{
+	    slotindex: 17,		
+	    name: "Gravity Beetle Heart Tank",
+            stageIdx: STAGE_GRAVITY_BEETLE,
+	    itemName: "Beetle Heart",
+	    itemType: "Heart",
+            entityEntry: findStageEntityData(rom, STAGE_GRAVITY_BEETLE, ...ENT_HEART_TANK),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_GRAVITY_BEETLE, 0, 3),
+            minimapMarkerEntry: 0,
+            textIdx: 0x24,
+        },
+	// swapped CCHT as it does req a non frog armor
+	{
+	    slotindex: 18,		    
+	    name: "Tunnel Rhino Subtank",
+	    stageIdx: STAGE_TUNNEL_RHINO,
+            itemName: "Tunnel Subtank",
+	    itemType: "Tank",
+	    entityEntry: findStageEntityData(rom, STAGE_TUNNEL_RHINO, ...ENT_SUBTANK),
+	    dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TUNNEL_RHINO, 4, 0),
+	    minimapMarkerEntry: 1,
+	    textIdx: 0x55,
+        },
+	{
+	    slotindex: 19,		
+            name: "Neon Tiger Heart Tank",
+            stageIdx: STAGE_NEON_TIGER,
+	    itemName: "Tiger Heart",
+	    itemType: "Heart",
+            entityEntry: findStageEntityData(rom, STAGE_NEON_TIGER, ...ENT_HEART_TANK),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_NEON_TIGER, 8, 0),
             minimapMarkerEntry: 2,
+            textIdx: 0x24,
+        },
+        {
+	    slotindex: 20,		
+            name: "Neon Tiger Subtank",
+            stageIdx: STAGE_NEON_TIGER,
+    	    itemName: "Tiger Subtank",
+	    itemType: "Tank",
+            entityEntry: findStageEntityData(rom, STAGE_NEON_TIGER, ...ENT_SUBTANK),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_NEON_TIGER, 0, 3),
+            minimapMarkerEntry: 0,
             textIdx: 0x55,
+        },
+	{
+	    slotindex: 21,
+            name: "Toxic Seahorse Heart Tank",
+            stageIdx: STAGE_TOXIC_SEAHORSE,
+	    itemName: "Seahorse Heart",
+	    itemType: "Heart",
+            entityEntry: findStageEntityData(rom, STAGE_TOXIC_SEAHORSE, ...ENT_HEART_TANK),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_TOXIC_SEAHORSE, 1, 3),
+            minimapMarkerEntry: 0,
+            textIdx: 0x24,
+        },
+	{
+	    slotindex: 22,		
+            name: "Blast Hornet Chimera Ride Armour",
+            stageIdx: STAGE_BLAST_HORNET,
+	    itemName: "Chimera Armour",
+	    itemType: "Armour",
+            entityEntry: findStageEntityData(rom, STAGE_BLAST_HORNET, ...ENT_RIDE_ARMOUR_ITEM),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLAST_HORNET, 6, 3),
+            minimapMarkerEntry: 2,
+            textIdx: 0x28,
+        },
+	{
+	    slotindex: 23,
+            name: "Blizzard Buffalo Capsule",
+            stageIdx: STAGE_BLIZZARD_BUFFALO,
+            itemName: "Leg Upgrade",
+	    itemType: "Capsule",
+            entityEntry: findStageEntityData(rom, STAGE_BLIZZARD_BUFFALO, ...ENT_CAPSULE),
+            dynamicSpriteEntry: getDynamicSpriteData(rom, STAGE_BLIZZARD_BUFFALO, 6, 0),
+            minimapMarkerEntry: 2,
+            textIdx: 0x61,
         },
     ]
 
@@ -312,14 +347,19 @@ function itemRandomize(rom, rng, opts, m) {
                 0x13 * (slot.stageIdx-1) + 6 * slot.minimapMarkerEntry;
             ramByteLowToCheck = rom[minimapMarkerEntry+3];
             ramBitToCheck = rom[minimapMarkerEntry+5];
-        } else {
+			 } else {
             // Doppler 1
             ramByteLowToCheck = 0xd7;
             ramBitToCheck = 0xf0;
         }
 
         items.push({
-            name: slot.itemName || slot.name,
+	    itemindex: slot.slotindex,	
+            name: slot.name,
+// split name into name and itemName
+	    itemName: slot.itemName,
+//added itemType for check clarity
+	    itemType: slot.itemType,
             majorType: rom[slot.entityEntry+0],
             type: rom[slot.entityEntry+3],
             subType: rom[slot.entityEntry+4],
@@ -328,7 +368,6 @@ function itemRandomize(rom, rng, opts, m) {
             ramByteLowToCheck: ramByteLowToCheck,
             ramBitToCheck: ramBitToCheck,
             textIdx: slot.textIdx,
-         	Category: slot.itemType,
         })
     }
 
@@ -337,68 +376,633 @@ function itemRandomize(rom, rng, opts, m) {
     // randomly fill slots with items
     let available_items = [...items];
     let available_slots = [...slots];
+    let s = 0;
     for (let i = 0; i < slots.length; i += 1) {
-      let chosen_item = Math.floor(rng() * available_items.length);
-      let chosen_slot = Math.floor(rng() * available_slots.length);
-      newSlots.push({
+	    let chosen_slot = 0;
+	    let chosen_item = Math.floor(rng() * available_items.length);
+
+//find index number of item and slot for logic checks to reduce resources used on continually pulling names and locations.
+      let itemcheck = available_items[chosen_item].itemindex;
+      let slotcheck = available_slots[s].slotindex;
+// find length, subtract 1 to have length match index spot
+      let smax = available_slots.length - 1;
+//insert itemcheck number vs chosen slot number for logic checks, increment item number slot if incorrect, checking for clear check. while statement to make sure it clears all checks.
+
+	// if hornet capsule (slot 0) is either hawk armour (item 7) or leg upgrade (item 23), increment slot and pull index
+	  if (slotcheck == 0 && itemcheck == 23){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+		  else {
+			  s = 0;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+	  }
+	  if (slotcheck == 0 && itemcheck == 10){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+		  else {
+			  s = 0;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+	  }
+	  if (slotcheck == 0 && itemcheck == 7){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+		  else {
+			  s = 0;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+	  }
+	  //Seahorse Capsule (slot 1) to make sure it's not Frog Armour (9)
+	  if (slotcheck == 1 && itemcheck == 9){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+		  else {
+			  s = 0;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+	  }
+	  //Seahorse Kangaroo Armour (2) to make sure it's not frog armor (9) or leg upgrade (23) (also adding checks for all capsules. 0,1,6,8,10,11,13,23)
+	  if (slotcheck == 2 && itemcheck == 9){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+  	  if (slotcheck == 2 && itemcheck == 23){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 2 && itemcheck == 13){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }			  
+	  if (slotcheck == 2 && itemcheck == 11){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 2 && itemcheck == 10){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 2 && itemcheck == 8){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 2 && itemcheck == 6){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 2 && itemcheck == 1){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 2 && itemcheck == 0){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  // Hornet Heart Tank (3) cannot be leg upgrade (23)
+	  if (slotcheck == 3 && itemcheck == 23){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  // Buffalo Heart Tank (4) cannot be either kangaroo armour (2) or chimera armour (22) if the other is already placed.
+	  // all multi armour checks have Chimera Armor (23) in them, so I will exclude chimera armor from all these locations, 
+	  // thus keeping a circular lock from happening at all locations. 
+	  // (also adding checks for all capsules. 0,1,6,8,10,11,13,23)
+	  if (slotcheck == 4 && itemcheck == 22){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 4 && itemcheck == 23){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 4 && itemcheck == 13){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }			  
+	  if (slotcheck == 4 && itemcheck == 11){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 4 && itemcheck == 10){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 4 && itemcheck == 8){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 4 && itemcheck == 6){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 4 && itemcheck == 1){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 4 && itemcheck == 0){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  // Buffalo Subtank (5) cannot be leg upgrade (23)
+	  // (also adding checks for all capsules. 0,1,6,8,10,11,13,23)
+	  if (slotcheck == 5 && itemcheck == 23){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 5 && itemcheck == 13){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }			  
+	  if (slotcheck == 5 && itemcheck == 11){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 5 && itemcheck == 10){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 5 && itemcheck == 8){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 5 && itemcheck == 6){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 5 && itemcheck == 1){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 5 && itemcheck == 0){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  //Crawfish Capsule (6) cannot be Kangaroo Armour (2), Hawk Armour (7) or Chimera Armour (22) if the other two are placed. 
+	  //Excluding Chimera (22) as per previous multiarmour check above (4).
+	  if (slotcheck == 6 && itemcheck == 22){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  // Crawfish Hawk Armour (7) cannot be Arm Upgrade (10)
+	  if (slotcheck == 7 && itemcheck == 10){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  //Beetle Capsule (8) cannot be Kangaroo Armour (2), Hawk Armour (7), or Chimera Armour (22) if the other two are placed.
+	  //Excluding Chimera (22) as per previous multiarmour check above (4).
+	  if (slotcheck == 8 && itemcheck == 22){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  //Beetle Frog Armour (9) requires leg upgrade (23)
+	  if (slotcheck == 9 && itemcheck == 23){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  //Tiger Capsule (10) requires leg upgrade (23)
+	  if (slotcheck == 10 && itemcheck == 23){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	//Rhino Capsule (11) requires arm upgrade (10)
+	if (slotcheck == 11 && itemcheck == 10){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  //Rhino Heart Tank (12) requires arm upgrade (10)
+	  if (slotcheck == 12 && itemcheck == 10){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  //Catfish Capsule (13) requires arm upgrade (10)
+	  if (slotcheck == 13 && itemcheck == 10){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  //Catfish SubTank (14) requires one armour (2,7,9,22), removing Chimera Armour (22) as per in check above (4)
+	  if (slotcheck == 14 && itemcheck == 22){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  //Crawfish Heart Tank (15) cannot be Kangaroo Armour (2), Hawk Armour (7), or Chimera Armour (22) if the other two are placed.
+	  //Excluding Chimera (22) as per previous multiarmour check above (4).
+	  // (also adding checks for all capsules. 0,1,6,8,10,11,13,23)
+	  	  if (slotcheck == 15 && itemcheck == 22){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 15 && itemcheck == 23){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 13){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }			  
+	  if (slotcheck == 16 && itemcheck == 11){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 10){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 8){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 6){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 1){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 0){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  // Catfish Heart tank cannoth be a capsule (0,1,2,7,9,11,12,14,23)
+	  if (slotcheck == 16 && itemcheck == 23){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 13){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }			  
+	  if (slotcheck == 16 && itemcheck == 11){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 10){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 8){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 6){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 1){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+	  if (slotcheck == 16 && itemcheck == 0){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+			  else {
+				  s = 0;
+				  slotcheck = available_slots[s].slotindex;
+			  }
+	  }
+//prelim (while loop, if incorrect, increment check available slots length, if < max, increment s by one and pull new slotindex, if = to max, reset s to 0 and pull index for check)
+	    
+//lock slot AFTER checks
+    chosen_slot = 0;
+	for (let z = 0; z < available_slots.length;){
+		if (available_slots[z].slotindex = slotcheck){
+			chosen_slot = z;
+		}
+		z++;
+	}
+// pushes the item and slot to locked array for building
+     newSlots.push({
         item: available_items[chosen_item],
         slot: available_slots[chosen_slot],
       })
+// removes the item from both arrays.
       available_items.splice(chosen_item, 1);
       available_slots.splice(chosen_slot, 1);
-    }
-
-    // Prevent volt catfish heart tank having a capsule (spikes)
-    // Prevent blizzard buffalo heart tank having a capsule (ride armour issues)
-	// Prevent Toxic Seahorse Kangaroo Armour from having a capsule (softlock issues, leftside capsule)
-	// Prevent Blizzard Buffalo Subtank from having a capsule (softlock issues, leftside capsule) 
-    for (let assignedSlot of newSlots) {
-        if (assignedSlot.slot.name !== "Volt Catfish Heart Tank" && 
-			assignedSlot.slot.name !== "Toxic Seahorse Kangaroo Ride Armour" &&
-			assignedSlot.slot.name !== "Blizzard Buffalo Subtank" &&
-            assignedSlot.slot.name !== "Blizzard Buffalo Heart Tank") continue;
-        if (assignedSlot.item.Category.indexOf("Capsule") === -1) continue;
-
-        for (let assignedSlot2 of newSlots) {
-            if (assignedSlot2.slot.name === assignedSlot.slot.name) continue;
-            if (assignedSlot2.item.Category.indexOf("Capsule") !== -1) continue;
-
-            let temp = assignedSlot.item;
-            assignedSlot.item = assignedSlot2.item;
-            assignedSlot2.item = temp;
-            break;
-        }
-    }
-
-    // Prevent Doppler having an upgrade if 4 upgrades required to reach him
-    if (opts.new_game_mode === 'doppler_upgrades_locked' && opts.upgrades_required === '4') {
-        for (let assignedSlot of newSlots) {
-            if (assignedSlot.slot.name !== "Doppler 1 Capsule") continue;
-            if (assignedSlot.item.name.indexOf(" Upgrade") === -1) break;
-
-            console.log('was upgrade', assignedSlot.item.name)
-    
-            for (let assignedSlot2 of newSlots) {
-                if (assignedSlot2.slot.name === assignedSlot.slot.name) continue;
-                if (assignedSlot2.item.name.indexOf(" Upgrade") !== -1) continue;
-    
-                let temp = assignedSlot.item;
-                assignedSlot.item = assignedSlot2.item;
-                assignedSlot2.item = temp;
-                break;
-            }
-            break;
-        }
-    }
-
-    // Move gravity beetle frog ride armour left by 0x18 pixels if it's a capsule
-    for (let assignedSlot of newSlots) {
-        if (assignedSlot.slot.name !== "Gravity Beetle Frog Ride Armour") continue;
-        if (assignedSlot.item.Category.indexOf("Capsule") === -1) break;
-
-        start = assignedSlot.slot.entityEntry;
-        rom[start+5] = 0x28;
-        break;
+//reset s for next loop
+      s = 0;
     }
 
     /*
@@ -410,9 +1014,9 @@ function itemRandomize(rom, rng, opts, m) {
     let stageSelItemFlagAddrText = new Array(3 * 4 * 8);
 
     // mutate slots
-    for (let assignedSlot of newSlots) {
-        let slot = assignedSlot.slot;
-        let item = assignedSlot.item;
+    for (let FinalSlot of newSlots) {
+        let slot = FinalSlot.slot;
+        let item = FinalSlot.item;
         rom[slot.entityEntry+0] = item.majorType;
         rom[slot.entityEntry+3] = item.type;
         rom[slot.entityEntry+4] = item.subType;
@@ -442,34 +1046,6 @@ function itemRandomize(rom, rng, opts, m) {
     `);
     let chosenBank = m.getLabelBank('StageSelItemFlagAddrText');
     m.addBytes(chosenBank, stageSelItemFlagAddrText, rom);
-
-    // qol - minimap marker can cater to hyper armour
-    m.addAsm(4, 0x9080, `
-    ; Return zflag set to display marker
-        jsr CheckMinimapMarkerForHyperArmour.l
-        nop
-    `);
-    m.addAsm(null, null, `
-    CheckMinimapMarkerForHyperArmour:
-        lda $000a.w
-        cmp #$f0.b
-        bne _normalMinimapMarkerCheck
-
-        lda $${hexc(gotHyperArmour)}.l
-        bne _gotHyperArmour
-
-        sep #$02.b
-        rtl
-
-    _gotHyperArmour:
-        rep #$02.b
-        rtl
-
-    _normalMinimapMarkerCheck:
-        lda ($10)
-        bit $000a.w
-        rtl
-    `);
 
     // qol - stage select shows correct items
     for (let _textIdx of [
@@ -675,29 +1251,6 @@ function itemRandomize(rom, rng, opts, m) {
         rtl
     `);
 
-    // Hyper Armour sets the relevant ram var
-    m.addAsm(5, null, `
-    GiveHyperArmour:
-    ; From previous code
-        lda #$ff.b
-        tsb $1fcc.w
-        lda #$02.b
-        tsb $0a84.w
-        lda #$01.b
-        sta $${hexc(gotHyperArmour)}.l
-        rts
-    `);
-    let labelAddr = m.getLabelFullAddr('GiveHyperArmour');
-    let addrInBank = (labelAddr % 0x8000) + 0x8000;
-    writeWord(rom, conv(5, 0xc7d7), addrInBank);
-
-    // Hyper Armour loads its tile data with the right ram var
-    m.addAsm(4, 0xb70a, `
-        lda $${hexc(gotHyperArmour)}.l
-        cmp #$01.b
-        nop
-    `);
-
     // Get the right text idx for Dr Light
     m.addAsm(2, 0xfd02, `
         jsr SetCapsuleItemGiverTextIdx.l
@@ -795,15 +1348,10 @@ function itemRandomize(rom, rng, opts, m) {
     for (let i = 0; i < 15*4; i++) {
         rom[start+i] = 0;
     }
-    // Skip Doppler capsule check so it's always displayed
-    m.addAsm(0x13, isNormal ? 0xc011 : 0xc019, `
-        jmp InitialCapsuleCheck.w
-    `);
-    // various hooks to use subtype to determine item, rather than stage
+	 // various hooks to use subtype to determine item, rather than stage
     m.addAsm(0x13, isNormal ? 0xc031 : 0xc034, `
     InitialCapsuleCheck:
         jmp _InitialCapsuleCheck.w
-
     ReturnFrom_InitialCapsuleCheck:
         tay
         nop
@@ -818,41 +1366,20 @@ function itemRandomize(rom, rng, opts, m) {
     m.addAsm(0x13, isNormal ? 0xc071 : 0xc06a, `
     GoodToGoWithCapsule:
     `);
-    m.addAsm(0x13, null, `
+	//readded capsule logic with hyper stripped completely.
+	 m.addAsm(0x13, null, `
     _InitialCapsuleCheck:
         jsr ConvertNewCapsuleParamToCapsuleItemGivingEntityParam.w
         cmp #$08.b
         bne _returnFrom_IntialCapsuleCheck
-
-        lda wSubTanksAndUpgradesGottenBitfield.w
-        and wHealthTanksGottenBitfield.w
-        cmp #$ff.b
-        bne _makeHyperCapsuleUnavail
-
-    ; Require 4 chips
-        lda wChipsAndRideArmoursGottenBitfield.w
-        cmp #$ff.b
-        bne _makeHyperCapsuleUnavail
-
-        lda wCurrHealth.w
-        cmp wMaxHealth.w
-        bne _makeHyperCapsuleUnavail
-
-        lda $${hexc(gotHyperArmour)}.l
-        cmp #$01.b
-        beq _deleteHyperCapsule
-
     ; We good
         jmp GoodToGoWithCapsule.w
 
-    _makeHyperCapsuleUnavail:
-        jmp CantGetCapsuleItem.w
-
-    _deleteHyperCapsule:
-        jmp DeleteCapsuleEntity.w
-
     _returnFrom_IntialCapsuleCheck:
         jmp ReturnFrom_InitialCapsuleCheck.w
+    `);
+    m.addAsm(0x13, 0xc37d, `
+        jsr ConvertNewCapsuleParamToCapsuleItemGivingEntityParam.w
     `);
     m.addAsm(0x13, 0xc37d, `
         jsr ConvertNewCapsuleParamToCapsuleItemGivingEntityParam.w

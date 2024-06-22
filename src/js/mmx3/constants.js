@@ -197,7 +197,6 @@ const ENT_SUBTANK = [MT_ITEM, ITEMID_SUBTANK];
 
 // New ram vars noted here
 // (TODO: have labels in banks, with base addrs), and routine to add labels
-let gotHyperArmour = 0x7ef4e3;
 
 // idxes into a table of $26 weakness vars
 const enemyWeaknesses = {

@@ -13,7 +13,6 @@ function prep(rom, rng, opts, m) {
         [STAGE_BLAST_HORNET, 3, 0],
         [STAGE_BLIZZARD_BUFFALO, 6, 0],
         [STAGE_CRUSH_CRAWFISH, 3, 0],
-        [STAGE_DOPPLER_1, 8, 0],
         [STAGE_GRAVITY_BEETLE, 10, 0],
         [STAGE_NEON_TIGER, 2, 0],
         [STAGE_TOXIC_SEAHORSE, 7, 0],
