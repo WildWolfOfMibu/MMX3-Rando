@@ -177,7 +177,7 @@ function itemRandomize(rom, rng, opts, m) {
             textIdx: 0x57,
         },
         {
-	    slotindex: 11,		
+	    slotindex: 10,		
             name: "Neon Tiger Capsule",
             stageIdx: STAGE_NEON_TIGER,
             itemName: "Arm Upgrade",
@@ -390,6 +390,16 @@ function itemRandomize(rom, rng, opts, m) {
 
 	// if hornet capsule (slot 0) is either hawk armour (item 7) or leg upgrade (item 23), increment slot and pull index
 	  if (slotcheck == 0 && itemcheck == 23){
+		  if (smax != s){
+			  s++;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+		  else {
+			  s = 0;
+			  slotcheck = available_slots[s].slotindex;
+		  }
+	  }
+	  if (slotcheck == 0 && itemcheck == 10){
 		  if (smax != s){
 			  s++;
 			  slotcheck = available_slots[s].slotindex;
@@ -1338,6 +1348,15 @@ function itemRandomize(rom, rng, opts, m) {
     for (let i = 0; i < 15*4; i++) {
         rom[start+i] = 0;
     }
+	 // various hooks to use subtype to determine item, rather than stage
+    m.addAsm(0x13, isNormal ? 0xc031 : 0xc034, `
+    InitialCapsuleCheck:
+        jmp _InitialCapsuleCheck.w
+    ReturnFrom_InitialCapsuleCheck:
+        tay
+        nop
+        nop
+    `);
     m.addAsm(0x13, isNormal ? 0xc065 : 0xc05e, `
     CantGetCapsuleItem:
     `);
@@ -1346,6 +1365,21 @@ function itemRandomize(rom, rng, opts, m) {
     `);
     m.addAsm(0x13, isNormal ? 0xc071 : 0xc06a, `
     GoodToGoWithCapsule:
+    `);
+	//readded capsule logic with hyper stripped completely.
+	 m.addAsm(0x13, null, `
+    _InitialCapsuleCheck:
+        jsr ConvertNewCapsuleParamToCapsuleItemGivingEntityParam.w
+        cmp #$08.b
+        bne _returnFrom_IntialCapsuleCheck
+    ; We good
+        jmp GoodToGoWithCapsule.w
+
+    _returnFrom_IntialCapsuleCheck:
+        jmp ReturnFrom_InitialCapsuleCheck.w
+    `);
+    m.addAsm(0x13, 0xc37d, `
+        jsr ConvertNewCapsuleParamToCapsuleItemGivingEntityParam.w
     `);
     m.addAsm(0x13, 0xc37d, `
         jsr ConvertNewCapsuleParamToCapsuleItemGivingEntityParam.w
