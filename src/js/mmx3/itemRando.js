@@ -398,7 +398,7 @@ function itemRandomize(rom, rng, opts, m) {
 
     let newSlots = [];
 
-    // randomly fill slots with items
+    
     let unsorted_items = [...items];
     let available_items = [];
 
@@ -418,6 +418,7 @@ function itemRandomize(rom, rng, opts, m) {
     
     let available_slots = [...slots];
     let s = 0;
+   // randomly fill slots with items
     for (let i = 0; i < slots.length; i += 1) {
 	    let chosen_slot = 0;
 	    let chosen_item = Math.floor(rng() * available_items.length);
