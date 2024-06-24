@@ -399,7 +399,23 @@ function itemRandomize(rom, rng, opts, m) {
     let newSlots = [];
 
     // randomly fill slots with items
-    let available_items = [...items];
+    let unsorted_items = [...items];
+    let available_items = [];
+
+    //sorting items into item index order	
+    let idx = 0;
+    let idxsort = 0;
+    while (unsorted_items.length > 0;){
+	    if (unsorted_item[idx].itemindex != idxsort){
+		    idx++
+    } else {
+		    available_items.push(unsorted_item[idx]);
+		    unsorted_item.splice(idx, 1);
+		    idx = 0;
+		    idxsort++;
+	    }
+		    
+    
     let available_slots = [...slots];
     let s = 0;
     for (let i = 0; i < slots.length; i += 1) {
