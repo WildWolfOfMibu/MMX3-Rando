@@ -4,11 +4,12 @@ Seahorse Kangaroo Armour 0
 Buffalo Heart Tank 1
 Buffalo Subtank 2
 Beetle Frog Armour 3
-Buffalo Heart Tank 4
-Crawfish Heart Tank 5
-Catfish Heart Tank 6
+Crawfish Heart Tank 4
+Catfish Heart Tank 5
 (no leg, hawk, arm)
-Hornet Capsule 7
+Hornet Capsule 6
+(Frog Armour req)
+Seahorse Capsule 7
 (leg req)
 Hornet Heart Tank 8
 (armour req)
