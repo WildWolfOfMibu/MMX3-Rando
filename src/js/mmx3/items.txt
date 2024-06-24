@@ -1,0 +1,25 @@
+Item Index
+Head Chip 0
+Body Chip 1
+Arm Chip 2
+Leg Chip 3
+Head Upgrade 4
+Body Upgrade 5
+Arm Upgrade 6
+Leg Upgrade 7
+Kangaroo Armour 8
+Kawk Armour 9
+Frog Armour 10
+Chimera Armour 11
+Buffalo Subtank 12
+Catfish Subtank 13
+Rhino Subtank 14
+Tiger Subtank 15
+Hornet Heart Tank 16
+Buffalo Heart Tank 17
+Beetle Heart Tank 18
+Seahorse Heart Tank 19
+Catfish Heart Tank 20
+Crawfish Heart Tank 21
+Rhino Heart Tank 22
+Tiger Heart Tank 23

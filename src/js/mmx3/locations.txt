@@ -1,0 +1,37 @@
+Location Index
+(no capsules lv 8)
+Seahorse Kangaroo Armour 0 
+Buffalo Heart Tank 1
+Buffalo Subtank 2
+Beetle Frog Armour 3
+Buffalo Heart Tank 4
+Crawfish Heart Tank 5
+Catfish Heart Tank 6
+(no leg, hawk, arm)
+Hornet Capsule 7
+(leg req)
+Hornet Heart Tank 8
+(armour req)
+Crawfish Capsule 9
+(Arm req)
+Crawfish Hawk Armour 10
+(armour req)
+Beetle Capsule 11
+(leg req)
+Tiger Capsule 12
+(arm req)
+Rhino Capsule 13
+(arm req)
+Rhino Heart Tank 14
+(arm req)
+Catfish Capsule 15
+(armour req)
+Catfish Subtank 16
+(no hard reqs)
+Beetle Heart Tank 17
+Rhino Subtank 18
+Tiger Heart Tank 19
+Tiger Subtank 20
+Seahorse Heart Tank 21
+Hornet Chimera Armour 22
+Buffalo Capsule 23
