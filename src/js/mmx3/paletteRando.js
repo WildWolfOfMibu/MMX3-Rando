@@ -1,22 +1,23 @@
-const snes2rgb = function(snesCol) {
+import { palAddrs } from './palAddrs';
+import { conv, readWord, writeWord } from './utils';
+const snes2rgb = (snesCol) => {
     let r = snesCol & 0x1f;
-    let g = (snesCol>>5) & 0x1f;
-    let b = (snesCol>>10) & 0x1f;
-    return [r/0x1f, g/0x1f, b/0x1f];
-}
-
-const rgb2snes = function(r, g, b) {
+    let g = (snesCol >> 5) & 0x1f;
+    let b = (snesCol >> 10) & 0x1f;
+    return [r / 0x1f, g / 0x1f, b / 0x1f];
+};
+const rgb2snes = (r, g, b) => {
     return ((b & 0x1f) << 10) + ((g & 0x1f) << 5) + (r & 0x1f);
-}
-
-const rgb2hsl = function(r, g, b) {
+};
+const rgb2hsl = (r, g, b) => {
     let maxColVal = Math.max(r, g, b);
     let minColVal = Math.min(r, g, b);
     let maxCol = 'r';
-    if (g == maxCol) maxCol = 'g';
-    if (b == maxCol) maxCol = 'b';
+    if (g == maxColVal)
+        maxCol = 'g';
+    if (b == maxColVal)
+        maxCol = 'b';
     let delta = maxColVal - minColVal;
-
     let lightness = (maxColVal + minColVal) / 2;
     let saturation = 0;
     if (delta !== 0) {
@@ -25,51 +26,63 @@ const rgb2hsl = function(r, g, b) {
     let hue;
     if (delta === 0) {
         hue = 0;
-    } else if (maxCol === 'r') {
+    }
+    else if (maxCol === 'r') {
         hue = 60 * (((g - b) / delta) % 6);
-    } else if (maxCol === 'g') {
+    }
+    else if (maxCol === 'g') {
         hue = 60 * (((b - r) / delta) + 2);
-    } else {
+    }
+    else {
         hue = 60 * (((r - g) / delta) + 4);
     }
-    if (hue < 360) hue += 360;
+    if (hue < 360)
+        hue += 360;
     return [hue, saturation, lightness];
-}
-
-const hsl2rgb = function(h, s, l) {
+};
+const hsl2rgb = (h, s, l) => {
     let C = (1 - Math.abs(2 * l - 1)) * s;
-    let X = C * (1 - Math.abs( ((h / 60) % 2) - 1 ));
-    let m = l - C/2;
+    let X = C * (1 - Math.abs(((h / 60) % 2) - 1));
+    let m = l - C / 2;
     let r, g, b;
-    if (h < 60) {r = C, g = X, b = 0}
-    else if (h < 120) {r = X, g = C, b = 0}
-    else if (h < 180) {r = 0, g = C, b = X}
-    else if (h < 240) {r = 0, g = X, b = C}
-    else if (h < 300) {r = X, g = 0, b = C}
-    else {r = C, g = 0, b = X}
+    if (h < 60) {
+        r = C, g = X, b = 0;
+    }
+    else if (h < 120) {
+        r = X, g = C, b = 0;
+    }
+    else if (h < 180) {
+        r = 0, g = C, b = X;
+    }
+    else if (h < 240) {
+        r = 0, g = X, b = C;
+    }
+    else if (h < 300) {
+        r = X, g = 0, b = C;
+    }
+    else {
+        r = C, g = 0, b = X;
+    }
     return [
-        (r+m) * 0x1f,
-        (g+m) * 0x1f,
-        (b+m) * 0x1f,
+        (r + m) * 0x1f,
+        (g + m) * 0x1f,
+        (b + m) * 0x1f,
     ];
-}
-
-function paletteRandomize(rom, rng, opts, m) {
+};
+export function paletteRandomize(rom, rng, opts, _) {
     const miscPalAddrs = [
         [conv(7, 0x808a), 1], // X wireframe logo
     ];
-
     // Add in unused palettes
     let copyPalAddrs = [...(new Set(palAddrs))].sort();
     let newPalAddrs = [...(new Set(palAddrs))].sort();
-    for (let i = 0; i < copyPalAddrs.length-1; i++) {
+    for (let i = 0; i < copyPalAddrs.length - 1; i++) {
         let currAddr = copyPalAddrs[i];
-        let nextAddr = copyPalAddrs[i+1];
-        for (let addr = currAddr+0x20; addr < nextAddr; addr += 0x20) {
+        let nextAddr = copyPalAddrs[i + 1];
+        for (let addr = currAddr + 0x20; addr < nextAddr; addr += 0x20) {
             newPalAddrs.push(addr);
         }
     }
-
     // Randomize palettes
     switch (opts.colours) {
         case 'chaos':
@@ -77,10 +90,11 @@ function paletteRandomize(rom, rng, opts, m) {
             let palPool = [];
             for (let addr of newPalAddrs) {
                 let start = conv(0xc, addr);
-                palPool.push(rom.slice(start, start+0x20));
+                palPool.push(rom.slice(start, start + 0x20));
             }
             let unassignedPals = [];
-            for (let i = 0; i < newPalAddrs.length; i++) unassignedPals.push(i);
+            for (let i = 0; i < newPalAddrs.length; i++)
+                unassignedPals.push(i);
             while (unassignedPals.length !== 0) {
                 let slotIdx = Math.floor(rng() * unassignedPals.length);
                 let palsIdx = Math.floor(rng() * palPool.length);
@@ -98,25 +112,23 @@ function paletteRandomize(rom, rng, opts, m) {
                 }
             }
             break;
-
         case 'hsl_palettes':
             for (let palAddr of newPalAddrs) {
                 let start = conv(0xc, palAddr);
                 let hOffs = rng() * 360;
-                let sMult = rng()+0.5;
-                let lMult = rng()+0.5;
+                let sMult = rng() + 0.5;
+                let lMult = rng() + 0.5;
                 for (let i = 0; i < 0x20; i += 2) {
-                    let snesCol = readWord(rom, start+i);
+                    let snesCol = readWord(rom, start + i);
                     let [h, s, l] = rgb2hsl(...snes2rgb(snesCol));
                     h = (h + hOffs) % 360;
-                    s = Math.min(s*sMult, 1);
-                    l = Math.min(l*lMult, 1);
+                    s = Math.min(s * sMult, 1);
+                    l = Math.min(l * lMult, 1);
                     let newSnesCol = rgb2snes(...hsl2rgb(h, s, l));
-                    writeWord(rom, start+i, newSnesCol);
+                    writeWord(rom, start + i, newSnesCol);
                 }
             }
             break;
-
         case 'gb_green':
             let greens = [
                 rgb2snes(0x08, 0x0a, 0x02),
@@ -127,14 +139,13 @@ function paletteRandomize(rom, rng, opts, m) {
             for (let palAddr of newPalAddrs) {
                 let start = conv(0xc, palAddr);
                 for (let i = 0; i < 0x20; i += 2) {
-                    let snesCol = readWord(rom, start+i);
+                    let snesCol = readWord(rom, start + i);
                     let [h, s, l] = rgb2hsl(...snes2rgb(snesCol));
-                    let greenCol = Math.floor(l/0.25);
-                    writeWord(rom, start+i, greens[Math.min(greenCol, 3)]);
+                    let greenCol = Math.floor(l / 0.25);
+                    writeWord(rom, start + i, greens[Math.min(greenCol, 3)]);
                 }
             }
             break;
-
         case 'vb_palettes':
             let reds = [
                 rgb2snes(0x00, 0x00, 0x00),
@@ -145,14 +156,13 @@ function paletteRandomize(rom, rng, opts, m) {
             for (let palAddr of newPalAddrs) {
                 let start = conv(0xc, palAddr);
                 for (let i = 0; i < 0x20; i += 2) {
-                    let snesCol = readWord(rom, start+i);
+                    let snesCol = readWord(rom, start + i);
                     let [h, s, l] = rgb2hsl(...snes2rgb(snesCol));
-                    let greenCol = Math.floor(l/0.25);
-                    writeWord(rom, start+i, reds[Math.min(greenCol, 3)]);
+                    let greenCol = Math.floor(l / 0.25);
+                    writeWord(rom, start + i, reds[Math.min(greenCol, 3)]);
                 }
             }
             break;
-
         case 'gb_grey':
             let greys = [
                 rgb2snes(0x00, 0x00, 0x00),
@@ -163,23 +173,22 @@ function paletteRandomize(rom, rng, opts, m) {
             for (let palAddr of newPalAddrs) {
                 let start = conv(0xc, palAddr);
                 for (let i = 0; i < 0x20; i += 2) {
-                    let snesCol = readWord(rom, start+i);
+                    let snesCol = readWord(rom, start + i);
                     let [h, s, l] = rgb2hsl(...snes2rgb(snesCol));
-                    let greenCol = Math.floor(l/0.25);
-                    writeWord(rom, start+i, greys[Math.min(greenCol, 3)]);
+                    let greenCol = Math.floor(l / 0.25);
+                    writeWord(rom, start + i, greys[Math.min(greenCol, 3)]);
                 }
             }
             break;
-
         case 'greyscale':
             for (let palAddr of newPalAddrs) {
                 let start = conv(0xc, palAddr);
                 for (let i = 0; i < 0x20; i += 2) {
-                    let snesCol = readWord(rom, start+i);
+                    let snesCol = readWord(rom, start + i);
                     let [h, s, l] = rgb2hsl(...snes2rgb(snesCol));
                     s = 0;
                     let newSnesCol = rgb2snes(...hsl2rgb(h, s, l));
-                    writeWord(rom, start+i, newSnesCol);
+                    writeWord(rom, start + i, newSnesCol);
                 }
             }
             break;

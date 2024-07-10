@@ -1,2 +1,5 @@
 .idea/
 *.txt
+
+.vscode/
+package-lock.json

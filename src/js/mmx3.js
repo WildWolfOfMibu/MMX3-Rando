@@ -1,13 +1,18 @@
-function randomize(_rom, rng, opts) {
+//@ts-check
+import { M65816 } from './asm65816';
+import { bossData, enemyWeaknesses, subweapons } from './mmx3/constants';
+import { enemyRandomize } from './mmx3/enemyRando';
+import { itemRandomize } from './mmx3/itemRando';
+import { paletteRandomize } from './mmx3/paletteRando';
+import { prep } from './mmx3/prep';
+import { conv, hexc, getEnemyBaseData, writeWord, getWeaknessTables, sum, readWord } from './mmx3/utils';
+export function randomize(rom, rng, opts) {
     /*
     Initial rom changes
     */
-
-    let rom = Uint8Array.from(_rom);
-
+    // let rom = number[].from(_rom);
     let start;
     let isNormal = opts.romType === 'normal';
-
     let m = new M65816({
         wStageIdx: 0x1fae,
         wChipsAndRideArmoursGottenBitfield: 0x1fd7,
@@ -33,13 +38,10 @@ function randomize(_rom, rng, opts) {
         0x13: 0xfa6e,
         0x4a: 0xc0a6,
     });
-
-    prep(rom, rng, opts, m);
+    prep(rom);
     let newSlots = itemRandomize(rom, rng, opts, m);
     paletteRandomize(rom, rng, opts, m);
     enemyRandomize(rom, rng, opts, m);
-
-
     // Zero mod Zero initialised with 10hp
     if (!isNormal) {
         m.addAsm(0x4a, 0x807c, `
@@ -47,44 +49,38 @@ function randomize(_rom, rng, opts) {
             jsr $809e.w
         `);
     }
-
     if (opts.enemy_multipliers !== '1') {
         let mult = parseFloat(opts.enemy_multipliers);
-
         // start with enemy table
-        start = conv(6, 0xe28e);        
+        start = conv(6, 0xe28e);
         for (let enemyId = 0; enemyId <= 0x6a; enemyId++) {
             if (enemyId != 9) {
-                if (rom[start+2]!==0) {
-                    let newDmgDealt = Math.max(1, Math.floor(rom[start+2]*mult));
-                    rom[start+2] = newDmgDealt;
+                if (rom[start + 2] !== 0) {
+                    let newDmgDealt = Math.max(1, Math.floor(rom[start + 2] * mult));
+                    rom[start + 2] = newDmgDealt;
                 }
-                if (rom[start+3]!==0) {
-                    let newHealth = Math.max(1, rom[start+3]*mult);
-                    rom[start+3] = newHealth;
+                if (rom[start + 3] !== 0) {
+                    let newHealth = Math.max(1, rom[start + 3] * mult);
+                    rom[start + 3] = newHealth;
                 }
             }
             start += 5;
         }
-
         // then boss health
-        for (let [bossName, deets] of Object.entries(bossData)) {
-            let healthAddr = deets.maxHealth;
-            if (rom[healthAddr-1] !== 0xc9 || rom[healthAddr] !== 0x20)
+        for (let bossName in bossData) {
+            let healthAddr = bossData[bossName].maxHealth;
+            if (rom[healthAddr - 1] !== 0xc9 || rom[healthAddr] !== 0x20)
                 throw new Error(`Boss ${bossName} health address is wrong`);
-
-            let health = Math.floor(rom[healthAddr]*mult);
+            let health = Math.floor(rom[healthAddr] * mult);
             rom[healthAddr] = health;
             bossData[bossName].newHealth = health;
         }
-
         // ride armour goliath cross-charge table
         start = conv(6, 0xf353);
         for (let i = 0; i < 4; i++) {
-            let dmg = Math.max(1, Math.floor(rom[start+i]*mult));
-            rom[start+i] = dmg;
+            let dmg = Math.max(1, Math.floor(rom[start + i] * mult));
+            rom[start + i] = dmg;
         }
-
         // then misc `lda/adc #xx.b`
         for (let addr of [
             conv(0x3, 0xcb21),
@@ -189,14 +185,14 @@ function randomize(_rom, rng, opts) {
             conv(0x3f, 0xeadd),
             conv(0x3f, 0xeff6),
         ]) {
-            if (rom[addr] === 0xea) continue;
+            if (rom[addr] === 0xea)
+                continue;
             if (rom[addr] !== 0xa9 && rom[addr] !== 0x69)
                 throw new Error(`Enemy misc dmg invalid ${hexc(addr)}`);
-            let newDmg = Math.max(1, Math.floor(rom[addr+1]*mult));
-            rom[addr+1] = newDmg;
+            let newDmg = Math.max(1, Math.floor(rom[addr + 1] * mult));
+            rom[addr + 1] = newDmg;
         }
     }
-
     // Scavenger hunt: num subweapons required
     if (opts.new_game_mode === 'doppler_subwep_locked' || opts.new_game_mode === 'doppler_upgrades_locked') {
         let num_required = opts.new_game_mode === 'doppler_subwep_locked' ? opts.subweps_required : opts.upgrades_required;
@@ -210,14 +206,13 @@ function randomize(_rom, rng, opts) {
                 conv(0, 0xc491),
             ]) {
                 // `cmp #$08.b`
-                if (rom[addr-1] !== 0xc9) throw new Error(`Invalid num subweapon check ${hexc(addr)}`);
+                if (rom[addr - 1] !== 0xc9)
+                    throw new Error(`Invalid num subweapon check ${hexc(addr)}`);
                 rom[addr] = num_required;
             }
-
             rom[conv(0, 0xc2d0)] = 0xb0; // bcs instead of beq after 3:8076
             rom[conv(0, 0xc421)] = 0x90; // bcc instead of bne after 0:c420
             rom[conv(0, 0xc492)] = 0x90; // bcc instead of bne after 0:c491
-
             if (opts.new_game_mode === 'doppler_upgrades_locked') {
                 m.addAsm(3, 0x8065, `
                     jsr DopplerUpgradeLockCheck.w
@@ -239,7 +234,8 @@ function randomize(_rom, rng, opts) {
                     rts
                 `);
             }
-        } else {
+        }
+        else {
             m.addAsm(3, 0x806c, `
                 jsr ZeroModCheckGotSufficientSubweapons.l
             `);
@@ -279,7 +275,8 @@ function randomize(_rom, rng, opts) {
                     lda #$ff.b
                     rtl
                 `);
-            } else {
+            }
+            else {
                 m.addAsm(null, null, `
                 ZeroModCheckGotSufficientSubweapons:
                     php
@@ -328,43 +325,39 @@ function randomize(_rom, rng, opts) {
             }
         }
     }
-
     // Randomize boss health
     if (opts.random_boss_hp) {
-        for (let [bossName, deets] of Object.entries(bossData)) {
-            let healthAddr = deets.maxHealth;
+        for (let bossName in bossData) {
+            let healthAddr = bossData[bossName].maxHealth;
             // if (rom[healthAddr-1] !== 0xc9 || rom[healthAddr] !== 0x20)
             //     throw new Error(
             //         `Boss ${bossName} health address is wrong
             //         ${hexc(rom[healthAddr-1])}, ${hexc(rom[healthAddr])},
             //         ${hexc(healthAddr)}`);
-
             let minHp = opts.min_boss_hp;
-            let maxHp = opts.max_boss_hp+1;
-            let health = Math.floor(rng() * (maxHp-minHp)) + minHp;
+            let maxHp = opts.max_boss_hp + 1;
+            let health = Math.floor(rng() * (maxHp - minHp)) + minHp;
             rom[healthAddr] = Math.min(health, 0x7f);
             bossData[bossName].newHealth = health;
         }
     }
-
     // Randomize boss weakness
     if (opts.random_boss_weakness) {
-        for (let [bossName, deets] of Object.entries(bossData)) {
-            let tableEntry = getEnemyBaseData(deets.id);
+        for (let bossName in bossData) {
+            let tableEntry = getEnemyBaseData(bossData[bossName].id);
             let weakness = Math.floor(rng() * 8) + 0x12;
-            rom[tableEntry+4] = weakness;
-            for (let addr of deets.extraWeakness) {
-                if (rom[addr-1] !== 0xa9)
+            rom[tableEntry + 4] = weakness;
+            for (let addr of bossData[bossName].extraWeakness) {
+                if (rom[addr - 1] !== 0xa9)
                     throw new Error(`Boss weakness is wrong ${hexc(addr)}`);
                 rom[addr] = weakness;
             }
             bossData[bossName].newWeakness = enemyWeaknesses[weakness];
         }
     }
-
     // Randomize boss drops
     if (opts.random_boss_drop) {
-        let subweaponPool = [0,1,2,3,4,5,6,7];
+        let subweaponPool = [0, 1, 2, 3, 4, 5, 6, 7];
         let subwepToStage = {
             0: 3,
             1: 0,
@@ -375,29 +368,26 @@ function randomize(_rom, rng, opts) {
             6: 1,
             7: 6,
         };
-        for (let [bossName, deets] of Object.entries(bossData)) {
+        for (let bossName in bossData) {
             if (isNormal) {
                 // Sanity check
-                if (rom[deets.subwepCheck-1] !== 0x2c) // bit abs.w
+                if (rom[bossData[bossName].subwepCheck - 1] !== 0x2c) // bit abs.w
                     throw new Error(`Subweapon check failed for ${bossName}`);
-                if (rom[deets.subwepReward-1] !== 0x8d) // sta abs.w
+                if (rom[bossData[bossName].subwepReward - 1] !== 0x8d) // sta abs.w
                     throw new Error(`Subweapon reward failed for ${bossName}`);
             }
         }
-
         // This and the called routine, make sure to properly display the
         // weapon-giving screen, animations, and actual given weapon
         if (isNormal) {
             m.addAsm(0, 0xa67e, `
                 jsr StageRemappedForSubWepRewardAccu16.l
             `);
-
             m.addAsm(0, 0xa6a2, `
                 nop
                 nop
                 nop
             `);
-
             m.addAsm(null, null, `
             ; A - stage idx in lower byte
             ; Return new stage idx in X
@@ -411,18 +401,17 @@ function randomize(_rom, rng, opts) {
                 tax
                 rtl
             `);
-
             m.addAsm(0x06, null, `
             StageForSubwepRemapping:
                 nop ; stages are idxed from 1
             `);
-        } else {
+        }
+        else {
             m.addAsm(0, 0xa69f, `
                 jsr StageRemappedForSubWepRewardAccu16.l
                 nop
                 nop
             `);
-
             m.addAsm(null, null, `
             StageRemappedForSubWepRewardAccu16:
                 lda wStageIdx.w
@@ -431,33 +420,30 @@ function randomize(_rom, rng, opts) {
                 sta wBeatenStageIdx.w
                 rtl
             `);
-
             m.addAsm(0x48, 0x975b, `
             StageForSubwepRemapping:
             `);
         }
-
-        for (let [bossName, deets] of Object.entries(bossData)) {
+        for (let bossName in bossData) {
             let subwepIdx = Math.floor(rng() * subweaponPool.length);
             let subwepId = subweaponPool[subwepIdx];
             subweaponPool.splice(subwepIdx, 1);
             bossData[bossName].newDrop = subweapons[subwepId];
-
             if (isNormal) {
                 // Stage->subweapon given
-                rom[conv(0x06, m.bankEnds[0x06]+deets.idx)] = subwepToStage[subwepId]+1;
+                rom[conv(0x06, m.bankEnds[0x06] + bossData[bossName].idx)] = subwepToStage[subwepId] + 1;
                 // SubweaponsStatusToAssociatedStage
-                rom[conv(0x06, 0x9c5e+subwepId)] = deets.idx+1;
-                writeWord(rom, deets.subwepReward, 0x1fbc+subwepId*2);
-                writeWord(rom, deets.subwepCheck, 0x1fbc+subwepId*2);
-            } else {
+                rom[conv(0x06, 0x9c5e + subwepId)] = bossData[bossName].idx + 1;
+                writeWord(rom, bossData[bossName].subwepReward, 0x1fbc + subwepId * 2);
+                writeWord(rom, bossData[bossName].subwepCheck, 0x1fbc + subwepId * 2);
+            }
+            else {
                 // Stage->subweapon given
-                rom[conv(0x48, 0x975c+deets.idx)] = subwepToStage[subwepId]+1;
+                rom[conv(0x48, 0x975c + bossData[bossName].idx)] = subwepToStage[subwepId] + 1;
             }
         }
         m.bankEnds[0x06] += 8;
     }
-
     if (opts.random_player_hp) {
         m.addAsm(0, 0xa1cb, `
             jsr RandoPlayerHealth.l
@@ -474,7 +460,8 @@ function randomize(_rom, rng, opts) {
                 sta wCurrHealth.w
                 rtl
             `);
-        } else {
+        }
+        else {
             m.addAsm(null, null, `
             RandoPlayerHealth:
                 lda wFrameCounter.w
@@ -496,21 +483,18 @@ function randomize(_rom, rng, opts) {
             sta wCurrHealth.w
         `);
     }
-
     // Add randomizer text + version
     m.addAsm(0, 0x8ef8, `
         jsr AddTmAndRandoDetails.l
         nop
     `);
-    
-    let text = `Randomizer v${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}`;
+    let text = `Randomizer v${opts.fullVersion}`;
     m.addAsm(null, null, `
     RandomizerText:
     `);
     let chosenBank = m.getLabelBank('RandomizerText');
-    m.addBytes(chosenBank, text.split('').map(ch=>ch.charCodeAt(0)), rom);
+    m.addBytes(chosenBank, text.split('').map(ch => ch.charCodeAt(0)), rom);
     m.addBytes(chosenBank, [0], rom);
-
     m.addAsm(null, null, `
     AddTmAndRandoDetails:
     ; From prev code, but with a far call
@@ -527,7 +511,7 @@ function randomize(_rom, rng, opts) {
         lda #$09.b
         sta $600.w,X ; vram hi
         inx
-        lda #${text.length*2}.b
+        lda #${text.length * 2}.b
         sta $600.w,X ; num bytes
         inx
         txy
@@ -549,10 +533,8 @@ function randomize(_rom, rng, opts) {
         stx $a5.b
         rtl
     `);
-
     // qol - quicker leg upgrade shot
     rom[conv(0x3f, 0xd251)] = 3;
-
     // qol - exit stage anytime
     m.addAsm(8, 0x8604, `
         jsr CheckSoftReset.l
@@ -577,7 +559,6 @@ function randomize(_rom, rng, opts) {
     _endSoftResetCheck:
         rtl
     `);
-
     // qol - skip intro stage (by pianohombre)
     if (opts.skip_intro) {
         m.addAsm(0, 0x99bd, `
@@ -591,7 +572,6 @@ function randomize(_rom, rng, opts) {
             stx wStageIdx.w
         `);
     }
-
     // qol - show items in stage select
     if (opts.stage_sel_show_items) {
         m.addAsm(3, 0x84b6, `
@@ -599,17 +579,15 @@ function randomize(_rom, rng, opts) {
             nop
         `);
     }
-
     // qol - more subweapons breaks walls/ice that's normally for Tornado Fang
     if (opts.fragile_walls) {
         let wallWeaknessEntries = getWeaknessTables(rom, 0x0e, isNormal);
         for (let tableAddr of wallWeaknessEntries) {
             for (let i = 0; i < 8; i++) {
-                rom[tableAddr+7+i] = 2;
+                rom[tableAddr + 7 + i] = 2;
             }
         }
     }
-
     // qol - no damage in most scenarios
     if (opts.zero_damage) {
         m.addAsm(4, 0xce01, `
@@ -635,14 +613,12 @@ function randomize(_rom, rng, opts) {
             nop
         `);
     }
-
     // qol - non knockback
     if (opts.no_knockback) {
         m.addAsm(4, 0xcb56, `
             jmp $cb6f.w
         `);
     }
-
     // qol - small enemies spawn with 1hp
     if (opts.enemies_1hp) {
         // loading from enemy table
@@ -655,20 +631,18 @@ function randomize(_rom, rng, opts) {
             lda #$01.b
         `);
         // bosses
-        for (let [bossName, deets] of Object.entries(bossData)) {
-            let healthAddr = deets.maxHealth;
+        for (let bossName in bossData) {
+            let healthAddr = bossData[bossName].maxHealth;
             rom[healthAddr] = 1;
             bossData[bossName].newHealth = 1;
         }
     }
-
     // Can use ride armour even if no chimera
     if (isNormal) {
         m.addAsm(3, 0xd75f, `
             and #$0f.b
         `);
     }
-
     // Start on the 1st available ride armour
     m.addAsm(3, 0xd879, `
         jsr StartAt1stRideArmourGotten.w
@@ -699,42 +673,35 @@ function randomize(_rom, rng, opts) {
         stx $34.b
         rts
     `);
-
     // Prevent additional texts due to chip descripts/reqs not filled
     if (isNormal)
         rom[conv(5, 0xc8ed)] = 0x80; // bra
-
     // Prevent Dr. Light from being drawn
-    rom[conv(5, 0xc89d)] = 0x80 // bra
-
+    rom[conv(5, 0xc89d)] = 0x80; // bra
     // Prevent movement animation after getting a capsule item
     start = conv(6, 0xcd09);
     for (let i = 0; i < 12; i++) {
-        rom[start+i] = 0x15;
+        rom[start + i] = 0x15;
     }
-
     m.compile(rom);
-
     // set checksum
     let checksum = sum(rom) - readWord(rom, 0x7fdc) - readWord(rom, 0x7fde);
     checksum = checksum & 0xffff;
-    writeWord(rom, 0x7fdc, 0x10000-checksum);
+    writeWord(rom, 0x7fdc, 0x10000 - checksum);
     writeWord(rom, 0x7fde, checksum);
-
     let bossDetails = [];
-    for (let [bossName, deets] of Object.entries(bossData)) {
+    for (let bossName in bossData) {
+        let deets = bossData[bossName];
         bossDetails.push([bossName, deets.newHealth, deets.newWeakness, deets.newDrop]);
     }
-
-    for (let [label, deets] of Object.entries(m.labels)) {
-        let [blockName, offs] = deets;
+    for (let label in m.labels) {
+        let [blockName, offs] = m.labels[label];
         let romOffs = m.asm[blockName].placement + offs;
-        // console.log(`Label ${label} at rom offset ${hexc(romOffs)}`);
+        console.log(`Label ${label} at rom offset ${hexc(romOffs)}`);
     }
-
     return {
         newSlots: newSlots,
         bossDetails: bossDetails,
         randomized_rom: rom,
-    }
+    };
 }

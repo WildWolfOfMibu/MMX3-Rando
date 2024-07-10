@@ -1,664 +1,671 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Mega Man X3 Randomizer</title>
-    <link rel="stylesheet" href="bulma.min.css">
-    <script src="fontAwesome_all.js"></script>
-    <!--script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script-->
-    <script src="vue_2_6_12.js"></script>
-    <script src="seedrandom.js"></script>
 
-    <script>
-      const MAJOR_VERSION = 2;
-      const MINOR_VERSION = 1;
-      const PATCH_VERSION = 0;
-    </script>
-    <script src="src/js/asm65816.js"></script>
-    <script src="src/js/mmx3/utils.js"></script>
-    <script src="src/js/mmx3/constants.js"></script>
-    <script src="src/js/mmx3/palAddrs.js"></script>
-    <script src="src/js/mmx3/prep.js"></script>
-    <script src="src/js/mmx3/itemRando.js"></script>
-    <script src="src/js/mmx3/paletteRando.js"></script>
-    <script src="src/js/mmx3/enemyRando.js"></script>
-    <script src="src/js/mmx3.js"></script>
-    <script>
-      var crc32=function(r){for(var a,o=[],c=0;c<256;c++){a=c;for(var f=0;f<8;f++)a=1&a?3988292384^a>>>1:a>>>1;o[c]=a}for(var n=-1,t=0;t<r.length;t++)n=n>>>8^o[255&(n^r.charCodeAt(t))];return(-1^n)>>>0};
-    </script>
-    <style>
-      .btn-margin {
-          margin-top: 5px;
-      }
-      .subtitle {
-          margin-top: 20px;
-          margin-bottom: 2px;
-      }
-      .tr-green {
-          background-color: lawngreen;
-      }
-      .tr-yellow {
-          background-color: yellow;
-      }
-      /* html {
+<head>
+  <meta charset="UTF-8">
+  <title>Mega Man X3 Randomizer</title>
+  <link rel="stylesheet" href="bulma.min.css">
+  <script src="fontAwesome_all.js"></script>
+  <!--script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script-->
+  <script src="vue_2_6_12.js"></script>
+  <script src="seedrandom.js"></script>
+
+  <script>
+    const MAJOR_VERSION = 2;
+    const MINOR_VERSION = 1;
+    const PATCH_VERSION = 0;
+  </script>
+  <script type="module" src="src/js/asm65816.js"></script>
+  <script type="module" src="src/js/mmx3/utils.js"></script>
+  <script type="module" src="src/js/mmx3/constants.js"></script>
+  <script type="module" src="src/js/mmx3/palAddrs.js"></script>
+  <script type="module" src="src/js/mmx3/prep.js"></script>
+  <script type="module" src="src/js/mmx3/itemRando.js"></script>
+  <script type="module" src="src/js/mmx3/paletteRando.js"></script>
+  <script type="module" src="src/js/mmx3/enemyRando.js"></script>
+  <script type="module" src="src/js/mmx3.js"></script>
+  <script>
+    var crc32 = function (r) { for (var a, o = [], c = 0; c < 256; c++) { a = c; for (var f = 0; f < 8; f++)a = 1 & a ? 3988292384 ^ a >>> 1 : a >>> 1; o[c] = a } for (var n = -1, t = 0; t < r.length; t++)n = n >>> 8 ^ o[255 & (n ^ r.charCodeAt(t))]; return (-1 ^ n) >>> 0 };
+  </script>
+  <style>
+    .btn-margin {
+      margin-top: 5px;
+    }
+
+    .subtitle {
+      margin-top: 20px;
+      margin-bottom: 2px;
+    }
+
+    .tr-green {
+      background-color: lawngreen;
+    }
+
+    .tr-yellow {
+      background-color: yellow;
+    }
+
+    /* html {
         background-image: url('ufouriaBG.jpg');
       } */
-    </style>
-  </head>
-  <body>
-    <section class="section" id="app">
-      <div class="container box">
+  </style>
+</head>
 
-        <h1 class="title">
-          Mega Man X3 Item Randomizer {{ fullVersion }}
-        </h1>
+<body>
+  <section class="section" id="app">
+    <div class="container box">
 
-        <div class="file">
-          <label class="file-label">
-            <input class="file-input" type="file" name="rom" id="rom" v-on:change="fileChange()" onclick="this.value=null">
-            <span class="file-cta">
-              <span class="file-icon">
-                <i class="fas fa-upload"></i>
-              </span>
-              <span class="file-label">
-                Upload a regular (.sfc/.smc) or Zero Mod (.sfc) ROM
-              </span>
+      <h1 class="title">
+        Mega Man X3 Item Randomizer {{ fullVersion }}
+      </h1>
+
+      <div class="file">
+        <label class="file-label">
+          <input class="file-input" type="file" name="rom" id="rom" v-on:change="fileChange()"
+            onclick="this.value=null">
+          <span class="file-cta">
+            <span class="file-icon">
+              <i class="fas fa-upload"></i>
             </span>
+            <span class="file-label">
+              Upload a regular (.sfc/.smc) or Zero Mod (.sfc) ROM
+            </span>
+          </span>
+        </label>
+      </div>
+
+      <div class="field">
+        <label class="label">Seed</label>
+        <div class="control">
+          <input class="input" type="text" v-model="seed" style="width:30%">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Flags</label>
+        <div class="control">
+          <input class="input" type="text" v-model="flags" style="width:30%">
+        </div>
+      </div>
+
+      <div>
+        <span v-if="correctFileCRCcheck===true" style="color:green">
+          Valid ROM
+        </span>
+        <span v-if="correctFileCRCcheck===false" style="color:red">
+          Invalid ROM
+        </span>
+      </div>
+
+      <hr />
+
+      <div class="tabs is-centered">
+        <ul>
+          <li v-bind:class="isTabSelected('qol')" v-on:click="selectTab('qol')">
+            <a href="#">Quality of Life</a>
+          </li>
+        </ul>
+        <ul>
+          <li v-bind:class="isTabSelected('game_modes')" v-on:click="selectTab('game_modes')">
+            <a href="#">New Game Modes</a>
+          </li>
+        </ul>
+        <ul>
+          <li v-bind:class="isTabSelected('random_options')" v-on:click="selectTab('random_options')">
+            <a href="#">Random options</a>
+          </li>
+        </ul>
+        <ul>
+          <li v-bind:class="isTabSelected('misc_options')" v-on:click="selectTab('misc_options')">
+            <a href="#">Misc options</a>
+          </li>
+        </ul>
+        <ul>
+          <li v-bind:class="isTabSelected('colours')" v-on:click="selectTab('colours')">
+            <a href="#">Colours</a>
+          </li>
+        </ul>
+        <ul v-if="beta==1">
+          <li v-bind:class="isTabSelected('beta_test')" v-on:click="selectTab('beta_test')">
+            <a href="#">Beta Testing</a>
+          </li>
+        </ul>
+        <ul>
+          <li v-bind:class="isTabSelected('changelog')" v-on:click="selectTab('changelog')">
+            <a href="#">Changelog</a>
+          </li>
+        </ul>
+        <ul>
+          <li v-bind:class="isTabSelected('notes')" v-on:click="selectTab('notes')">
+            <a href="#">Notes</a>
+          </li>
+        </ul>
+      </div>
+
+      <div v-show="tab==='qol'">
+        <div class="field">
+          <label class="label">Skip Intro Stage</label>
+          <div class="control">
+            <input type="checkbox" v-model="skip_intro">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Always show items in Stage Select</label>
+          <div class="control">
+            <input type="checkbox" v-model="stage_sel_show_items">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">More weapons can break walls/ice</label>
+          <div class="control">
+            <input type="checkbox" v-model="fragile_walls">
+          </div>
+        </div>
+      </div>
+
+      <div v-show="tab==='game_modes'">
+        <div class="field">
+          <label class="radio">
+            <input type="radio" v-model="new_game_mode" value="doppler_subwep_locked">
+            Scavenger Hunt: Doppler is subweapon-locked
+          </label>
+        </div>
+        <div class="field">
+          <div class="control">
+            Subweapons required:
+            <input min="0" max="8" class="input" type="number" v-model="subweps_required"
+              :disabled="new_game_mode!=='doppler_subwep_locked'">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="radio">
+            <input type="radio" v-model="new_game_mode" value="doppler_upgrades_locked">
+            Scavenger Hunt: Doppler is upgrades-locked
+          </label>
+        </div>
+        <div class="field">
+          <div class="control">
+            Upgrades required:
+            <input min="0" max="4" class="input" type="number" v-model="upgrades_required"
+              :disabled="new_game_mode!=='doppler_upgrades_locked'">
+          </div>
+        </div>
+      </div>
+
+      <div v-show="tab==='random_options'">
+        <div class="field">
+          <label class="label">*Random Boss HP</label>
+          <div class="control">
+            <input type="checkbox" v-model="random_boss_hp">
+          </div>
+          <div class="control">
+            Min HP: <input class="input" type="number" v-model="min_boss_hp">
+          </div>
+          <div class="control">
+            Max HP: <input class="input" type="number" v-model="max_boss_hp">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">*Random Boss Weakness</label>
+          <div class="control">
+            <input type="checkbox" v-model="random_boss_weakness">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">*Random Boss Drop</label>
+          <div class="control">
+            <input type="checkbox" v-model="random_boss_drop">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Random Player HP</label>
+          <div class="control">
+            <input type="checkbox" v-model="random_player_hp">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">*Random Enemies</label>
+          <div class="control">
+            <input type="checkbox" v-model="random_enemies">
+          </div>
+        </div>
+      </div>
+
+      <div v-show="tab==='misc_options'">
+        <div class="field">
+          <label class="radio">
+            <input type="radio" v-model="enemy_multipliers" value="0.75">
+            Enemies do .75x damage, and have .75x health
+          </label>
+        </div>
+        <div class="field">
+          <label class="radio">
+            <input type="radio" v-model="enemy_multipliers" value="1">
+            Enemies do 1x damage, and have 1x health
+          </label>
+        </div>
+        <div class="field">
+          <label class="radio">
+            <input type="radio" v-model="enemy_multipliers" value="1.5">
+            Enemies do 1.5x damage, and have 1.5x health
+          </label>
+        </div>
+        <div class="field">
+          <label class="radio">
+            <input type="radio" v-model="enemy_multipliers" value="3">
+            Enemies do 3x damage, and have 3x health
+          </label>
+        </div>
+      </div>
+
+      <div v-show="tab==='colours'">
+        <div class="field">
+          <label class="radio">
+            <input type="radio" v-model="colours" value="null">
+            None
           </label>
         </div>
 
         <div class="field">
-          <label class="label">Seed</label>
+          <label class="radio">
+            <input type="radio" v-model="colours" value="chaos">
+            *Chaos
+          </label>
+        </div>
+
+        <div class="field">
+          <label class="radio">
+            <input type="radio" v-model="colours" value="hsl_palettes">
+            *HSL random offsets
+          </label>
+        </div>
+
+        <div class="field">
+          <label class="radio">
+            <input type="radio" v-model="colours" value="gb_green">
+            GameBoy green
+          </label>
+        </div>
+
+        <div class="field">
+          <label class="radio">
+            <input type="radio" v-model="colours" value="gb_grey">
+            GameBoy grey
+          </label>
+        </div>
+
+        <div class="field">
+          <label class="radio">
+            <input type="radio" v-model="colours" value="vb_palettes">
+            Virtual Boy
+          </label>
+        </div>
+
+        <div class="field">
+          <label class="radio">
+            <input type="radio" v-model="colours" value="greyscale">
+            SNES grey
+          </label>
+        </div>
+      </div>
+
+      <div v-show="tab==='beta_test'">
+        <div class="field">
+          <label class="label">Take 0 damage in most cases</label>
           <div class="control">
-            <input class="input" type="text" v-model="seed" style="width:30%">
+            <input type="checkbox" v-model="zero_damage">
           </div>
         </div>
 
         <div class="field">
-          <label class="label">Flags</label>
+          <label class="label">Most enemies spawn with 1hp</label>
           <div class="control">
-            <input class="input" type="text" v-model="flags" style="width:30%">
+            <input type="checkbox" v-model="enemies_1hp">
           </div>
         </div>
 
-        <div>
-          <span v-if="correctFileCRCcheck===true" style="color:green">
-            Valid ROM
-          </span>
-          <span v-if="correctFileCRCcheck===false" style="color:red">
-            Invalid ROM
-          </span>
-        </div>
-
-        <hr/>
-
-        <div class="tabs is-centered">
-          <ul>
-            <li v-bind:class="isTabSelected('qol')" v-on:click="selectTab('qol')">
-              <a href="#">Quality of Life</a>
-            </li>
-          </ul>
-          <ul>
-            <li v-bind:class="isTabSelected('game_modes')" v-on:click="selectTab('game_modes')">
-              <a href="#">New Game Modes</a>
-            </li>
-          </ul>
-          <ul>
-            <li v-bind:class="isTabSelected('random_options')" v-on:click="selectTab('random_options')">
-              <a href="#">Random options</a>
-            </li>
-          </ul>
-          <ul>
-            <li v-bind:class="isTabSelected('misc_options')" v-on:click="selectTab('misc_options')">
-              <a href="#">Misc options</a>
-            </li>
-          </ul>
-          <ul>
-            <li v-bind:class="isTabSelected('colours')" v-on:click="selectTab('colours')">
-              <a href="#">Colours</a>
-            </li>
-          </ul>
-          <ul v-if="beta==1">
-            <li v-bind:class="isTabSelected('beta_test')" v-on:click="selectTab('beta_test')">
-              <a href="#">Beta Testing</a>
-            </li>
-          </ul>
-          <ul>
-            <li v-bind:class="isTabSelected('changelog')" v-on:click="selectTab('changelog')">
-              <a href="#">Changelog</a>
-            </li>
-          </ul>
-          <ul>
-            <li v-bind:class="isTabSelected('notes')" v-on:click="selectTab('notes')">
-              <a href="#">Notes</a>
-            </li>
-          </ul>
-        </div>
-
-        <div v-show="tab==='qol'">
-          <div class="field">
-            <label class="label">Skip Intro Stage</label>
-            <div class="control">
-              <input type="checkbox" v-model="skip_intro">
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">Always show items in Stage Select</label>
-            <div class="control">
-              <input type="checkbox" v-model="stage_sel_show_items">
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">More weapons can break walls/ice</label>
-            <div class="control">
-              <input type="checkbox" v-model="fragile_walls">
-            </div>
-          </div>
-        </div>
-
-        <div v-show="tab==='game_modes'">
-          <div class="field">
-            <label class="radio">
-              <input type="radio" v-model="new_game_mode" value="doppler_subwep_locked">
-              Scavenger Hunt: Doppler is subweapon-locked
-            </label>
-          </div>
-          <div class="field">
-            <div class="control">
-              Subweapons required: 
-              <input 
-                min="0" max="8" class="input" type="number" 
-                v-model="subweps_required"
-                :disabled="new_game_mode!=='doppler_subwep_locked'"
-              >
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="radio">
-              <input type="radio" v-model="new_game_mode" value="doppler_upgrades_locked">
-              Scavenger Hunt: Doppler is upgrades-locked
-            </label>
-          </div>
-          <div class="field">
-            <div class="control">
-              Upgrades required: 
-              <input 
-                min="0" max="4" class="input" type="number" 
-                v-model="upgrades_required"
-                :disabled="new_game_mode!=='doppler_upgrades_locked'"
-              >
-            </div>
-          </div>
-        </div>
-
-        <div v-show="tab==='random_options'">
-          <div class="field">
-            <label class="label">*Random Boss HP</label>
-            <div class="control">
-              <input type="checkbox" v-model="random_boss_hp">
-            </div>
-            <div class="control">
-              Min HP: <input class="input" type="number" v-model="min_boss_hp">
-            </div>
-            <div class="control">
-              Max HP: <input class="input" type="number" v-model="max_boss_hp">
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">*Random Boss Weakness</label>
-            <div class="control">
-              <input type="checkbox" v-model="random_boss_weakness">
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">*Random Boss Drop</label>
-            <div class="control">
-              <input type="checkbox" v-model="random_boss_drop">
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">Random Player HP</label>
-            <div class="control">
-              <input type="checkbox" v-model="random_player_hp">
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">*Random Enemies</label>
-            <div class="control">
-              <input type="checkbox" v-model="random_enemies">
-            </div>
-          </div>
-        </div>
-
-        <div v-show="tab==='misc_options'">
-          <div class="field">
-            <label class="radio">
-              <input type="radio" v-model="enemy_multipliers" value="0.75">
-              Enemies do .75x damage, and have .75x health
-            </label>
-          </div>
-          <div class="field">
-            <label class="radio">
-              <input type="radio" v-model="enemy_multipliers" value="1">
-              Enemies do 1x damage, and have 1x health
-            </label>
-          </div>
-          <div class="field">
-            <label class="radio">
-              <input type="radio" v-model="enemy_multipliers" value="1.5">
-              Enemies do 1.5x damage, and have 1.5x health
-            </label>
-          </div>
-          <div class="field">
-            <label class="radio">
-              <input type="radio" v-model="enemy_multipliers" value="3">
-              Enemies do 3x damage, and have 3x health
-            </label>
-          </div>
-        </div>
-
-        <div v-show="tab==='colours'">
-          <div class="field">
-            <label class="radio">
-              <input type="radio" v-model="colours" value="null">
-              None
-            </label>
-          </div>
-
-          <div class="field">
-            <label class="radio">
-              <input type="radio" v-model="colours" value="chaos">
-              *Chaos
-            </label>
-          </div>
-
-          <div class="field">
-            <label class="radio">
-              <input type="radio" v-model="colours" value="hsl_palettes">
-              *HSL random offsets
-            </label>
-          </div>
-
-          <div class="field">
-            <label class="radio">
-              <input type="radio" v-model="colours" value="gb_green">
-              GameBoy green
-            </label>
-          </div>
-
-          <div class="field">
-            <label class="radio">
-              <input type="radio" v-model="colours" value="gb_grey">
-              GameBoy grey
-            </label>
-          </div>
-
-          <div class="field">
-            <label class="radio">
-              <input type="radio" v-model="colours" value="vb_palettes">
-              Virtual Boy
-            </label>
-          </div>
-
-          <div class="field">
-            <label class="radio">
-              <input type="radio" v-model="colours" value="greyscale">
-              SNES grey
-            </label>
-          </div>
-        </div>
-
-        <div v-show="tab==='beta_test'">
-          <div class="field">
-            <label class="label">Take 0 damage in most cases</label>
-            <div class="control">
-              <input type="checkbox" v-model="zero_damage">
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">Most enemies spawn with 1hp</label>
-            <div class="control">
-              <input type="checkbox" v-model="enemies_1hp">
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">No knockback (todo: Prevents capsule use)</label>
-            <div class="control">
-              <input type="checkbox" v-model="no_knockback">
-            </div>
-          </div>
-        </div>
-
-        <div v-show="tab==='changelog'">
-          <div class="content">
-            <div class="title">Changelog</div>
-			
-			<div class="subtitle">v2.1.0</div>
-			
-			<ul>
-				<li>Added additional logic checks</li>
-				<li>Added index to simplify additional logic checks</li>
-			</ul>
-			
-			<div class="subtitle">v2.0.0</div>
-			
-			<ul>
-				<li> Added indices for items and slots for ease of logic checks</li>
-				<li> Complete logic rework </li>
-				<li> 5 capsule softlock checks </li>
-				<li> 4 Arm Upgrade logic checks</li>
-				<li> 3 Leg Upgrade logic checks</li>
-				<li> 2 Frog Armour logic checks</li>
-				<li> 3 Non-Frog Armour logic checks</li>
-				<li> Special Blizzard Buffalo Heart Tank and Blast Hornet Capsule checks</li>
-				<li></li>
-				<li> Removed all 4 chips required for Hyper Chip</li>
-			</ul>
-
-			<div class="subtitle">v1.1.1</div>
-
-			<ul>
-              <li>Removed Blizzard Buffalo Subtank from locations for Capsules due to soft lock issues</li>
-			  <li>Removed Toxic Seahorse Ride Armour from locations for Capsules due to soft lock issues</li>
-			  <li>Corrected Capsule softlock checks to include "Chip" check for upgrade chips</li>
-			  <li> Added itemType and Category for cleaner checks and future precise item placement (Plando?) </li>
-			</ul>
-
-            <div class="subtitle">v1.1.0</div>
-
-            <ul>
-              <li>Allow .smc for normal rom</li>
-              <li>Added flags input</li>
-              <li>Randomized rom file name now based off seed, flags and version</li>
-              <li>Bug: fixed normal rom giving a different weapon for randomized subweapon drop, during the post-defeat animation screen</li>
-              <li>Bug: if Gravity Beetle frog ride armour has a capsule, move it left so we can get the item inside</li>
-              <li>Bug: default upgrades required now set to 4</li>
-              <li>Bug: prevent Blizzard Buffalo heart tank having a capsule (todo: have capsules play nicely when on ride armour)</li>
-            </ul>
-
-            <div class="subtitle">v1.0.1</div>
-
-            <ul>
-              <li>Bug: Bosses stuck in an infinite loop if their HP >= 128</li>
-              <li>Bug: Zero would spawn with 0HP in Zero Mod after swapping</li>
-            </ul>
-
-            <div class="subtitle">v1.0.0</div>
-
-            <ul>
-              <li>Release</li>
-            </ul>
-
-            <div class="subtitle">v0.0.3</div>
-
-            <ul>
-              <li>Tornado Fang walls breakable by any subweapon</li>
-              <li>Enemy damage/health multiplier</li>
-            </ul>
-
-            <div class="subtitle">v0.0.2</div>
-
-            <ul>
-              <li>Upgrades scavenger hunt</li>
-            </ul>
-
-            <div class="subtitle">v0.0.1</div>
-
-            <ul>
-              <li>Enemy rando</li>
-            </ul>
-
-            <div class="subtitle">v0.0.0</div>
-
-            <ul>
-              <li>Skip Intro</li>
-              <li>Always show items in Stage Select</li>
-              <li>Subweapon scavenger hunt</li>
-              <li>Random boss HP</li>
-              <li>Random boss weakness</li>
-              <li>Random player HP</li>
-              <li>Random enemies</li>
-              <li>Chaos colours</li>
-              <li>HSL random offsets</li>
-              <li>Gameboy green/grey</li>
-              <li>Virtual boy</li>
-              <li>SNES grey</li>
-            </ul>
-          </div>
-        </div>
-
-        <div v-show="tab==='notes'">
-          <div class="content">
-            <div class="title">Notes</div>
-
-            <div class="subtitle">About Chips</div>
-
-            <ul>
-              <li>You can get all the body part chips, and the hyper chip</li>
-              <li>The 4 body part chips' requirements stay the same (requires their associated upgrade)</li>
-              <s>Hyper chip requires the other 4 body part chips</s>
-			  <li>Reverted Hyper Chip to original game - Hyper stands alone</li>
-            </ul>
-
-            <div class="subtitle">Convenience changes</div>
-
-            <ul>
-              <li>Select+B lets you exit a stage</li>
-              <li>Quicker leg upgrade shot</li>
-              <li>Can get and use ride armours without the Chimaera ride armour</li>
-            </ul>
-
-            <div class="subtitle">Other notes</div>
-
-            <ul>
-              <li>I highly recommend the HSL colour option</li>
-              <li>Options prefixed with * are affected by the seed</li>
-            </ul>
-          </div>
-        </div>
-
-        <hr/>
-
-        <div class="btn-margin">
-          <button class="button" :disabled="correctFileCRCcheck!==true" v-on:click="randomizeRom(true)">Randomize with new seed</button>
-          <button class="button" :disabled="correctFileCRCcheck!==true" v-on:click="randomizeRom(false)">Randomize</button>
-        </div>
-
-        <div>
-          <span v-if="randomized===true" style="color:green">
-            Randomized
-          </span>
-        </div>
-
-        <div class="btn-margin">
-          <a class="button" :disabled="randomized!==true" :download="fname" :href="createBlobURL">Download Randomized ROM</a>
-          <a class="button" :disabled="randomized!==true||romType==='normal'||fname_prefix===''" :download="manifestFname" :href="createManifestBlobURL">Download Zero Mod Manifest</a>
-          <button class="button" :disabled="randomized!==true" v-on:click="toggleSpoilers()">
-            <span v-if="showing_spoilers">Hide Spoiler Log</span>
-            <span v-if="!showing_spoilers">Show Spoiler Log</span>
-          </button>
-        </div>
-
-        <div class="btn-margin">
-          <div v-if="showing_spoilers">
-            <table class="table">
-              <thead>
-                  <tr>
-                  <th>Location</th>
-                  <th>Item</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  <tr v-for="(slot, idx) in orderedSlots">
-                  <td>{{ slot.slot.name }}</td>
-                  <td>{{ slot.item.itemName }}</td>
-                  </tr>
-              </tbody>
-            </table>
-
-            <table class="table">
-              <thead>
-                  <tr>
-                  <th>Boss</th>
-                  <th>Health</th>
-                  <th>Weakness</th>
-                  <th>Drop</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  <tr v-for="(newBossEntry, idx) in bossDetails">
-                  <td>{{ newBossEntry[0] }}</td>
-                  <td>{{ newBossEntry[1] }}</td>
-                  <td>{{ newBossEntry[2] }}</td>
-                  <td>{{ newBossEntry[3] }}</td>
-                  </tr>
-              </tbody>
-            </table>
+        <div class="field">
+          <label class="label">No knockback (todo: Prevents capsule use)</label>
+          <div class="control">
+            <input type="checkbox" v-model="no_knockback">
           </div>
         </div>
       </div>
-    </section>
-    <script>
-      const urlParams = new URLSearchParams(window.location.search);
-      const beta = urlParams.get('beta');
 
-      let app = new Vue({
-        el: '#app',
-        data: {
-          beta: beta,
-          correctFileCRCcheck: null,
-          randomized: null,
-          randomized_rom: null,
-          showing_spoilers: false,
-          romType: 'normal',
-          romExt: 'sfc',
-          seed: "",
-          tab: "notes",
-          fname_prefix: "",
+      <div v-show="tab==='changelog'">
+        <div class="content">
+          <div class="title">Changelog</div>
 
-          newSlots: [],
-          bossDetails: [],
+          <div class="subtitle">v2.1.0</div>
 
-          // qol
-          skip_intro: true,
-          stage_sel_show_items: true,
-          fragile_walls: false,
+          <ul>
+            <li>Added additional logic checks</li>
+            <li>Added index to simplify additional logic checks</li>
+          </ul>
 
-          // new game mode
-          new_game_mode: "doppler_subwep_locked",
-          subweps_required: 8,
-          upgrades_required: 4,
+          <div class="subtitle">v2.0.0</div>
 
-          // random_options
-          random_boss_hp: false,
-          min_boss_hp: 16,
-          max_boss_hp: 36,
-          random_boss_weakness: false,
-          random_boss_drop: false,
-          random_player_hp: false,
-          random_enemies: false,
+          <ul>
+            <li> Added indices for items and slots for ease of logic checks</li>
+            <li> Complete logic rework </li>
+            <li> 5 capsule softlock checks </li>
+            <li> 4 Arm Upgrade logic checks</li>
+            <li> 3 Leg Upgrade logic checks</li>
+            <li> 2 Frog Armour logic checks</li>
+            <li> 3 Non-Frog Armour logic checks</li>
+            <li> Special Blizzard Buffalo Heart Tank and Blast Hornet Capsule checks</li>
+            <li></li>
+            <li> Removed all 4 chips required for Hyper Chip</li>
+          </ul>
 
-          // misc options
-          enemy_multipliers: '1',
+          <div class="subtitle">v1.1.1</div>
 
-          // colours
-          colours: null,
+          <ul>
+            <li>Removed Blizzard Buffalo Subtank from locations for Capsules due to soft lock issues</li>
+            <li>Removed Toxic Seahorse Ride Armour from locations for Capsules due to soft lock issues</li>
+            <li>Corrected Capsule softlock checks to include "Chip" check for upgrade chips</li>
+            <li> Added itemType and Category for cleaner checks and future precise item placement (Plando?) </li>
+          </ul>
 
-          // beta
-          zero_damage: false,
-          enemies_1hp: false,
-          no_knockback: false,
+          <div class="subtitle">v1.1.0</div>
+
+          <ul>
+            <li>Allow .smc for normal rom</li>
+            <li>Added flags input</li>
+            <li>Randomized rom file name now based off seed, flags and version</li>
+            <li>Bug: fixed normal rom giving a different weapon for randomized subweapon drop, during the post-defeat
+              animation screen</li>
+            <li>Bug: if Gravity Beetle frog ride armour has a capsule, move it left so we can get the item inside</li>
+            <li>Bug: default upgrades required now set to 4</li>
+            <li>Bug: prevent Blizzard Buffalo heart tank having a capsule (todo: have capsules play nicely when on ride
+              armour)</li>
+          </ul>
+
+          <div class="subtitle">v1.0.1</div>
+
+          <ul>
+            <li>Bug: Bosses stuck in an infinite loop if their HP >= 128</li>
+            <li>Bug: Zero would spawn with 0HP in Zero Mod after swapping</li>
+          </ul>
+
+          <div class="subtitle">v1.0.0</div>
+
+          <ul>
+            <li>Release</li>
+          </ul>
+
+          <div class="subtitle">v0.0.3</div>
+
+          <ul>
+            <li>Tornado Fang walls breakable by any subweapon</li>
+            <li>Enemy damage/health multiplier</li>
+          </ul>
+
+          <div class="subtitle">v0.0.2</div>
+
+          <ul>
+            <li>Upgrades scavenger hunt</li>
+          </ul>
+
+          <div class="subtitle">v0.0.1</div>
+
+          <ul>
+            <li>Enemy rando</li>
+          </ul>
+
+          <div class="subtitle">v0.0.0</div>
+
+          <ul>
+            <li>Skip Intro</li>
+            <li>Always show items in Stage Select</li>
+            <li>Subweapon scavenger hunt</li>
+            <li>Random boss HP</li>
+            <li>Random boss weakness</li>
+            <li>Random player HP</li>
+            <li>Random enemies</li>
+            <li>Chaos colours</li>
+            <li>HSL random offsets</li>
+            <li>Gameboy green/grey</li>
+            <li>Virtual boy</li>
+            <li>SNES grey</li>
+          </ul>
+        </div>
+      </div>
+
+      <div v-show="tab==='notes'">
+        <div class="content">
+          <div class="title">Notes</div>
+
+          <div class="subtitle">About Chips</div>
+
+          <ul>
+            <li>You can get all the body part chips, and the hyper chip</li>
+            <li>The 4 body part chips' requirements stay the same (requires their associated upgrade)</li>
+            <s>Hyper chip requires the other 4 body part chips</s>
+            <li>Reverted Hyper Chip to original game - Hyper stands alone</li>
+          </ul>
+
+          <div class="subtitle">Convenience changes</div>
+
+          <ul>
+            <li>Select+B lets you exit a stage</li>
+            <li>Quicker leg upgrade shot</li>
+            <li>Can get and use ride armours without the Chimaera ride armour</li>
+          </ul>
+
+          <div class="subtitle">Other notes</div>
+
+          <ul>
+            <li>I highly recommend the HSL colour option</li>
+            <li>Options prefixed with * are affected by the seed</li>
+          </ul>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="btn-margin">
+        <button class="button" :disabled="correctFileCRCcheck!==true" v-on:click="randomizeRom(true)">Randomize with new
+          seed</button>
+        <button class="button" :disabled="correctFileCRCcheck!==true"
+          v-on:click="randomizeRom(false)">Randomize</button>
+      </div>
+
+      <div>
+        <span v-if="randomized===true" style="color:green">
+          Randomized
+        </span>
+      </div>
+
+      <div class="btn-margin">
+        <a class="button" :disabled="randomized!==true" :download="fname" :href="createBlobURL">Download Randomized
+          ROM</a>
+        <a class="button" :disabled="randomized!==true||romType==='normal'||fname_prefix===''" :download="manifestFname"
+          :href="createManifestBlobURL">Download Zero Mod Manifest</a>
+        <button class="button" :disabled="randomized!==true" v-on:click="toggleSpoilers()">
+          <span v-if="showing_spoilers">Hide Spoiler Log</span>
+          <span v-if="!showing_spoilers">Show Spoiler Log</span>
+        </button>
+      </div>
+
+      <div class="btn-margin">
+        <div v-if="showing_spoilers">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Location</th>
+                <th>Item</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(slot, idx) in orderedSlots">
+                <td>{{ slot.slot.name }}</td>
+                <td>{{ slot.item.itemName }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Boss</th>
+                <th>Health</th>
+                <th>Weakness</th>
+                <th>Drop</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(newBossEntry, idx) in bossDetails">
+                <td>{{ newBossEntry[0] }}</td>
+                <td>{{ newBossEntry[1] }}</td>
+                <td>{{ newBossEntry[2] }}</td>
+                <td>{{ newBossEntry[3] }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const beta = urlParams.get('beta');
+
+    let app = new Vue({
+      el: '#app',
+      data: {
+        beta: beta,
+        correctFileCRCcheck: null,
+        randomized: null,
+        randomized_rom: null,
+        showing_spoilers: false,
+        romType: 'normal',
+        romExt: 'sfc',
+        seed: "",
+        tab: "notes",
+        fname_prefix: "",
+
+        newSlots: [],
+        bossDetails: [],
+
+        // qol
+        skip_intro: true,
+        stage_sel_show_items: true,
+        fragile_walls: false,
+
+        // new game mode
+        new_game_mode: "doppler_subwep_locked",
+        subweps_required: 8,
+        upgrades_required: 4,
+
+        // random_options
+        random_boss_hp: false,
+        min_boss_hp: 16,
+        max_boss_hp: 36,
+        random_boss_weakness: false,
+        random_boss_drop: false,
+        random_player_hp: false,
+        random_enemies: false,
+
+        // misc options
+        enemy_multipliers: '1',
+
+        // colours
+        colours: null,
+
+        // beta
+        zero_damage: false,
+        enemies_1hp: false,
+        no_knockback: false,
+      },
+      methods: {
+        fileChange: function () {
+          app.correctFileCRCcheck = null;
+          app.fname_prefix = '';
+          app.romType = 'normal';
+          app.randomized = false;
+
+          const selectedFile = document.getElementById('rom').files[0];
+          let reader = new FileReader();
+
+          // crc check
+          reader.onload = function () {
+            let crcCheck = crc32(reader.result);
+            // standard sfc rom
+            if (crcCheck === 0xfa0fe671) {
+              app.correctFileCRCcheck = true;
+              app.romType = 'normal';
+              app.romExt = 'sfc';
+              // added check for MSU-1 compatible rom
+            } else if (crcCheck === 0x4daad6d4) {
+              app.correctFileCRCcheck = true;
+              app.romType = 'normal';
+              app.romExt = 'sfc';
+              // Zeromod - commit https://github.com/justin3009/MMX3-ZeroProject/commit/00645924b18e39f46c80b635c2f39750128c06f7
+            } else if (crcCheck === 0x8c9fe237) {
+              app.correctFileCRCcheck = true;
+              app.romType = 'zeromod';
+              app.romExt = 'sfc';
+              //added Zeromod MSU-1 compatible rom
+            } else if (crcCheck === 0xc7e11b7a) {
+              app.correctFileCRCcheck = true;
+              app.romType = 'zeromod';
+              app.romExt = 'sfc';
+              // MMX3 (U) smc rom
+            } else if (crcCheck === 0x97f99192) {
+              app.correctFileCRCcheck = true;
+              app.romType = 'normal';
+              app.romExt = 'smc';
+            } else {
+              app.correctFileCRCcheck = false;
+            }
+            reader.abort();
+          };
+          reader.readAsBinaryString(selectedFile);
         },
-        methods: {
-          fileChange: function() {
-            app.correctFileCRCcheck = null;
-            app.fname_prefix = '';
-            app.romType = 'normal';
-            app.randomized = false;
 
-            const selectedFile = document.getElementById('rom').files[0];
-            let reader = new FileReader();
+        randomizeRom: function (forceNewSeed) {
+          // use seed if provided, or gen one
+          let myrng;
+          if (app.seed === '' || forceNewSeed) {
+            app.seed = +(new Date());
+          }
+          myrng = new Math.seedrandom(app.seed);
 
-            // crc check
-            reader.onload = function() {
-              let crcCheck = crc32(reader.result);
-              // standard sfc rom
-			  if (crcCheck === 0xfa0fe671) {
-                app.correctFileCRCcheck = true;
-                app.romType = 'normal';
-                app.romExt = 'sfc';
-				// added check for MSU-1 compatible rom
-              } else if (crcCheck === 0x4daad6d4){
-			    app.correctFileCRCcheck = true;
-                app.romType = 'normal';
-                app.romExt = 'sfc';
-				// Zeromod - commit https://github.com/justin3009/MMX3-ZeroProject/commit/00645924b18e39f46c80b635c2f39750128c06f7
-			  } else if (crcCheck === 0x8c9fe237) {
-                app.correctFileCRCcheck = true;
-                app.romType = 'zeromod';
-                app.romExt = 'sfc';
-				//added Zeromod MSU-1 compatible rom
-				} else if (crcCheck === 0xc7e11b7a) {
-                app.correctFileCRCcheck = true;
-                app.romType = 'zeromod';
-                app.romExt = 'sfc';
-				// MMX3 (U) smc rom
-              } else if (crcCheck === 0x97f99192) {
-                app.correctFileCRCcheck = true;
-                app.romType = 'normal';
-                app.romExt = 'smc';
-              } else {
-                app.correctFileCRCcheck = false;
-              }
-              reader.abort();
-            };
-            reader.readAsBinaryString(selectedFile);
-          },
+          const selectedFile = document.getElementById('rom').files[0];
+          let reader = new FileReader();
+          app.randomized = false;
+          app.showing_spoilers = false;
 
-          randomizeRom: function(forceNewSeed) {
-            // use seed if provided, or gen one
-            let myrng;
-            if (app.seed === '' || forceNewSeed) {
-              app.seed = +(new Date()); 
+          // file processing
+          reader.onload = function () {
+            let res = reader.result;
+            if (app.romExt === 'smc') {
+              res = res.slice(0x200);
             }
-            myrng = new Math.seedrandom(app.seed);
+            let view = new Uint8Array(res);
+            let return_val = randomize(view, myrng, app);
 
-            const selectedFile = document.getElementById('rom').files[0];
-            let reader = new FileReader();
-            app.randomized = false;
-            app.showing_spoilers = false;
-
-            // file processing
-            reader.onload = function() {
-              let res = reader.result;
-              if (app.romExt === 'smc') {
-                res = res.slice(0x200);
-              }
-              let view = new Uint8Array(res);
-              let return_val = randomize(view, myrng, app);
-
-              for (let attr of ['newSlots', 'bossDetails', 'randomized_rom']) {
-                app[attr] = return_val[attr];
-              }
-              app.randomized = true;
-
-              reader.abort();
+            for (let attr of ['newSlots', 'bossDetails', 'randomized_rom']) {
+              app[attr] = return_val[attr];
             }
-            reader.readAsArrayBuffer(selectedFile);
-          },
+            app.randomized = true;
 
-          toggleSpoilers: function() {
-            this.showing_spoilers = !this.showing_spoilers;
-          },
+            reader.abort();
+          }
+          reader.readAsArrayBuffer(selectedFile);
+        },
+
+        toggleSpoilers: function () {
+          this.showing_spoilers = !this.showing_spoilers;
+        },
 
         //   getRowClass: function(loc_item) {
         //     if (loc_item[1].includes('Key'))
@@ -667,28 +674,28 @@
         //       return 'tr-yellow';
         //     return '';
         //   },
-          isTabSelected: function(tab) {
-            if (this.tab === tab)
-              return 'is-active';
-            return ''
-          },
-
-          selectTab: function(tab) {
-            this.tab = tab;
-          },
+        isTabSelected: function (tab) {
+          if (this.tab === tab)
+            return 'is-active';
+          return ''
         },
-        computed: {
-          createBlobURL: function() {
-            if (!this.randomized) return '';
-            let blob = new Blob([app.randomized_rom], {
-              type: 'application/octet-stream'
-            });
-            return window.URL.createObjectURL(blob);
-          },
 
-          createManifestBlobURL: function() {
-            if (!this.randomized) return '';
-            let blob = new Blob([`<?xml version="1.0" encoding="UTF-8"?>
+        selectTab: function (tab) {
+          this.tab = tab;
+        },
+      },
+      computed: {
+        createBlobURL: function () {
+          if (!this.randomized) return '';
+          let blob = new Blob([app.randomized_rom], {
+            type: 'application/octet-stream'
+          });
+          return window.URL.createObjectURL(blob);
+        },
+
+        createManifestBlobURL: function () {
+          if (!this.randomized) return '';
+          let blob = new Blob([`<?xml version="1.0" encoding="UTF-8"?>
 <cartridge region="NTSC">
   <rom>
     <map mode="linear" address="00-7f:8000-ffff"/>
@@ -714,60 +721,61 @@
   </mmio>
   </msu1>
 </cartridge>`], {
-              type: 'application/xml'
-            });
-            return window.URL.createObjectURL(blob);
+            type: 'application/xml'
+          });
+          return window.URL.createObjectURL(blob);
+        },
+
+        fname: function () {
+          this.fname_prefix = `mmx3-${this.seed}${this.flags}-${this.fullVersion}`;
+          return `${this.fname_prefix}.sfc`;
+        },
+
+        manifestFname: function () {
+          return `${this.fname_prefix}.xml`;
+        },
+
+        orderedSlots: function () {
+          return this.newSlots.sort((a, b) => a.slot.name < b.slot.name ? -1 : 1);
+        },
+
+        fullVersion: function () {
+          return `v${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}`
+        },
+
+        flags: {
+          get() {
+            let _flags = "";
+            if (this.random_boss_hp) _flags += "h";
+            if (this.random_boss_weakness) _flags += "w";
+            if (this.random_boss_drop) _flags += "d";
+            if (this.random_enemies) _flags += "e";
+            if (this.colours === "chaos") _flags += "c";
+            if (this.colours === "hsl_palettes") _flags += "s";
+            return _flags;
           },
 
-          fname: function() {
-            this.fname_prefix = `mmx3-${this.seed}${this.flags}-${this.fullVersion}`;
-            return `${this.fname_prefix}.sfc`;
+          set(flag) {
+            this.random_boss_hp = flag.includes("h")
+            this.random_boss_weakness = flag.includes("w")
+            this.random_boss_drop = flag.includes("d")
+            this.random_enemies = flag.includes("e")
+            if (flag.includes("c")) { this.colours = "chaos" }
+            else if (flag.includes("s")) { this.colours = "hsl_palettes" }
+            else this.colours = null;
           },
-
-          manifestFname: function() {
-            return `${this.fname_prefix}.xml`;
-          },
-
-          orderedSlots: function() {
-            return this.newSlots.sort((a, b) => a.slot.name < b.slot.name ? -1 : 1);
-          },
-
-          fullVersion: function() {
-            return `v${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}`
-          },
-
-          flags: {
-            get() {
-              let _flags = "";
-              if (this.random_boss_hp) _flags += "h";
-              if (this.random_boss_weakness) _flags += "w";
-              if (this.random_boss_drop) _flags += "d";
-              if (this.random_enemies) _flags += "e";
-              if (this.colours === "chaos") _flags += "c";
-              if (this.colours === "hsl_palettes") _flags += "s";
-              return _flags;
-            },
-
-            set(flag) {
-              this.random_boss_hp = flag.includes("h")
-              this.random_boss_weakness = flag.includes("w")
-              this.random_boss_drop = flag.includes("d")
-              this.random_enemies = flag.includes("e")
-              if (flag.includes("c")) {this.colours = "chaos"}
-              else if (flag.includes("s")) {this.colours = "hsl_palettes"}
-              else this.colours = null;
-            },
-          }
         }
-      })
-    </script>
-  </body>
-  <div class="footer">
+      }
+    })
+  </script>
+</body>
+<div class="footer">
   <p class="footer-text-left">
-    <p>initial work credit to vinheim3, aka Daniel Jianoran </p>
-    <a href="https://github.com/vinheim3" class="menu">vinheim</a> 
-	<p> and special thanks to ZeroThe14th for helping test </p>
-	<a href="https://www.twitch.tv/zerothe14th" class="menu">ZeroThe14th</a>
+  <p>initial work credit to vinheim3, aka Daniel Jianoran </p>
+  <a href="https://github.com/vinheim3" class="menu">vinheim</a>
+  <p> and special thanks to ZeroThe14th for helping test </p>
+  <a href="https://www.twitch.tv/zerothe14th" class="menu">ZeroThe14th</a>
   </p>
 </div>
+
 </html>
