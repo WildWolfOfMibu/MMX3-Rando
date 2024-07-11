@@ -233,6 +233,9 @@ class BossDatum {
     idx: number
     subwepReward: number
     subwepCheck: number
+    health?: number
+    weakness?: string
+    drop?: string
     constructor(
         extraWeakness: number[],
         maxHealth: number,

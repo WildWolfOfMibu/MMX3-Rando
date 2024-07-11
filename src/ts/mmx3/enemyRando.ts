@@ -108,7 +108,7 @@ export function enemyRandomize(rom: number[], rng: () => number, opts: RandoOpti
             entAddrs.splice(entAddrs.indexOf(conv(0x3c, 0xe6e6)), 1);
             entAddrs.splice(entAddrs.indexOf(conv(0x3c, 0xe71a)), 1);
         }
-        fullEnemyDeets.name = {
+        fullEnemyDeets[name] = {
             ...deets,
             pal_idx: pal_idx,
             sub_idx: sub_idx,

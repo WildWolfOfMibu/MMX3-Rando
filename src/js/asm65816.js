@@ -567,6 +567,7 @@ export class M65816 {
             // let mthd = (this[mnem as keyof typeof this]);
             // if (typeof mthd !== 'function') throw new Error(`No mnemonic ${mnem}`);
             // let byteData = mthd(tokens.slice(1, tokens.length), true);
+            //TODO: convert this to TS
             //@ts-ignore
             if (this[mnem] === undefined)
                 throw new Error(`No mnemonic ${mnem}`);
@@ -627,6 +628,7 @@ export class M65816 {
                 // let mthd = this[mnem as keyof typeof this];
                 // if (typeof mthd !== 'function') throw new Error(`No mnemonic ${mnem}`);
                 // let byteData = mthd(tokens.slice(1, tokens.length), true);
+                //TODO: convert this to TS
                 //@ts-ignore
                 if (this[mnem] === undefined)
                     throw new Error(`No mnemonic ${mnem}`);

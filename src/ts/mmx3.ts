@@ -753,14 +753,14 @@ export function randomize(rom: number[], rng: () => number, opts: RandoOptions) 
 
     type BossInfo = [
         name: string,
-        health?: number,
-        weakness?: string,
-        drop?: string,
+        health: number,
+        weakness: string,
+        drop: string,
     ]
     let bossDetails: BossInfo[] = [];
     for (let bossName in bossData) {
         let deets = bossData[bossName]
-        bossDetails.push([bossName, deets.newHealth, deets.newWeakness, deets.newDrop]);
+        bossDetails.push([bossName, deets.newHealth!, deets.newWeakness!, deets.newDrop!]);
     }
 
     for (let label in m.labels) {

@@ -202,6 +202,9 @@ class BossDatum {
     idx;
     subwepReward;
     subwepCheck;
+    health;
+    weakness;
+    drop;
     constructor(extraWeakness, maxHealth, id, idx, subwepReward, subwepCheck) {
         this.extraWeakness = extraWeakness;
         this.maxHealth = maxHealth;
