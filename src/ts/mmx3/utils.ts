@@ -2,7 +2,7 @@
 /**
  * Returns the full address given a bank and an offset (?)
 */
-export const conv = function (bank: number, addr: number): number {
+export function conv(bank: number, addr: number): number {
     return bank * 0x8000 + (addr % 0x8000);
 }
 
@@ -11,7 +11,7 @@ export const conv = function (bank: number, addr: number): number {
  * @description necessary extra conversion is done here to 
  *   account for the endianness of the 65c816 microprocesor. 
  */
-export const readWord = function (rom: number[], addr: number): number {
+export function readWord(rom: number[], addr: number): number {
     return (rom[addr + 1] << 8) | rom[addr];
 }
 
@@ -23,7 +23,7 @@ export const readWord = function (rom: number[], addr: number): number {
  * @description necessary extra conversion is done here to 
  *   account for the endianness of the 65c816 microprocesor. 
  */
-export const writeWord = function (rom: number[], addr: number, val: number) {
+export function writeWord(rom: number[], addr: number, val: number) {
     rom[addr] = val & 0xff;
     rom[addr + 1] = val >> 8;
 }
@@ -39,11 +39,11 @@ export const sum = function (arr: number[]): number {
 /**
  * Returns a hexidecimal string from a given number
  */
-export const hexc = function (num: number): string { return num.toString(16) }
+export function hexc(num: number): string { return num.toString(16) }
 
 // MMX3
 
-export const findStageEntityData = function (rom: number[], stageIdx: number, majorType: number, type: number): number {
+export function findStageEntityData(rom: number[], stageIdx: number, majorType: number, type: number): number {
     // +0 main type
     // +1/2 Y coord
     // +3 entity ID
@@ -72,7 +72,7 @@ export const findStageEntityData = function (rom: number[], stageIdx: number, ma
     throw new Error(`Could not find stage entity data ${stageIdx}, ${majorType}, ${hexc(type)}`);
 }
 
-export const getDynamicSpriteData = function (rom: number[], stageIdx: number, dynIdx: number, entryIdx: number): number {
+export function getDynamicSpriteData(rom: number[], stageIdx: number, dynIdx: number, entryIdx: number): number {
     // +0 decomp id
     // +1/2 vram dest
     // +3/4 palette id
@@ -83,11 +83,11 @@ export const getDynamicSpriteData = function (rom: number[], stageIdx: number, d
     return table + dynOffs + entryIdx * 6;
 }
 
-export const getEnemyBaseData = function (enemy_idx: number): number {
+export function getEnemyBaseData(enemy_idx: number): number {
     return conv(6, 0xe28e + 5 * (enemy_idx - 1));
 }
 
-export const getWeaknessTables = function (rom: number[], weaknessIdx: number, isNormal: boolean): number[] {
+export function getWeaknessTables(rom: number[], weaknessIdx: number, isNormal: boolean): number[] {
     let baseTables: number[] = isNormal
         ? [conv(6, 0xe4a5)]
         : [conv(0x4b, 0x8000), conv(0x4b, 0x8080), conv(0x4b, 0x8100)]
@@ -103,7 +103,7 @@ export const getWeaknessTables = function (rom: number[], weaknessIdx: number, i
     return entries;
 }
 
-export const getTextAddrs = function (rom: number[], textIdx: number, isNormal: boolean): number[] {
+export function getTextAddrs(rom: number[], textIdx: number, isNormal: boolean): number[] {
     let addrs: number[] = [];
     if (isNormal) {
         let entry = conv(0x39, 0xc1bc + textIdx * 2);
@@ -117,7 +117,7 @@ export const getTextAddrs = function (rom: number[], textIdx: number, isNormal: 
     return addrs;
 }
 
-export const replaceText = function (rom: number[], textIdx: number, isNormal: boolean, text: [string, string]) {
+export function replaceText(rom: number[], textIdx: number, isNormal: boolean, text: [string, string]) {
     // skip 7 bytes
     let addrs: number[] = getTextAddrs(rom, textIdx, isNormal);
 
@@ -136,11 +136,11 @@ export const replaceText = function (rom: number[], textIdx: number, isNormal: b
     }
 }
 
-export const setPaletteAddr = function (rom: number[], stage: number, dynIdx: number, entryIdx: number, newVal: number): void {
-    let start: number = getDynamicSpriteData(rom, stage, dynIdx, entryIdx);
+export function setPaletteAddr(rom: number[], stage: number, dynIdx: number, entryIdx: number, newVal: number): void {
+    let start = getDynamicSpriteData(rom, stage, dynIdx, entryIdx);
     writeWord(rom, start + 1, newVal);
 }
-export const setPaletteSlot = function (rom: number[], stage: number, dynIdx: number, entryIdx: number, newVal: number): void {
-    let start: number = getDynamicSpriteData(rom, stage, dynIdx, entryIdx);
+export function setPaletteSlot(rom: number[], stage: number, dynIdx: number, entryIdx: number, newVal: number): void {
+    let start = getDynamicSpriteData(rom, stage, dynIdx, entryIdx);
     rom[start + 5] = newVal;
 }

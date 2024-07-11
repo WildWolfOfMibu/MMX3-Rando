@@ -37,18 +37,13 @@ export const ENEMYID = {
 
 export const DECOMP_DATA_IDX_RIDE_ARMOUR_ITEM = 0x3b;
 
-export const ENT: {
-    RIDE_ARMOUR_HOLDER: readonly [number, number],
-    CAPSULE: readonly [number, number],
-    RIDE_ARMOUR_ITEM: readonly [number, number],
-    HEART_TANK: readonly [number, number],
-    SUBTANK: readonly [number, number],
-} = {
-    RIDE_ARMOUR_HOLDER: [MT_ENEMY, ENEMYID_HANGERTER],
-    CAPSULE: [MT_ENEMY, ENEMYID_CAPSULE],
-    RIDE_ARMOUR_ITEM: [MT_ITEM, ITEMID.RIDE_ARMOUR_ITEM],
-    HEART_TANK: [MT_ITEM, ITEMID.HEART_TANK],
-    SUBTANK: [MT_ITEM, ITEMID.SUBTANK],
+type EntityDatum = readonly [majorType: number, type: number]
+export const ENTITY_DATA = {
+    RIDE_ARMOUR_HOLDER: [MT_ENEMY, ENEMYID_HANGERTER] as EntityDatum,
+    CAPSULE: [MT_ENEMY, ENEMYID_CAPSULE] as EntityDatum,
+    RIDE_ARMOUR_ITEM: [MT_ITEM, ITEMID.RIDE_ARMOUR_ITEM] as EntityDatum,
+    HEART_TANK: [MT_ITEM, ITEMID.HEART_TANK] as EntityDatum,
+    SUBTANK: [MT_ITEM, ITEMID.SUBTANK] as EntityDatum,
 }
 
 /*

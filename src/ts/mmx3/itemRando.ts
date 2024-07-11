@@ -2,7 +2,7 @@ import { M65816 } from '../asm65816.js';
 import { RandoOptions } from '../mmx3.js';
 import {
 	STAGES,
-	ENT,
+	ENTITY_DATA,
 	MT_ITEM,
 	ITEMID,
 	DECOMP_DATA_IDX_RIDE_ARMOUR_ITEM,
@@ -19,30 +19,32 @@ import {
 } from './utils.js';
 
 export type Item = {
-	itemindex: number,
 	name: string,
 	itemName: string,
 	itemType: string,
+	textIdx: number,
+
+	decompIdx: number,
+	itemindex: number,
+	ramByteLowToCheck: number,
+	ramBitToCheck: number,
 	majorType: number,
 	type: number,
 	subType: number,
-	decompIdx: number,
 	paletteId: number,
-	ramByteLowToCheck: number,
-	ramBitToCheck: number,
-	textIdx: number,
 }
 
 export type Slot = {
-	dynamicSpriteEntry: number;
-	entityEntry: number;
-	minimapMarkerEntry: number;
 	name: string,
 	itemName: string,
 	itemType: string,
+	textIdx: number,
+
+	dynamicSpriteEntry: number;
+	entityEntry: number;
+	minimapMarkerEntry: number;
 	slotindex: number,
 	stageIdx: number;
-	textIdx: number,
 	tileDataOffset?: number;
 }
 
@@ -50,7 +52,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 	const isNormal: boolean = opts.romType === 'normal';
 
 	// Replace the rider armour holder enemy dynamic sprites with the chimera rider armour item
-	var start: number = findStageEntityData(rom, STAGES.BLAST_HORNET, ...ENT.RIDE_ARMOUR_HOLDER);
+	var start: number = findStageEntityData(rom, STAGES.BLAST_HORNET, ...ENTITY_DATA.RIDE_ARMOUR_HOLDER);
 	rom[start + 0] = MT_ITEM;
 	writeWord(rom, start + 1, 0x790);
 	rom[start + 3] = ITEMID.RIDE_ARMOUR_ITEM;
@@ -72,7 +74,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		[STAGES.TUNNEL_RHINO, 0x282 - 0x2a0],
 		[STAGES.NEON_TIGER, 0x182 - 0x1c0],
 	] as const) {
-		start = findStageEntityData(rom, stage, ...ENT.CAPSULE);
+		start = findStageEntityData(rom, stage, ...ENTITY_DATA.CAPSULE);
 		let y = readWord(rom, start + 1);
 		writeWord(rom, start + 1, y + offset + 0x20);
 	}
@@ -84,7 +86,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		[STAGES.VOLT_CATFISH, 0x04],
 		[STAGES.BLIZZARD_BUFFALO, 0x08],
 	] as const) {
-		start = findStageEntityData(rom, stage, ...ENT.CAPSULE);
+		start = findStageEntityData(rom, stage, ...ENTITY_DATA.CAPSULE);
 		rom[start + 4] = newSubType;
 	}
 
@@ -117,7 +119,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.BLAST_HORNET,
 		itemName: "Head Chip",
 		itemType: "Capsule",
-		entityEntry: findStageEntityData(rom, STAGES.BLAST_HORNET, ...ENT.CAPSULE),
+		entityEntry: findStageEntityData(rom, STAGES.BLAST_HORNET, ...ENTITY_DATA.CAPSULE),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.BLAST_HORNET, 3, 0),
 		minimapMarkerEntry: 0,
 		textIdx: 0x5d,
@@ -128,7 +130,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.TOXIC_SEAHORSE,
 		itemName: "Leg Chip",
 		itemType: "Capsule",
-		entityEntry: findStageEntityData(rom, STAGES.TOXIC_SEAHORSE, ...ENT.CAPSULE),
+		entityEntry: findStageEntityData(rom, STAGES.TOXIC_SEAHORSE, ...ENTITY_DATA.CAPSULE),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.TOXIC_SEAHORSE, 7, 0),
 		minimapMarkerEntry: 2,
 		textIdx: 0x5d,
@@ -138,7 +140,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.TOXIC_SEAHORSE,
 		itemName: "Kangaroo Armour",
 		itemType: "Armour",
-		entityEntry: findStageEntityData(rom, STAGES.TOXIC_SEAHORSE, ...ENT.RIDE_ARMOUR_ITEM),
+		entityEntry: findStageEntityData(rom, STAGES.TOXIC_SEAHORSE, ...ENTITY_DATA.RIDE_ARMOUR_ITEM),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.TOXIC_SEAHORSE, 4, 2),
 		minimapMarkerEntry: 1,
 		textIdx: 0x59,
@@ -149,7 +151,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.BLAST_HORNET,
 		itemName: "Hornet Heart",
 		itemType: "Heart",
-		entityEntry: findStageEntityData(rom, STAGES.BLAST_HORNET, ...ENT.HEART_TANK),
+		entityEntry: findStageEntityData(rom, STAGES.BLAST_HORNET, ...ENTITY_DATA.HEART_TANK),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.BLAST_HORNET, 9, 0),
 		minimapMarkerEntry: 1,
 		textIdx: 0x24,
@@ -159,7 +161,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.BLIZZARD_BUFFALO,
 		itemName: "Buffalo Heart",
 		itemType: "Heart",
-		entityEntry: findStageEntityData(rom, STAGES.BLIZZARD_BUFFALO, ...ENT.HEART_TANK),
+		entityEntry: findStageEntityData(rom, STAGES.BLIZZARD_BUFFALO, ...ENTITY_DATA.HEART_TANK),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.BLIZZARD_BUFFALO, 1, 0),
 		tileDataOffset: 0x1e00,
 		minimapMarkerEntry: 0,
@@ -170,7 +172,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.BLIZZARD_BUFFALO,
 		itemName: "Buffalo Subtank",
 		itemType: "Tank",
-		entityEntry: findStageEntityData(rom, STAGES.BLIZZARD_BUFFALO, ...ENT.SUBTANK),
+		entityEntry: findStageEntityData(rom, STAGES.BLIZZARD_BUFFALO, ...ENTITY_DATA.SUBTANK),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.BLIZZARD_BUFFALO, 5, 3),
 		minimapMarkerEntry: 1,
 		textIdx: 0x55,
@@ -180,7 +182,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.CRUSH_CRAWFISH,
 		itemName: "Body Chip",
 		itemType: "Capsule",
-		entityEntry: findStageEntityData(rom, STAGES.CRUSH_CRAWFISH, ...ENT.CAPSULE),
+		entityEntry: findStageEntityData(rom, STAGES.CRUSH_CRAWFISH, ...ENTITY_DATA.CAPSULE),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.CRUSH_CRAWFISH, 3, 0),
 		minimapMarkerEntry: 1,
 		textIdx: 0x5d,
@@ -190,7 +192,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.CRUSH_CRAWFISH,
 		itemName: "Hawk Armour",
 		itemType: "Armour",
-		entityEntry: findStageEntityData(rom, STAGES.CRUSH_CRAWFISH, ...ENT.RIDE_ARMOUR_ITEM),
+		entityEntry: findStageEntityData(rom, STAGES.CRUSH_CRAWFISH, ...ENTITY_DATA.RIDE_ARMOUR_ITEM),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.CRUSH_CRAWFISH, 0, 3),
 		minimapMarkerEntry: 0,
 		textIdx: 0x5b,
@@ -200,7 +202,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.GRAVITY_BEETLE,
 		itemName: "Arm Chip",
 		itemType: "Capsule",
-		entityEntry: findStageEntityData(rom, STAGES.GRAVITY_BEETLE, ...ENT.CAPSULE),
+		entityEntry: findStageEntityData(rom, STAGES.GRAVITY_BEETLE, ...ENTITY_DATA.CAPSULE),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.GRAVITY_BEETLE, 10, 0),
 		minimapMarkerEntry: 2,
 		textIdx: 0x5d,
@@ -210,7 +212,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.GRAVITY_BEETLE,
 		itemName: "Frog Armour",
 		itemType: "Armour",
-		entityEntry: findStageEntityData(rom, STAGES.GRAVITY_BEETLE, ...ENT.RIDE_ARMOUR_ITEM),
+		entityEntry: findStageEntityData(rom, STAGES.GRAVITY_BEETLE, ...ENTITY_DATA.RIDE_ARMOUR_ITEM),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.GRAVITY_BEETLE, 5, 3),
 		minimapMarkerEntry: 1,
 		textIdx: 0x57,
@@ -220,7 +222,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.NEON_TIGER,
 		itemName: "Arm Upgrade",
 		itemType: "Capsule",
-		entityEntry: findStageEntityData(rom, STAGES.NEON_TIGER, ...ENT.CAPSULE),
+		entityEntry: findStageEntityData(rom, STAGES.NEON_TIGER, ...ENTITY_DATA.CAPSULE),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.NEON_TIGER, 2, 0),
 		minimapMarkerEntry: 1,
 		textIdx: 0x67,
@@ -230,7 +232,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.TUNNEL_RHINO,
 		itemName: "Helmet Upgrade",
 		itemType: "Capsule",
-		entityEntry: findStageEntityData(rom, STAGES.TUNNEL_RHINO, ...ENT.CAPSULE),
+		entityEntry: findStageEntityData(rom, STAGES.TUNNEL_RHINO, ...ENTITY_DATA.CAPSULE),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.TUNNEL_RHINO, 7, 1),
 		minimapMarkerEntry: 2,
 		textIdx: 0x65,
@@ -240,7 +242,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.TUNNEL_RHINO,
 		itemName: "Rhino Heart",
 		itemType: "Heart",
-		entityEntry: findStageEntityData(rom, STAGES.TUNNEL_RHINO, ...ENT.HEART_TANK),
+		entityEntry: findStageEntityData(rom, STAGES.TUNNEL_RHINO, ...ENTITY_DATA.HEART_TANK),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.TUNNEL_RHINO, 2, 0),
 		tileDataOffset: 0x1600,
 		minimapMarkerEntry: 0,
@@ -251,7 +253,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.VOLT_CATFISH,
 		itemName: "Body Upgrade",
 		itemType: "Capsule",
-		entityEntry: findStageEntityData(rom, STAGES.VOLT_CATFISH, ...ENT.CAPSULE),
+		entityEntry: findStageEntityData(rom, STAGES.VOLT_CATFISH, ...ENTITY_DATA.CAPSULE),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.VOLT_CATFISH, 4, 1),
 		minimapMarkerEntry: 0,
 		textIdx: 0x63,
@@ -261,7 +263,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.VOLT_CATFISH,
 		itemName: "Catfish Subtank",
 		itemType: "Tank",
-		entityEntry: findStageEntityData(rom, STAGES.VOLT_CATFISH, ...ENT.SUBTANK),
+		entityEntry: findStageEntityData(rom, STAGES.VOLT_CATFISH, ...ENTITY_DATA.SUBTANK),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.VOLT_CATFISH, 8, 0),
 		minimapMarkerEntry: 2,
 		textIdx: 0x55,
@@ -271,7 +273,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.CRUSH_CRAWFISH,
 		itemName: "Crawfish Heart",
 		itemType: "Heart",
-		entityEntry: findStageEntityData(rom, STAGES.CRUSH_CRAWFISH, ...ENT.HEART_TANK),
+		entityEntry: findStageEntityData(rom, STAGES.CRUSH_CRAWFISH, ...ENTITY_DATA.HEART_TANK),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.CRUSH_CRAWFISH, 2, 2),
 		minimapMarkerEntry: 2,
 		textIdx: 0x24,
@@ -281,7 +283,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.VOLT_CATFISH,
 		itemName: "Catfish Heart",
 		itemType: "Heart",
-		entityEntry: findStageEntityData(rom, STAGES.VOLT_CATFISH, ...ENT.HEART_TANK),
+		entityEntry: findStageEntityData(rom, STAGES.VOLT_CATFISH, ...ENTITY_DATA.HEART_TANK),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.VOLT_CATFISH, 3, 0),
 		minimapMarkerEntry: 1,
 		textIdx: 0x24,
@@ -292,7 +294,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.GRAVITY_BEETLE,
 		itemName: "Beetle Heart",
 		itemType: "Heart",
-		entityEntry: findStageEntityData(rom, STAGES.GRAVITY_BEETLE, ...ENT.HEART_TANK),
+		entityEntry: findStageEntityData(rom, STAGES.GRAVITY_BEETLE, ...ENTITY_DATA.HEART_TANK),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.GRAVITY_BEETLE, 0, 3),
 		minimapMarkerEntry: 0,
 		textIdx: 0x24,
@@ -303,7 +305,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.TUNNEL_RHINO,
 		itemName: "Tunnel Subtank",
 		itemType: "Tank",
-		entityEntry: findStageEntityData(rom, STAGES.TUNNEL_RHINO, ...ENT.SUBTANK),
+		entityEntry: findStageEntityData(rom, STAGES.TUNNEL_RHINO, ...ENTITY_DATA.SUBTANK),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.TUNNEL_RHINO, 4, 0),
 		minimapMarkerEntry: 1,
 		textIdx: 0x55,
@@ -313,7 +315,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.NEON_TIGER,
 		itemName: "Tiger Heart",
 		itemType: "Heart",
-		entityEntry: findStageEntityData(rom, STAGES.NEON_TIGER, ...ENT.HEART_TANK),
+		entityEntry: findStageEntityData(rom, STAGES.NEON_TIGER, ...ENTITY_DATA.HEART_TANK),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.NEON_TIGER, 8, 0),
 		minimapMarkerEntry: 2,
 		textIdx: 0x24,
@@ -323,7 +325,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.NEON_TIGER,
 		itemName: "Tiger Subtank",
 		itemType: "Tank",
-		entityEntry: findStageEntityData(rom, STAGES.NEON_TIGER, ...ENT.SUBTANK),
+		entityEntry: findStageEntityData(rom, STAGES.NEON_TIGER, ...ENTITY_DATA.SUBTANK),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.NEON_TIGER, 0, 3),
 		minimapMarkerEntry: 0,
 		textIdx: 0x55,
@@ -333,7 +335,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.TOXIC_SEAHORSE,
 		itemName: "Seahorse Heart",
 		itemType: "Heart",
-		entityEntry: findStageEntityData(rom, STAGES.TOXIC_SEAHORSE, ...ENT.HEART_TANK),
+		entityEntry: findStageEntityData(rom, STAGES.TOXIC_SEAHORSE, ...ENTITY_DATA.HEART_TANK),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.TOXIC_SEAHORSE, 1, 3),
 		minimapMarkerEntry: 0,
 		textIdx: 0x24,
@@ -343,7 +345,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.BLAST_HORNET,
 		itemName: "Chimera Armour",
 		itemType: "Armour",
-		entityEntry: findStageEntityData(rom, STAGES.BLAST_HORNET, ...ENT.RIDE_ARMOUR_ITEM),
+		entityEntry: findStageEntityData(rom, STAGES.BLAST_HORNET, ...ENTITY_DATA.RIDE_ARMOUR_ITEM),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.BLAST_HORNET, 6, 3),
 		minimapMarkerEntry: 2,
 		textIdx: 0x28,
@@ -353,7 +355,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		stageIdx: STAGES.BLIZZARD_BUFFALO,
 		itemName: "Leg Upgrade",
 		itemType: "Capsule",
-		entityEntry: findStageEntityData(rom, STAGES.BLIZZARD_BUFFALO, ...ENT.CAPSULE),
+		entityEntry: findStageEntityData(rom, STAGES.BLIZZARD_BUFFALO, ...ENTITY_DATA.CAPSULE),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.BLIZZARD_BUFFALO, 6, 0),
 		minimapMarkerEntry: 2,
 		textIdx: 0x61,
