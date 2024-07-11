@@ -1,5 +1,5 @@
-import { STAGES } from "./constants"
-import { setPaletteAddr, setPaletteSlot } from "./utils";
+import { STAGES } from "./constants.js"
+import { setPaletteAddr, setPaletteSlot } from "./utils.js";
 
 export function prep(rom: number[]) {
     // Make the entry for Crush Crawfish take on its own palette slot, and tile data slot

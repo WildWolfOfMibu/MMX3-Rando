@@ -1,5 +1,5 @@
-import { STAGES, ENT, MT_ITEM, ITEMID, DECOMP_DATA_IDX_RIDE_ARMOUR_ITEM, } from './constants';
-import { findStageEntityData, writeWord, getDynamicSpriteData, readWord, replaceText, conv, getTextAddrs, hexc, } from './utils';
+import { STAGES, ENT, MT_ITEM, ITEMID, DECOMP_DATA_IDX_RIDE_ARMOUR_ITEM, } from './constants.js';
+import { findStageEntityData, writeWord, getDynamicSpriteData, readWord, replaceText, conv, getTextAddrs, hexc, } from './utils.js';
 export function itemRandomize(rom, rng, opts, m) {
     const isNormal = opts.romType === 'normal';
     // Replace the rider armour holder enemy dynamic sprites with the chimera rider armour item

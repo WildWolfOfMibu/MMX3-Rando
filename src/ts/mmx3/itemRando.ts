@@ -1,13 +1,12 @@
-//@ts-check
-import { M65816 } from '../asm65816';
-import { RandoOptions } from '../mmx3';
+import { M65816 } from '../asm65816.js';
+import { RandoOptions } from '../mmx3.js';
 import {
 	STAGES,
 	ENT,
 	MT_ITEM,
 	ITEMID,
 	DECOMP_DATA_IDX_RIDE_ARMOUR_ITEM,
-} from './constants';
+} from './constants.js';
 import {
 	findStageEntityData,
 	writeWord,
@@ -17,7 +16,7 @@ import {
 	conv,
 	getTextAddrs,
 	hexc,
-} from './utils';
+} from './utils.js';
 
 export type Item = {
 	itemindex: number,

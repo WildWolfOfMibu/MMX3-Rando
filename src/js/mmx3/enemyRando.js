@@ -1,5 +1,5 @@
-import { ENEMIES } from './constants';
-import { conv, hexc, readWord, writeWord } from './utils';
+import { ENEMIES } from './constants.js';
+import { conv, hexc, readWord, writeWord } from './utils.js';
 const getDynDecompIdxAddrs = function (rom, decomp_idx) {
     let table = conv(8, 0x8623);
     let dataPtrs = [];

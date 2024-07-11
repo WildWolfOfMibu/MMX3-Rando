@@ -1,5 +1,4 @@
-//@ts-check
-import { hexc, conv } from './mmx3/utils';
+import { hexc, conv } from './mmx3/utils.js';
 export class M65816 {
     symbols;
     labels;
@@ -536,6 +535,14 @@ export class M65816 {
     xba(tokens, getSize) {
         return [0xeb];
     }
+    /**
+     * Adds assembly code to the bank at the specified address.
+     *
+     * @param {number} placeBank The bank to add the assembly code to.
+     * @param {number} placeAddr The address to add the assembly code to.
+     * @param {string} asm The assembly code to add.
+     * @param {string} name The name of the assembly code.
+     */
     addAsm(placeBank, placeAddr, asm, name) {
         let offs = 0;
         let labelOffs = [];
@@ -557,10 +564,14 @@ export class M65816 {
             if (tokens.length === 0)
                 throw new Error('Error parsing line');
             let mnem = tokens[0];
-            let mthd = this[mnem];
-            if (typeof mthd !== 'function')
+            // let mthd = (this[mnem as keyof typeof this]);
+            // if (typeof mthd !== 'function') throw new Error(`No mnemonic ${mnem}`);
+            // let byteData = mthd(tokens.slice(1, tokens.length), true);
+            //@ts-ignore
+            if (this[mnem] === undefined)
                 throw new Error(`No mnemonic ${mnem}`);
-            let byteData = mthd(tokens.slice(1, tokens.length), true);
+            //@ts-ignore
+            let byteData = this[mnem](tokens.slice(1, tokens.length), true);
             offs += byteData.length;
         }
         if (!name)
@@ -613,10 +624,14 @@ export class M65816 {
                 if (tokens.length === 0)
                     throw new Error('Error parsing line');
                 let mnem = tokens[0];
-                let mthd = this[mnem];
-                if (typeof mthd !== 'function')
+                // let mthd = this[mnem as keyof typeof this];
+                // if (typeof mthd !== 'function') throw new Error(`No mnemonic ${mnem}`);
+                // let byteData = mthd(tokens.slice(1, tokens.length), true);
+                //@ts-ignore
+                if (this[mnem] === undefined)
                     throw new Error(`No mnemonic ${mnem}`);
-                let byteData = mthd(tokens.slice(1, tokens.length), true);
+                //@ts-ignore
+                let byteData = this[mnem](tokens.slice(1, tokens.length), true);
                 offs += byteData.length;
                 for (let i = 0; i < byteData.length; i++) {
                     rom[placement++] = byteData[i];

@@ -1,8 +1,7 @@
-//@ts-check
-import { M65816 } from '../asm65816';
-import { RandoOptions } from '../mmx3';
-import { ENEMIES, EnemyData } from './constants'
-import { conv, hexc, readWord, writeWord } from './utils';
+import { M65816 } from '../asm65816.js';
+import { RandoOptions } from '../mmx3.js';
+import { ENEMIES, EnemyData } from './constants.js'
+import { conv, hexc, readWord, writeWord } from './utils.js';
 
 const getDynDecompIdxAddrs = function (rom: number[], decomp_idx: number): number[] {
     let table = conv(8, 0x8623);

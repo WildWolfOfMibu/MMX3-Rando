@@ -1,5 +1,4 @@
-//@ts-check
-import { hexc, conv } from './mmx3/utils'
+import { hexc, conv } from './mmx3/utils.js'
 
 export type Options = {
     wStageIdx: number,
@@ -558,6 +557,14 @@ export class M65816 {
         return [0xeb];
     }
 
+    /**
+     * Adds assembly code to the bank at the specified address.
+     *
+     * @param {number} placeBank The bank to add the assembly code to.
+     * @param {number} placeAddr The address to add the assembly code to.
+     * @param {string} asm The assembly code to add.
+     * @param {string} name The name of the assembly code.
+     */
     addAsm(placeBank: number | null, placeAddr: number | null, asm: string, name?: string): void {
         let offs = 0;
         let labelOffs: [string, number][] = [];
@@ -582,9 +589,15 @@ export class M65816 {
             let tokens = this.getTokens(line);
             if (tokens.length === 0) throw new Error('Error parsing line');
             let mnem = tokens[0];
-            let mthd = this[mnem as keyof typeof this];
-            if (typeof mthd !== 'function') throw new Error(`No mnemonic ${mnem}`);
-            let byteData = mthd(tokens.slice(1, tokens.length), true);
+            // let mthd = (this[mnem as keyof typeof this]);
+            // if (typeof mthd !== 'function') throw new Error(`No mnemonic ${mnem}`);
+            // let byteData = mthd(tokens.slice(1, tokens.length), true);
+
+            //TODO: convert this to TS
+            //@ts-ignore
+            if (this[mnem] === undefined) throw new Error(`No mnemonic ${mnem}`);
+            //@ts-ignore
+            let byteData = this[mnem](tokens.slice(1, tokens.length), true);
             offs += byteData.length;
         }
 
@@ -647,9 +660,15 @@ export class M65816 {
                 let tokens = this.getTokens(line);
                 if (tokens.length === 0) throw new Error('Error parsing line');
                 let mnem = tokens[0];
-                let mthd = this[mnem as keyof typeof this];
-                if (typeof mthd !== 'function') throw new Error(`No mnemonic ${mnem}`);
-                let byteData = mthd(tokens.slice(1, tokens.length), true);
+                // let mthd = this[mnem as keyof typeof this];
+                // if (typeof mthd !== 'function') throw new Error(`No mnemonic ${mnem}`);
+                // let byteData = mthd(tokens.slice(1, tokens.length), true);
+                //TODO: convert this to TS
+                //@ts-ignore
+                if (this[mnem] === undefined) throw new Error(`No mnemonic ${mnem}`);
+                //@ts-ignore
+                let byteData = this[mnem](tokens.slice(1, tokens.length), true);
+
                 offs += byteData.length;
                 for (let i = 0; i < byteData.length; i++) {
                     rom[placement++] = byteData[i];

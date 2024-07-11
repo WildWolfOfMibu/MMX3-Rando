@@ -1,5 +1,4 @@
-//@ts-check
-import { conv } from "./utils";
+import { conv } from "./utils.js";
 export const STAGES = {
     BLAST_HORNET: 1,
     BLIZZARD_BUFFALO: 2,

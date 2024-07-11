@@ -1,5 +1,5 @@
-import { palAddrs } from './palAddrs';
-import { conv, readWord, writeWord } from './utils';
+import { palAddrs } from './palAddrs.js';
+import { conv, readWord, writeWord } from './utils.js';
 const snes2rgb = (snesCol) => {
     let r = snesCol & 0x1f;
     let g = (snesCol >> 5) & 0x1f;

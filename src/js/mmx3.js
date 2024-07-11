@@ -1,11 +1,10 @@
-//@ts-check
-import { M65816 } from './asm65816';
-import { bossData, enemyWeaknesses, subweapons } from './mmx3/constants';
-import { enemyRandomize } from './mmx3/enemyRando';
-import { itemRandomize } from './mmx3/itemRando';
-import { paletteRandomize } from './mmx3/paletteRando';
-import { prep } from './mmx3/prep';
-import { conv, hexc, getEnemyBaseData, writeWord, getWeaknessTables, sum, readWord } from './mmx3/utils';
+import { M65816 } from './asm65816.js';
+import { bossData, enemyWeaknesses, subweapons } from './mmx3/constants.js';
+import { enemyRandomize } from './mmx3/enemyRando.js';
+import { itemRandomize } from './mmx3/itemRando.js';
+import { paletteRandomize } from './mmx3/paletteRando.js';
+import { prep } from './mmx3/prep.js';
+import { conv, hexc, getEnemyBaseData, writeWord, getWeaknessTables, sum, readWord } from './mmx3/utils.js';
 export function randomize(rom, rng, opts) {
     /*
     Initial rom changes
