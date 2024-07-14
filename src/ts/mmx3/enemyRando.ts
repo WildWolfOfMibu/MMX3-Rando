@@ -3,7 +3,7 @@ import { RandoOptions } from '../mmx3.js';
 import { ENEMIES, EnemyData } from './constants.js'
 import { conv, hexc, readWord, writeWord } from './utils.js';
 
-const getDynDecompIdxAddrs = function (rom: number[], decomp_idx: number): number[] {
+function getDynDecompIdxAddrs(rom: number[], decomp_idx: number): number[] {
     let table = conv(8, 0x8623);
 
     let dataPtrs: number[] = []
@@ -12,15 +12,17 @@ const getDynDecompIdxAddrs = function (rom: number[], decomp_idx: number): numbe
 
     let retAddrs: number[] = [];
     for (let dataPtr of dataPtrs) {
-        for (let readDecompIdx = rom[dataPtr]; readDecompIdx !== 0xff; dataPtr += 6) {
-            if (readDecompIdx === decomp_idx)
-                retAddrs.push(dataPtr)
+        while (true) {
+            let readDecompIdx = rom[dataPtr];
+            if (readDecompIdx === 0xff) break;
+            if (readDecompIdx === decomp_idx) retAddrs.push(dataPtr);
+            dataPtr += 6;
         }
     }
     return retAddrs;
 }
 
-const getStageEntityDecompIdxAddrs = function (rom: number[], entity_id: number): number[] {
+function getStageEntityDecompIdxAddrs(rom: number[], entity_id: number): number[] {
     let table = conv(0x3c, 0xce4b);
     let retAddrs: number[] = [];
     for (let stage = 0; stage < 0xf; stage++) {
@@ -31,7 +33,7 @@ const getStageEntityDecompIdxAddrs = function (rom: number[], entity_id: number)
         while (column !== lastCol) {
             lastCol = column;
             while (1) {
-                if (rom[start + 3] === entity_id && rom[start] == 3)
+                if (rom[start + 3] == entity_id && rom[start] == 3)
                     retAddrs.push(start);
                 if (rom[start + 6] & 0x80)
                     break;
@@ -67,7 +69,6 @@ export function enemyRandomize(rom: number[], rng: () => number, opts: RandoOpti
 
         let pal_idx = deets.pal_idx;
         if (pal_idx === undefined) {
-
             let pal_idxes = new Set<number>();
             for (let addr of dynAddrs) {
                 pal_idxes.add(readWord(rom, addr + 3));
@@ -88,14 +89,15 @@ export function enemyRandomize(rom: number[], rng: () => number, opts: RandoOpti
 
             let sub_idxes = new Set<number>();
             for (let addr of entAddrs) {
-                sub_idxes.add(rom[addr + 4]);
+                sub_idxes.add(rom[addr + 4])
             }
+
             if (sub_idxes.size > 1) {
                 console.log('Name:', name);
                 console.log('sub_idxes', [...sub_idxes].map(hexc));
-                for (let addr of entAddrs) {
+                for (let addr of entAddrs)
                     console.log(hexc(addr), rom[addr + 4]);
-                }
+
             } else {
                 sub_idx = [...sub_idxes][0];
             }
@@ -132,7 +134,10 @@ export function enemyRandomize(rom: number[], rng: () => number, opts: RandoOpti
     // Mutate
     for (let name in fullEnemyDeets) {
         let deets = fullEnemyDeets[name]
-        if (typeof deets.newEnemyName == 'undefined') { return }
+        if (typeof deets.newEnemyName == 'undefined') {
+            throw new Error("Unknown enemyname: ${deets}")
+            return
+        }
         let newEnemy = fullEnemyDeets[deets.newEnemyName]
 
         for (let addr of deets.dynAddrs) {

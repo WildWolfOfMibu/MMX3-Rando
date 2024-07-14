@@ -1,38 +1,41 @@
 import { conv } from "./utils.js";
 
-export const STAGES = {
-    BLAST_HORNET: 1,
-    BLIZZARD_BUFFALO: 2,
-    GRAVITY_BEETLE: 3,
-    TOXIC_SEAHORSE: 4,
-    VOLT_CATFISH: 5,
-    CRUSH_CRAWFISH: 6,
-    TUNNEL_RHINO: 7,
-    NEON_TIGER: 8,
-    VILE: 9,
-    DOPPLER_1: 10,
+export enum STAGES {
+    BLAST_HORNET = 1,
+    BLIZZARD_BUFFALO = 2,
+    GRAVITY_BEETLE = 3,
+    TOXIC_SEAHORSE = 4,
+    VOLT_CATFISH = 5,
+    CRUSH_CRAWFISH = 6,
+    TUNNEL_RHINO = 7,
+    NEON_TIGER = 8,
+    VILE = 9,
+    DOPPLER_1 = 10,
+    DOPPLER_2 = 11,
+    DOPPLER_3 = 12,
+    DOPPLER_4 = 13,
 }
 export const MT_ITEM = 0;
 export const MT_ENEMY = 3;
 
-export const ITEMID = {
-    SUBTANK: 0x05,
-    HEART_TANK: 0x0b,
-    RIDE_ARMOUR_ITEM: 0x17,
+export enum ITEMID {
+    SUBTANK = 0x05,
+    HEART_TANK = 0x0b,
+    RIDE_ARMOUR_ITEM = 0x17,
 }
 
 export const ENEMYID_HANGERTER = 0x4c;
 export const ENEMYID_CAPSULE = 0x4d;
 
-export const ENEMYID = {
-    BLIZZARD_BUFFALO: 0x52,
-    BLAST_HORNET: 0x53,
-    CRUSH_CRAWFISH: 0x54,
-    TUNNEL_RHINO: 0x55,
-    NEON_TIGER: 0x56,
-    TOXIC_SEAHORSE: 0x57,
-    VOLT_CATFISH: 0x58,
-    GRAVITY_BEETLE: 0x59,
+export enum ENEMYID {
+    BLIZZARD_BUFFALO = 0x52,
+    BLAST_HORNET = 0x53,
+    CRUSH_CRAWFISH = 0x54,
+    TUNNEL_RHINO = 0x55,
+    NEON_TIGER = 0x56,
+    TOXIC_SEAHORSE = 0x57,
+    VOLT_CATFISH = 0x58,
+    GRAVITY_BEETLE = 0x59,
 }
 
 export const DECOMP_DATA_IDX_RIDE_ARMOUR_ITEM = 0x3b;

@@ -1,18 +1,18 @@
 import { palAddrs } from './palAddrs.js'
 import { conv, readWord, writeWord } from './utils.js';
 
-const snes2rgb = (snesCol: number): [number, number, number] => {
+export function snes2rgb(snesCol: number): [number, number, number] {
     let r: number = snesCol & 0x1f;
     let g: number = (snesCol >> 5) & 0x1f;
     let b: number = (snesCol >> 10) & 0x1f;
     return [r / 0x1f, g / 0x1f, b / 0x1f];
 }
 
-const rgb2snes = (r: number, g: number, b: number): number => {
+export function rgb2snes(r: number, g: number, b: number): number {
     return ((b & 0x1f) << 10) + ((g & 0x1f) << 5) + (r & 0x1f);
 }
 
-const rgb2hsl = (r: number, g: number, b: number): [number, number, number] => {
+export function rgb2hsl(r: number, g: number, b: number): [number, number, number] {
     let maxColVal: number = Math.max(r, g, b);
     let minColVal: number = Math.min(r, g, b);
     let maxCol: string = 'r';
@@ -39,17 +39,24 @@ const rgb2hsl = (r: number, g: number, b: number): [number, number, number] => {
     return [hue, saturation, lightness];
 }
 
-const hsl2rgb = (h: number, s: number, l: number): [number, number, number] => {
+export function hsl2rgb(h: number, s: number, l: number): [number, number, number] {
     let C: number = (1 - Math.abs(2 * l - 1)) * s;
     let X: number = C * (1 - Math.abs(((h / 60) % 2) - 1));
     let m: number = l - C / 2;
     let r: number, g: number, b: number;
-    if (h < 60) { r = C, g = X, b = 0 }
-    else if (h < 120) { r = X, g = C, b = 0 }
-    else if (h < 180) { r = 0, g = C, b = X }
-    else if (h < 240) { r = 0, g = X, b = C }
-    else if (h < 300) { r = X, g = 0, b = C }
-    else { r = C, g = 0, b = X }
+    if (h < 60) {
+        r = C, g = X, b = 0
+    } else if (h < 120) {
+        r = X, g = C, b = 0
+    } else if (h < 180) {
+        r = 0, g = C, b = X
+    } else if (h < 240) {
+        r = 0, g = X, b = C
+    } else if (h < 300) {
+        r = X, g = 0, b = C
+    } else {
+        r = C, g = 0, b = X
+    }
     return [
         (r + m) * 0x1f,
         (g + m) * 0x1f,
@@ -84,6 +91,7 @@ export function paletteRandomize(rom: number[], rng: () => number, opts: any, _:
             }
             let unassignedPals: number[] = [];
             for (let i: number = 0; i < newPalAddrs.length; i++) unassignedPals.push(i);
+
             while (unassignedPals.length !== 0) {
                 let slotIdx: number = Math.floor(rng() * unassignedPals.length);
                 let palsIdx: number = Math.floor(rng() * palPool.length);

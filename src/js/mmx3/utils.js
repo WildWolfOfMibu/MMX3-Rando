@@ -1,17 +1,17 @@
 /**
  * Returns the full address given a bank and an offset (?)
 */
-export const conv = function (bank, addr) {
+export function conv(bank, addr) {
     return bank * 0x8000 + (addr % 0x8000);
-};
+}
 /**
  * Returns the 16-bit word at the address of the given rom
  * @description necessary extra conversion is done here to
  *   account for the endianness of the 65c816 microprocesor.
  */
-export const readWord = function (rom, addr) {
+export function readWord(rom, addr) {
     return (rom[addr + 1] << 8) | rom[addr];
-};
+}
 /**
  * Writes the given 16-bit word at the address of the given rom
  * @param {number[]} rom - the ROM data to modify
@@ -20,23 +20,24 @@ export const readWord = function (rom, addr) {
  * @description necessary extra conversion is done here to
  *   account for the endianness of the 65c816 microprocesor.
  */
-export const writeWord = function (rom, addr, val) {
+export function writeWord(rom, addr, val) {
     rom[addr] = val & 0xff;
     rom[addr + 1] = val >> 8;
-};
+    console.log(`RomWrite: ${hexc(addr)}\:\t${rom[addr]}${rom[addr + 1]}`);
+}
 /**
  * Returns the sum of all data values in the supplied byte-array
  * @description handy for calculating checksums
  */
-export const sum = function (arr) {
+export function sum(arr) {
     return arr.reduce((sum, entry) => sum + entry);
-};
+}
 /**
  * Returns a hexidecimal string from a given number
  */
-export const hexc = function (num) { return num.toString(16); };
+export function hexc(num) { return num.toString(16); }
 // MMX3
-export const findStageEntityData = function (rom, stageIdx, majorType, type) {
+export function findStageEntityData(rom, stageIdx, majorType, type) {
     // +0 main type
     // +1/2 Y coord
     // +3 entity ID
@@ -45,27 +46,22 @@ export const findStageEntityData = function (rom, stageIdx, majorType, type) {
     const table = conv(0x3c, 0xce4b);
     let start = conv(0x3c, readWord(rom, table + stageIdx * 2));
     let lastCol = null;
-    let maxLoops = 1000;
-    while (maxLoops-- !== 0) {
+    for (let i = 0; i < 1000; ++i) {
         let col = rom[start++];
         if (col === lastCol)
             break;
         lastCol = col;
-        let maxInnerLoops = 1000;
-        while (maxInnerLoops-- !== 0) {
-            if ((rom[start] !== majorType) || (rom[start + 3] !== type)) {
-                start += 7;
-            }
-            else {
+        for (i = 0; i < 1000; ++i) {
+            if (rom[start] == majorType && rom[start + 3] == type)
                 return start;
-            }
+            start += 7;
             if ((rom[start - 1] & 0x80) !== 0)
                 break;
         }
     }
     throw new Error(`Could not find stage entity data ${stageIdx}, ${majorType}, ${hexc(type)}`);
-};
-export const getDynamicSpriteData = function (rom, stageIdx, dynIdx, entryIdx) {
+}
+export function getDynamicSpriteData(rom, stageIdx, dynIdx, entryIdx) {
     // +0 decomp id
     // +1/2 vram dest
     // +3/4 palette id
@@ -74,11 +70,11 @@ export const getDynamicSpriteData = function (rom, stageIdx, dynIdx, entryIdx) {
     const stageOffs = readWord(rom, table + stageIdx * 2);
     const dynOffs = readWord(rom, table + stageOffs + dynIdx * 2);
     return table + dynOffs + entryIdx * 6;
-};
-export const getEnemyBaseData = function (enemy_idx) {
+}
+export function getEnemyBaseData(enemy_idx) {
     return conv(6, 0xe28e + 5 * (enemy_idx - 1));
-};
-export const getWeaknessTables = function (rom, weaknessIdx, isNormal) {
+}
+export function getWeaknessTables(rom, weaknessIdx, isNormal) {
     let baseTables = isNormal
         ? [conv(6, 0xe4a5)]
         : [conv(0x4b, 0x8000), conv(0x4b, 0x8080), conv(0x4b, 0x8100)];
@@ -86,12 +82,12 @@ export const getWeaknessTables = function (rom, weaknessIdx, isNormal) {
     for (let tableAddr of baseTables) {
         let offsOrAddr = readWord(rom, tableAddr + weaknessIdx * 2);
         entries.push(isNormal
-            ? tableAddr + offsOrAddr
+            ? (tableAddr + offsOrAddr)
             : conv(0x4b, offsOrAddr));
     }
     return entries;
-};
-export const getTextAddrs = function (rom, textIdx, isNormal) {
+}
+export function getTextAddrs(rom, textIdx, isNormal) {
     let addrs = [];
     if (isNormal) {
         let entry = conv(0x39, 0xc1bc + textIdx * 2);
@@ -104,8 +100,8 @@ export const getTextAddrs = function (rom, textIdx, isNormal) {
         }
     }
     return addrs;
-};
-export const replaceText = function (rom, textIdx, isNormal, text) {
+}
+export function replaceText(rom, textIdx, isNormal, text) {
     // skip 7 bytes
     let addrs = getTextAddrs(rom, textIdx, isNormal);
     for (let _start of addrs) {
@@ -121,12 +117,12 @@ export const replaceText = function (rom, textIdx, isNormal, text) {
             rom[start++] = b;
         }
     }
-};
-export const setPaletteAddr = function (rom, stage, dynIdx, entryIdx, newVal) {
+}
+export function setPaletteAddr(rom, stage, dynIdx, entryIdx, newVal) {
     let start = getDynamicSpriteData(rom, stage, dynIdx, entryIdx);
     writeWord(rom, start + 1, newVal);
-};
-export const setPaletteSlot = function (rom, stage, dynIdx, entryIdx, newVal) {
+}
+export function setPaletteSlot(rom, stage, dynIdx, entryIdx, newVal) {
     let start = getDynamicSpriteData(rom, stage, dynIdx, entryIdx);
     rom[start + 5] = newVal;
-};
+}

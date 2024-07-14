@@ -1,15 +1,15 @@
 import { palAddrs } from './palAddrs.js';
 import { conv, readWord, writeWord } from './utils.js';
-const snes2rgb = (snesCol) => {
+export function snes2rgb(snesCol) {
     let r = snesCol & 0x1f;
     let g = (snesCol >> 5) & 0x1f;
     let b = (snesCol >> 10) & 0x1f;
     return [r / 0x1f, g / 0x1f, b / 0x1f];
-};
-const rgb2snes = (r, g, b) => {
+}
+export function rgb2snes(r, g, b) {
     return ((b & 0x1f) << 10) + ((g & 0x1f) << 5) + (r & 0x1f);
-};
-const rgb2hsl = (r, g, b) => {
+}
+export function rgb2hsl(r, g, b) {
     let maxColVal = Math.max(r, g, b);
     let minColVal = Math.min(r, g, b);
     let maxCol = 'r';
@@ -39,8 +39,8 @@ const rgb2hsl = (r, g, b) => {
     if (hue < 360)
         hue += 360;
     return [hue, saturation, lightness];
-};
-const hsl2rgb = (h, s, l) => {
+}
+export function hsl2rgb(h, s, l) {
     let C = (1 - Math.abs(2 * l - 1)) * s;
     let X = C * (1 - Math.abs(((h / 60) % 2) - 1));
     let m = l - C / 2;
@@ -68,7 +68,7 @@ const hsl2rgb = (h, s, l) => {
         (g + m) * 0x1f,
         (b + m) * 0x1f,
     ];
-};
+}
 export function paletteRandomize(rom, rng, opts, _) {
     const miscPalAddrs = [
         [conv(7, 0x808a), 1], // X wireframe logo

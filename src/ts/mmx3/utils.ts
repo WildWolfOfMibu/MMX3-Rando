@@ -1,4 +1,3 @@
-
 /**
  * Returns the full address given a bank and an offset (?)
 */
@@ -26,13 +25,15 @@ export function readWord(rom: number[], addr: number): number {
 export function writeWord(rom: number[], addr: number, val: number) {
     rom[addr] = val & 0xff;
     rom[addr + 1] = val >> 8;
+    console.log(`RomWrite: ${hexc(addr)}\:\t${rom[addr]}${rom[addr + 1]}`);
+
 }
 
 /**
  * Returns the sum of all data values in the supplied byte-array
  * @description handy for calculating checksums
  */
-export const sum = function (arr: number[]): number {
+export function sum(arr: number[]): number {
     return arr.reduce((sum, entry) => sum + entry);
 }
 
@@ -53,19 +54,17 @@ export function findStageEntityData(rom: number[], stageIdx: number, majorType: 
     const table: number = conv(0x3c, 0xce4b);
     let start: number = conv(0x3c, readWord(rom, table + stageIdx * 2));
     let lastCol: number | null = null;
-    let maxLoops: number = 1000;
-    while (maxLoops-- !== 0) {
-        let col: number = rom[start++];
-        if (col === lastCol) break;
+
+    for (let i = 0; i < 1000; ++i) {
+        let col = rom[start++];
+        if (col === lastCol)
+            break;
         lastCol = col;
 
-        let maxInnerLoops: number = 1000;
-        while (maxInnerLoops-- !== 0) {
-            if ((rom[start] !== majorType) || (rom[start + 3] !== type)) {
-                start += 7;
-            } else {
+        for (i = 0; i < 1000; ++i) {
+            if (rom[start] == majorType && rom[start + 3] == type)
                 return start;
-            }
+            start += 7;
             if ((rom[start - 1] & 0x80) !== 0) break;
         }
     }
@@ -96,7 +95,7 @@ export function getWeaknessTables(rom: number[], weaknessIdx: number, isNormal: 
     for (let tableAddr of baseTables) {
         let offsOrAddr: number = readWord(rom, tableAddr + weaknessIdx * 2);
         entries.push(isNormal
-            ? tableAddr + offsOrAddr
+            ? (tableAddr + offsOrAddr)
             : conv(0x4b, offsOrAddr)
         );
     }

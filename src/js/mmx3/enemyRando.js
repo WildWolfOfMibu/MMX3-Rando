@@ -1,20 +1,24 @@
 import { ENEMIES } from './constants.js';
 import { conv, hexc, readWord, writeWord } from './utils.js';
-const getDynDecompIdxAddrs = function (rom, decomp_idx) {
+function getDynDecompIdxAddrs(rom, decomp_idx) {
     let table = conv(8, 0x8623);
     let dataPtrs = [];
     for (let i = conv(8, 0x8647); i < conv(8, 0x8647); i += 2)
         dataPtrs.push(readWord(rom, i) + table);
     let retAddrs = [];
     for (let dataPtr of dataPtrs) {
-        for (let readDecompIdx = rom[dataPtr]; readDecompIdx !== 0xff; dataPtr += 6) {
+        while (true) {
+            let readDecompIdx = rom[dataPtr];
+            if (readDecompIdx === 0xff)
+                break;
             if (readDecompIdx === decomp_idx)
                 retAddrs.push(dataPtr);
+            dataPtr += 6;
         }
     }
     return retAddrs;
-};
-const getStageEntityDecompIdxAddrs = function (rom, entity_id) {
+}
+function getStageEntityDecompIdxAddrs(rom, entity_id) {
     let table = conv(0x3c, 0xce4b);
     let retAddrs = [];
     for (let stage = 0; stage < 0xf; stage++) {
@@ -24,7 +28,7 @@ const getStageEntityDecompIdxAddrs = function (rom, entity_id) {
         while (column !== lastCol) {
             lastCol = column;
             while (1) {
-                if (rom[start + 3] === entity_id && rom[start] == 3)
+                if (rom[start + 3] == entity_id && rom[start] == 3)
                     retAddrs.push(start);
                 if (rom[start + 6] & 0x80)
                     break;
@@ -35,7 +39,7 @@ const getStageEntityDecompIdxAddrs = function (rom, entity_id) {
         }
     }
     return retAddrs;
-};
+}
 export function enemyRandomize(rom, rng, opts, _) {
     if (!opts.random_enemies)
         return;
@@ -74,9 +78,8 @@ export function enemyRandomize(rom, rng, opts, _) {
             if (sub_idxes.size > 1) {
                 console.log('Name:', name);
                 console.log('sub_idxes', [...sub_idxes].map(hexc));
-                for (let addr of entAddrs) {
+                for (let addr of entAddrs)
                     console.log(hexc(addr), rom[addr + 4]);
-                }
             }
             else {
                 sub_idx = [...sub_idxes][0];
@@ -113,6 +116,7 @@ export function enemyRandomize(rom, rng, opts, _) {
     for (let name in fullEnemyDeets) {
         let deets = fullEnemyDeets[name];
         if (typeof deets.newEnemyName == 'undefined') {
+            throw new Error("Unknown enemyname: ${deets}");
             return;
         }
         let newEnemy = fullEnemyDeets[deets.newEnemyName];

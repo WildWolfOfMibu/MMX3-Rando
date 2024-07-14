@@ -48,11 +48,38 @@ export type Slot = {
 	tileDataOffset?: number;
 }
 
+enum Upgrade {
+	HeadChip = 0,
+	LegChip,
+	KangarooArmor,
+	HornetHeart,
+	BuffaloHeart,
+	BuffaloSubtank,
+	BodyChip,
+	HawkArmor,
+	ArmChip,
+	FrogArmor,
+	ArmUpgrade,
+	HelmetUpgrade,
+	RhinoHeart,
+	BodyUpgrade,
+	CatfishSubtank,
+	CrawfishHeart,
+	CatfishHeart,
+	BeetleHeart,
+	RhinoSubtank,
+	TigerHeart,
+	TigerSubtank,
+	SeahorseHeart,
+	ChimeraArmor,
+	LegUpgrade,
+}
+
 export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptions, m: M65816) {
 	const isNormal: boolean = opts.romType === 'normal';
 
 	// Replace the rider armour holder enemy dynamic sprites with the chimera rider armour item
-	var start: number = findStageEntityData(rom, STAGES.BLAST_HORNET, ...ENTITY_DATA.RIDE_ARMOUR_HOLDER);
+	let start: number = findStageEntityData(rom, STAGES.BLAST_HORNET, ...ENTITY_DATA.RIDE_ARMOUR_HOLDER);
 	rom[start + 0] = MT_ITEM;
 	writeWord(rom, start + 1, 0x790);
 	rom[start + 3] = ITEMID.RIDE_ARMOUR_ITEM;
@@ -93,14 +120,14 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 	// Make capsule text shorter
 	for (const [textIdx, text] of [
 		[0x40, "Head chip"],
-		[0x0b, "Leg upgrade"],
+		[0x41, "Body chip"],
 		[0x42, "Arm chip"],
 		[0x43, "Leg chip"],
-		[0x0d, "Body upgrade"],
-		[0x41, "Body chip"],
-		[0x0c, "Helmet upgrade"],
-		[0x0e, "Arm upgrade"],
 		[0x46, "Hyper chip"],
+		[0x0b, "Leg upgrade"],
+		[0x0c, "Helmet upgrade"],
+		[0x0d, "Body upgrade"],
+		[0x0e, "Arm upgrade"],
 	] as const) {
 		replaceText(rom, textIdx, isNormal, ["You got the", text]);
 	}
@@ -114,7 +141,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 	// added index list for slots/items for easier randomization.
 	let slots: Slot[] = [{
 		// Blast hornet has 2 requirements, so it needs processed first after doppler's potential 4 reqs
-		slotindex: 0,
+		slotindex: Upgrade.HeadChip,
 		name: "Blast Hornet Capsule",
 		stageIdx: STAGES.BLAST_HORNET,
 		itemName: "Head Chip",
@@ -125,7 +152,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		textIdx: 0x5d,
 	}, {
 		//forcing frog armour checks for next two checks
-		slotindex: 1,
+		slotindex: Upgrade.LegChip,
 		name: "Toxic Seahorse Capsule",
 		stageIdx: STAGES.TOXIC_SEAHORSE,
 		itemName: "Leg Chip",
@@ -135,7 +162,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 2,
 		textIdx: 0x5d,
 	}, {
-		slotindex: 2,
+		slotindex: Upgrade.KangarooArmor,
 		name: "Toxic Seahorse Kangaroo Ride Armour",
 		stageIdx: STAGES.TOXIC_SEAHORSE,
 		itemName: "Kangaroo Armour",
@@ -146,7 +173,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		textIdx: 0x59,
 	}, {
 		// 1 req checks
-		slotindex: 3,
+		slotindex: Upgrade.HornetHeart,
 		name: "Blast Hornet Heart Tank",
 		stageIdx: STAGES.BLAST_HORNET,
 		itemName: "Hornet Heart",
@@ -156,7 +183,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 1,
 		textIdx: 0x24,
 	}, {
-		slotindex: 4,
+		slotindex: Upgrade.BuffaloHeart,
 		name: "Blizzard Buffalo Heart Tank",
 		stageIdx: STAGES.BLIZZARD_BUFFALO,
 		itemName: "Buffalo Heart",
@@ -167,7 +194,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 0,
 		textIdx: 0x24,
 	}, {
-		slotindex: 5,
+		slotindex: Upgrade.BuffaloSubtank,
 		name: "Blizzard Buffalo Subtank",
 		stageIdx: STAGES.BLIZZARD_BUFFALO,
 		itemName: "Buffalo Subtank",
@@ -177,7 +204,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 1,
 		textIdx: 0x55,
 	}, {
-		slotindex: 6,
+		slotindex: Upgrade.BodyChip,
 		name: "Crush Crawfish Capsule",
 		stageIdx: STAGES.CRUSH_CRAWFISH,
 		itemName: "Body Chip",
@@ -187,7 +214,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 1,
 		textIdx: 0x5d,
 	}, {
-		slotindex: 7,
+		slotindex: Upgrade.HawkArmor,
 		name: "Crush Crawfish Hawk Ride Armour",
 		stageIdx: STAGES.CRUSH_CRAWFISH,
 		itemName: "Hawk Armour",
@@ -197,7 +224,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 0,
 		textIdx: 0x5b,
 	}, {
-		slotindex: 8,
+		slotindex: Upgrade.ArmChip,
 		name: "Gravity Beetle Capsule",
 		stageIdx: STAGES.GRAVITY_BEETLE,
 		itemName: "Arm Chip",
@@ -207,7 +234,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 2,
 		textIdx: 0x5d,
 	}, {
-		slotindex: 9,
+		slotindex: Upgrade.FrogArmor,
 		name: "Gravity Beetle Frog Ride Armour",
 		stageIdx: STAGES.GRAVITY_BEETLE,
 		itemName: "Frog Armour",
@@ -217,7 +244,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 1,
 		textIdx: 0x57,
 	}, {
-		slotindex: 10,
+		slotindex: Upgrade.ArmUpgrade,
 		name: "Neon Tiger Capsule",
 		stageIdx: STAGES.NEON_TIGER,
 		itemName: "Arm Upgrade",
@@ -227,7 +254,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 1,
 		textIdx: 0x67,
 	}, {
-		slotindex: 11,
+		slotindex: Upgrade.HelmetUpgrade,
 		name: "Tunnel Rhino Capsule",
 		stageIdx: STAGES.TUNNEL_RHINO,
 		itemName: "Helmet Upgrade",
@@ -237,7 +264,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 2,
 		textIdx: 0x65,
 	}, {
-		slotindex: 12,
+		slotindex: Upgrade.RhinoHeart,
 		name: "Tunnel Rhino Heart Tank",
 		stageIdx: STAGES.TUNNEL_RHINO,
 		itemName: "Rhino Heart",
@@ -248,7 +275,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 0,
 		textIdx: 0x24,
 	}, {
-		slotindex: 13,
+		slotindex: Upgrade.BodyUpgrade,
 		name: "Volt Catfish Capsule",
 		stageIdx: STAGES.VOLT_CATFISH,
 		itemName: "Body Upgrade",
@@ -258,7 +285,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 0,
 		textIdx: 0x63,
 	}, {
-		slotindex: 14,
+		slotindex: Upgrade.CatfishSubtank,
 		name: "Volt Catfish Subtank",
 		stageIdx: STAGES.VOLT_CATFISH,
 		itemName: "Catfish Subtank",
@@ -268,7 +295,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 2,
 		textIdx: 0x55,
 	}, {
-		slotindex: 15,
+		slotindex: Upgrade.CrawfishHeart,
 		name: "Crush Crawfish Heart Tank",
 		stageIdx: STAGES.CRUSH_CRAWFISH,
 		itemName: "Crawfish Heart",
@@ -278,7 +305,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 2,
 		textIdx: 0x24,
 	}, {
-		slotindex: 16,
+		slotindex: Upgrade.CatfishSubtank,
 		name: "Volt Catfish Heart Tank",
 		stageIdx: STAGES.VOLT_CATFISH,
 		itemName: "Catfish Heart",
@@ -289,7 +316,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		textIdx: 0x24,
 	}, {
 		// rearranged slots so that 0 req checks are processed last.
-		slotindex: 17,
+		slotindex: Upgrade.BeetleHeart,
 		name: "Gravity Beetle Heart Tank",
 		stageIdx: STAGES.GRAVITY_BEETLE,
 		itemName: "Beetle Heart",
@@ -300,17 +327,17 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		textIdx: 0x24,
 	}, {
 		// swapped CCHT as it does req a non frog armor
-		slotindex: 18,
+		slotindex: Upgrade.RhinoSubtank,
 		name: "Tunnel Rhino Subtank",
 		stageIdx: STAGES.TUNNEL_RHINO,
-		itemName: "Tunnel Subtank",
+		itemName: "Rhino Subtank",
 		itemType: "Tank",
 		entityEntry: findStageEntityData(rom, STAGES.TUNNEL_RHINO, ...ENTITY_DATA.SUBTANK),
 		dynamicSpriteEntry: getDynamicSpriteData(rom, STAGES.TUNNEL_RHINO, 4, 0),
 		minimapMarkerEntry: 1,
 		textIdx: 0x55,
 	}, {
-		slotindex: 19,
+		slotindex: Upgrade.TigerHeart,
 		name: "Neon Tiger Heart Tank",
 		stageIdx: STAGES.NEON_TIGER,
 		itemName: "Tiger Heart",
@@ -320,7 +347,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 2,
 		textIdx: 0x24,
 	}, {
-		slotindex: 20,
+		slotindex: Upgrade.TigerSubtank,
 		name: "Neon Tiger Subtank",
 		stageIdx: STAGES.NEON_TIGER,
 		itemName: "Tiger Subtank",
@@ -330,7 +357,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 0,
 		textIdx: 0x55,
 	}, {
-		slotindex: 21,
+		slotindex: Upgrade.SeahorseHeart,
 		name: "Toxic Seahorse Heart Tank",
 		stageIdx: STAGES.TOXIC_SEAHORSE,
 		itemName: "Seahorse Heart",
@@ -340,7 +367,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 0,
 		textIdx: 0x24,
 	}, {
-		slotindex: 22,
+		slotindex: Upgrade.ChimeraArmor,
 		name: "Blast Hornet Chimera Ride Armour",
 		stageIdx: STAGES.BLAST_HORNET,
 		itemName: "Chimera Armour",
@@ -350,7 +377,7 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		minimapMarkerEntry: 2,
 		textIdx: 0x28,
 	}, {
-		slotindex: 23,
+		slotindex: Upgrade.LegUpgrade,
 		name: "Blizzard Buffalo Capsule",
 		stageIdx: STAGES.BLIZZARD_BUFFALO,
 		itemName: "Leg Upgrade",
@@ -363,15 +390,20 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 	]
 
 	// points to stage1 of this table, $13 bytes per stage, 6 bytes per entry
-	let minimapMarkerTable = conv(6, 0xb01c);
+	const minimapMarkerTable = conv(6, 0xb01c)
+	const bytesPerStage = 0x13
+	const bytesPerEntry = 6
 
 	let items: Item[] = [];
 	for (let slot of slots) {
 		let ramByteLowToCheck: number;
 		let ramBitToCheck: number;
 		if (slot.minimapMarkerEntry !== undefined) {
-			let minimapMarkerEntry = minimapMarkerTable +
-				0x13 * (slot.stageIdx - 1) + 6 * slot.minimapMarkerEntry;
+			let minimapMarkerEntry =
+				minimapMarkerTable
+				+ bytesPerStage * (slot.stageIdx - 1)
+				+ bytesPerEntry * slot.minimapMarkerEntry
+
 			ramByteLowToCheck = rom[minimapMarkerEntry + 3];
 			ramBitToCheck = rom[minimapMarkerEntry + 5];
 		} else {
@@ -411,605 +443,70 @@ export function itemRandomize(rom: number[], rng: () => number, opts: RandoOptio
 		//find index number of item and slot for logic checks to reduce resources used on continually pulling names and locations.
 		let itemcheck = available_items[chosen_item].itemindex;
 		let slotcheck = available_slots[s].slotindex;
-		// find length, subtract 1 to have length match index spot
-		let smax = available_slots.length - 1;
 		//insert itemcheck number vs chosen slot number for logic checks, increment item number slot if incorrect, checking for clear check. while statement to make sure it clears all checks.
 
-		// if hornet capsule (slot 0) is either hawk armour (item 7) or leg upgrade (item 23), increment slot and pull index
-		if (slotcheck == 0 && itemcheck == 23) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
+		const Chips: Upgrade[] = [
+			Upgrade.HeadChip,
+			Upgrade.LegChip,
+			Upgrade.BodyChip,
+			Upgrade.ArmChip,
+		]
+		const Parts: Upgrade[] = [
+			Upgrade.ArmUpgrade,
+			Upgrade.HelmetUpgrade,
+			Upgrade.BodyUpgrade,
+			Upgrade.LegUpgrade,
+		]
+		const Capsules: Upgrade[] = [...Chips, ...Parts]
+
+		let LogicBlacklist: { [slot in Upgrade]: Upgrade[] } = {
+			[Upgrade.HeadChip]: [Upgrade.HawkArmor, Upgrade.ArmUpgrade, Upgrade.LegUpgrade],
+			[Upgrade.LegChip]: [Upgrade.FrogArmor],
+			[Upgrade.KangarooArmor]: [Upgrade.FrogArmor, ...Capsules],
+			[Upgrade.HornetHeart]: [Upgrade.LegUpgrade],
+			// Buffalo Heart Tank (4) cannot be either kangaroo armour (2) or chimera armour (22) if the other is already placed.
+			//   all multi armour checks have Chimera Armor (23) in them, so I will exclude chimera armor from all these locations, 
+			//   thus keeping a circular lock from happening at all locations. 
+			[Upgrade.BuffaloHeart]: [Upgrade.ChimeraArmor, ...Capsules],
+			[Upgrade.BuffaloSubtank]: [],
+			[Upgrade.BodyChip]: [Upgrade.LegUpgrade, ...Capsules],
+			/**
+			 * Crawfish Capsule (6) cannot be Kangaroo Armour (2), Hawk Armour (7) or Chimera Armour (22) if the other two are placed.
+			 * Excluding Chimera (22) as per previous multiarmour check above (4).
+			 */
+			[Upgrade.HawkArmor]: [Upgrade.ArmUpgrade],
+			[Upgrade.ArmChip]: [Upgrade.KangarooArmor],
+			[Upgrade.FrogArmor]: [Upgrade.LegUpgrade],
+			[Upgrade.ArmUpgrade]: [Upgrade.LegUpgrade],
+			[Upgrade.HelmetUpgrade]: [Upgrade.ArmUpgrade],
+			[Upgrade.RhinoHeart]: [Upgrade.ArmUpgrade],
+			[Upgrade.BodyUpgrade]: [Upgrade.ArmUpgrade],
+			/**
+			 * Catfish SubTank (14) requires one armour (2,7,9,22), removing Chimera Armour (22) as per in check above (4)
+			 */
+			[Upgrade.CatfishSubtank]: [Upgrade.ChimeraArmor],
+			/**
+			 * Crawfish Heart Tank (15) cannot be Kangaroo Armour (2), Hawk Armour (7), or Chimera 
+			 * Armour (22) if the other two are placed. Excluding Chimera (22) as per previous 
+			 * multiarmour check above (4). (also adding checks for all capsules. 0,1,6,8,10,11,13,23)
+			 */
+			[Upgrade.CrawfishHeart]: [Upgrade.KangarooArmor, Upgrade.HawkArmor, Upgrade.ChimeraArmor, ...Capsules],
+			[Upgrade.CatfishHeart]: [...Capsules],
+			[Upgrade.BeetleHeart]: [],
+			[Upgrade.RhinoSubtank]: [],
+			[Upgrade.TigerHeart]: [],
+			[Upgrade.TigerSubtank]: [],
+			[Upgrade.SeahorseHeart]: [],
+			[Upgrade.ChimeraArmor]: [],
+			[Upgrade.LegUpgrade]: []
 		}
-		if (slotcheck == 0 && itemcheck == 10) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
+		let bl = LogicBlacklist[slotcheck as Upgrade]
+		if (bl !== undefined && bl.includes(itemcheck)) {
+			slotcheck = available_slots[s].slotindex;
+			s = (s + 1) % available_slots.length
 		}
-		if (slotcheck == 0 && itemcheck == 7) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		//Seahorse Capsule (slot 1) to make sure it's not Frog Armour (9)
-		if (slotcheck == 1 && itemcheck == 9) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		//Seahorse Kangaroo Armour (2) to make sure it's not frog armor (9) or leg upgrade (23) (also adding checks for all capsules. 0,1,6,8,10,11,13,23)
-		if (slotcheck == 2 && itemcheck == 9) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 2 && itemcheck == 23) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 2 && itemcheck == 13) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 2 && itemcheck == 11) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 2 && itemcheck == 10) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 2 && itemcheck == 8) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 2 && itemcheck == 6) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 2 && itemcheck == 1) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 2 && itemcheck == 0) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		// Hornet Heart Tank (3) cannot be leg upgrade (23)
-		if (slotcheck == 3 && itemcheck == 23) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		// Buffalo Heart Tank (4) cannot be either kangaroo armour (2) or chimera armour (22) if the other is already placed.
-		// all multi armour checks have Chimera Armor (23) in them, so I will exclude chimera armor from all these locations, 
-		// thus keeping a circular lock from happening at all locations. 
-		// (also adding checks for all capsules. 0,1,6,8,10,11,13,23)
-		if (slotcheck == 4 && itemcheck == 22) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 4 && itemcheck == 23) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 4 && itemcheck == 13) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 4 && itemcheck == 11) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 4 && itemcheck == 10) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 4 && itemcheck == 8) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 4 && itemcheck == 6) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 4 && itemcheck == 1) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 4 && itemcheck == 0) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		// Buffalo Subtank (5) cannot be leg upgrade (23)
-		// (also adding checks for all capsules. 0,1,6,8,10,11,13,23)
-		if (slotcheck == 5 && itemcheck == 23) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 5 && itemcheck == 13) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 5 && itemcheck == 11) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 5 && itemcheck == 10) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 5 && itemcheck == 8) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 5 && itemcheck == 6) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 5 && itemcheck == 1) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 5 && itemcheck == 0) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		//Crawfish Capsule (6) cannot be Kangaroo Armour (2), Hawk Armour (7) or Chimera Armour (22) if the other two are placed. 
-		//Excluding Chimera (22) as per previous multiarmour check above (4).
-		if (slotcheck == 6 && itemcheck == 22) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		// Crawfish Hawk Armour (7) cannot be Arm Upgrade (10)
-		if (slotcheck == 7 && itemcheck == 10) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		//Beetle Capsule (8) cannot be Kangaroo Armour (2), Hawk Armour (7), or Chimera Armour (22) if the other two are placed.
-		//Excluding Chimera (22) as per previous multiarmour check above (4).
-		if (slotcheck == 8 && itemcheck == 22) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		//Beetle Frog Armour (9) requires leg upgrade (23)
-		if (slotcheck == 9 && itemcheck == 23) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		//Tiger Capsule (10) requires leg upgrade (23)
-		if (slotcheck == 10 && itemcheck == 23) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		//Rhino Capsule (11) requires arm upgrade (10)
-		if (slotcheck == 11 && itemcheck == 10) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		//Rhino Heart Tank (12) requires arm upgrade (10)
-		if (slotcheck == 12 && itemcheck == 10) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		//Catfish Capsule (13) requires arm upgrade (10)
-		if (slotcheck == 13 && itemcheck == 10) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		//Catfish SubTank (14) requires one armour (2,7,9,22), removing Chimera Armour (22) as per in check above (4)
-		if (slotcheck == 14 && itemcheck == 22) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		//Crawfish Heart Tank (15) cannot be Kangaroo Armour (2), Hawk Armour (7), or Chimera Armour (22) if the other two are placed.
-		//Excluding Chimera (22) as per previous multiarmour check above (4).
-		// (also adding checks for all capsules. 0,1,6,8,10,11,13,23)
-		if (slotcheck == 15 && itemcheck == 22) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 15 && itemcheck == 23) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 16 && itemcheck == 13) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 16 && itemcheck == 11) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 16 && itemcheck == 10) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 16 && itemcheck == 8) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 16 && itemcheck == 6) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 16 && itemcheck == 1) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 16 && itemcheck == 0) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		// Catfish Heart tank cannoth be a capsule (0,1,2,7,9,11,12,14,23)
-		if (slotcheck == 16 && itemcheck == 23) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 16 && itemcheck == 13) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 16 && itemcheck == 11) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 16 && itemcheck == 10) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 16 && itemcheck == 8) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 16 && itemcheck == 6) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 16 && itemcheck == 1) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
-		if (slotcheck == 16 && itemcheck == 0) {
-			if (smax != s) {
-				s++;
-				slotcheck = available_slots[s].slotindex;
-			}
-			else {
-				s = 0;
-				slotcheck = available_slots[s].slotindex;
-			}
-		}
+
+
 		//prelim (while loop, if incorrect, increment check available slots length, if < max, increment s by one and pull new slotindex, if = to max, reset s to 0 and pull index for check)
 
 		//lock slot AFTER checks

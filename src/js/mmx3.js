@@ -487,7 +487,7 @@ export function randomize(rom, rng, opts) {
         jsr AddTmAndRandoDetails.l
         nop
     `);
-    let text = `Randomizer v${opts.fullVersion}`;
+    let text = `Randomizer ${opts.fullVersion}`;
     m.addAsm(null, null, `
     RandomizerText:
     `);
@@ -696,7 +696,7 @@ export function randomize(rom, rng, opts) {
     for (let label in m.labels) {
         let [blockName, offs] = m.labels[label];
         let romOffs = m.asm[blockName].placement + offs;
-        console.log(`Label ${label} at rom offset ${hexc(romOffs)}`);
+        // console.log(`Label ${label} at rom offset ${hexc(romOffs)}`);
     }
     return {
         newSlots: newSlots,

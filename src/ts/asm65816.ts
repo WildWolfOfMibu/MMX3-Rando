@@ -80,15 +80,11 @@ export class M65816 {
                 }
                 tokenI++;
             }
-            if (!nextLineI)
-                lineI = tokenI;
-            else
-                lineI = nextLineI;
+            lineI = nextLineI ? nextLineI : tokenI
 
-            if (++loops === this.loopsToBreakOn) {
+            if (++loops === this.loopsToBreakOn)
                 throw new Error('Error parsing asm');
-                break;
-            }
+
         }
         return tokens;
     }
@@ -566,6 +562,8 @@ export class M65816 {
      * @param {string} name The name of the assembly code.
      */
     addAsm(placeBank: number | null, placeAddr: number | null, asm: string, name?: string): void {
+        console.log(`AddAsm:\n\tbank:${placeBank}\n\taddr:${placeAddr}\n\tasm:${asm}`);
+
         let offs = 0;
         let labelOffs: [string, number][] = [];
         let asmLines: string[] = [];
@@ -647,6 +645,7 @@ export class M65816 {
     }
 
     compile(rom: number[]): void {
+        console.log(`ASM:\n${this.asm}`)
         for (let name in this.asm) {
             let asm = this.asm[name].asm;
             let placement = this.asm[name].placement;
@@ -660,18 +659,17 @@ export class M65816 {
                 let tokens = this.getTokens(line);
                 if (tokens.length === 0) throw new Error('Error parsing line');
                 let mnem = tokens[0];
-                // let mthd = this[mnem as keyof typeof this];
-                // if (typeof mthd !== 'function') throw new Error(`No mnemonic ${mnem}`);
-                // let byteData = mthd(tokens.slice(1, tokens.length), true);
                 //TODO: convert this to TS
                 //@ts-ignore
                 if (this[mnem] === undefined) throw new Error(`No mnemonic ${mnem}`);
                 //@ts-ignore
-                let byteData = this[mnem](tokens.slice(1, tokens.length), true);
+                let byteData = this[mnem](tokens.slice(1, tokens.length), false);
 
                 offs += byteData.length;
                 for (let i = 0; i < byteData.length; i++) {
                     rom[placement++] = byteData[i];
+                    console.log(`Set: ${placement.toString(16)}:\t${byteData[i]}`);
+
                 }
             }
         }
